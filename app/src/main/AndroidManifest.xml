@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="com.xperia64.timidityae"
-		  android:installLocation="auto"
-		  android:versionCode="96"
-		  android:versionName="3.0.6">
+		  package="com.xperia64.timidityae">
 
 	<uses-feature
 		android:name="android.software.leanback"
@@ -11,10 +8,6 @@
 	<uses-feature
 		android:name="android.hardware.touchscreen"
 		android:required="false"/>
-
-	<uses-sdk
-		android:minSdkVersion="16"
-		android:targetSdkVersion="27"/>
 
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
