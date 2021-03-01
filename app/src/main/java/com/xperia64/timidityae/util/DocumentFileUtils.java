@@ -43,7 +43,7 @@ public class DocumentFileUtils {
                 int i;
                 for (i = 0; i < split.length; i++) {
                     // Did we find the document file?
-                    if (split[i].equals(df.getName())) {
+                    if (df != null && split[i].equals(df.getName())) {
                         i++;
                         break;
                     }
@@ -80,7 +80,7 @@ public class DocumentFileUtils {
                 String[] split = filename.split("/");
                 int i;
                 for (i = 0; i < split.length; i++) {
-                    if (split[i].equals(df.getName())) {
+                    if (df != null && split[i].equals(df.getName())) {
                         i++;
                         break;
                     }
@@ -135,7 +135,7 @@ public class DocumentFileUtils {
         // Locate the filesystem-relative path by comparing it to the
         // DocumentFile root directory.
         for (i = 0; i < split.length; i++) {
-            if (split[i].equals(df.getName())) {
+            if (df != null && split[i].equals(df.getName())) {
                 i++;
                 break;
             }
@@ -163,7 +163,7 @@ public class DocumentFileUtils {
         String[] insplit = from.split(File.separator);
         int i;
         for (i = 0; i < insplit.length; i++) {
-            if (insplit[i].equals(in.getName())) {
+            if (in != null && insplit[i].equals(in.getName())) {
                 i++;
                 break;
             }
@@ -179,13 +179,17 @@ public class DocumentFileUtils {
         String[] outsplit = subTo.split(File.separator);
         DocumentFile out = DocumentFile.fromTreeUri(context, docFileDevice);
         for (i = 0; i < outsplit.length - 1; i++) {
-            if (out.findFile(outsplit[i]) != null) {
-                out = out.findFile(outsplit[i]);
-            } else {
-                out = out.createDirectory(outsplit[i]);
+            if (out != null) {
+                if (out.findFile(outsplit[i]) != null) {
+                    out = out.findFile(outsplit[i]);
+                } else {
+                    out = out.createDirectory(outsplit[i]);
+                }
             }
         }
-        out = out.createFile("application/octet-stream", outsplit[outsplit.length - 1]);
+        if (out != null) {
+            out = out.createFile("application/octet-stream", outsplit[outsplit.length - 1]);
+        }
 
         try {
             DataInputStream is = new DataInputStream(new BufferedInputStream(context.getContentResolver().openInputStream(in.getUri())));
