@@ -38,235 +38,231 @@ import java.util.List;
 import java.util.Locale;
 
 public class FileBrowserFragment extends ListFragment {
-	public String currPath;
+    public String currPath;
+    private List<String> path;
+    private boolean gotDir = false;
+    private ActionFileBackListener mCallback;
+    private Activity mActivity;
+    private final OnItemLongClickListener longClick = new OnItemLongClickListener() {
 
-	private List<String> path;
-	private boolean gotDir = false;
-	private ActionFileBackListener mCallback;
-	private Activity mActivity;
+        @Override
+        public boolean onItemLongClick(AdapterView<?> l, View v, final int position, long id) {
+            if (new File(path.get(position)).isFile() && Globals.isMidi(path.get(position))) {
+                ((TimidityActivity) mActivity).dynExport(path.get(position), false);
+                return true;
+            }
+            return false;
+        }
 
-	private final OnItemLongClickListener longClick = new OnItemLongClickListener() {
+    };
 
-		@Override
-		public boolean onItemLongClick(AdapterView<?> l, View v, final int position, long id) {
-			if (new File(path.get(position)).isFile() && Globals.isMidi(path.get(position))) {
-				((TimidityActivity) mActivity).dynExport(path.get(position), false);
-				return true;
-			}
-			return false;
-		}
+    public static FileBrowserFragment create(String fold) {
+        Bundle args = new Bundle();
+        args.putString(Constants.currFoldKey, fold);
+        FileBrowserFragment fragment = new FileBrowserFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-	};
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null)
+            currPath = getArguments().getString(Constants.currFoldKey);
+        if (currPath == null)
+            currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        else if (!new File(currPath).exists())
+            currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
 
-	public interface ActionFileBackListener {
-		void needFileBackCallback(boolean yes);
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.list, container, false);
+    }
 
-	public static FileBrowserFragment create(String fold) {
-		Bundle args = new Bundle();
-		args.putString(Constants.currFoldKey, fold);
-		FileBrowserFragment fragment = new FileBrowserFragment();
-		fragment.setArguments(args);
-		return fragment;
-	}
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!gotDir) {
+            gotDir = true;
+            getDir(currPath);
+        }
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getArguments() != null)
-			currPath = getArguments().getString(Constants.currFoldKey);
-		if (currPath == null)
-			currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		else if (!new File(currPath).exists())
-			currPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-	}
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        if (activity instanceof Activity) {
+            mActivity = (Activity) activity;
+        }
+        try {
+            mCallback = (ActionFileBackListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement ActionFileBackListener");
+        }
+        if (Globals.shouldRestore) {
+            Intent new_intent = new Intent();
+            new_intent.setAction(Constants.msrv_rec);
+            new_intent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_get_fold);
+            mActivity.sendBroadcast(new_intent);
+        }
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.list, container, false);
-	}
+    @Override
+    public void onDetach() {
+        mActivity = null;
+        mCallback = null;
+        super.onDetach();
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		if (!gotDir) {
-			gotDir = true;
-			getDir(currPath);
-		}
-	}
+    @Override
+    public void onDestroy() {
+        mActivity = null;
+        mCallback = null;
+        super.onDestroy();
+    }
 
-	@Override
-	public void onAttach(Context activity) {
-		super.onAttach(activity);
-		if (activity instanceof Activity) {
-			mActivity = (Activity) activity;
-		}
-		try {
-			mCallback = (ActionFileBackListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement ActionFileBackListener");
-		}
-		if (Globals.shouldRestore) {
-			Intent new_intent = new Intent();
-			new_intent.setAction(Constants.msrv_rec);
-			new_intent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_get_fold);
-			mActivity.sendBroadcast(new_intent);
-		}
-	}
+    public void refresh() {
+        getDir(currPath);
+    }
 
-	@Override
-	public void onDetach() {
-		mActivity = null;
-		mCallback = null;
-		super.onDetach();
-	}
+    public void getDir(String dirPath) {
+        if (dirPath.matches(Globals.repeatedSeparatorString) && !new File(dirPath).canRead()) {
+            return;
+        }
+        if (!new File(dirPath).canRead() && (dirPath.toLowerCase(Locale.US).equals("/storage/emulated") || dirPath.toLowerCase(Locale.US).equals("/storage/emulated/"))) {
+            getDir(new File(dirPath).getParent());
+            return;
+        }
+        currPath = dirPath;
+        List<String> fname = new ArrayList<>();
+        path = new ArrayList<>();
+        if (currPath != null) {
+            File f = new File(currPath);
+            if (f.exists()) {
+                File[] files = f.listFiles();
+                if (files != null && files.length > 0) {
+                    Arrays.sort(files, new FileComparator());
+                    if (!currPath.matches(Globals.repeatedSeparatorString) && !((currPath.equals(File.separator + "storage" + File.separator) || currPath.equals(File.separator + "storage")) && !(new File(File.separator).canRead()))) {
+                        fname.add(Globals.parentString);
+                        // Thank you Marshmallow.
+                        // Disallowing access to /storage/emulated has now
+                        // prevent billions of hacking attempts daily.
+                        if (new File(f.getParent()).canRead()) {
+                            path.add(f.getParent() + File.separator);
+                        } else if (new File(File.separator).canRead()) {
+                            path.add(File.separator);
+                        } else {
+                            path.add(File.separator + "storage" + File.separator);
+                        }
+                        mCallback.needFileBackCallback(true);
+                    } else {
+                        mCallback.needFileBackCallback(false);
+                    }
+                    for (File file : files) {
+                        if ((!file.getName().startsWith(".") && !SettingsStorage.showHiddenFiles) || SettingsStorage.showHiddenFiles) {
+                            if (file.isFile()) {
+                                String extension = Globals.getFileExtension(file);
+                                if (extension != null) {
 
-	@Override
-	public void onDestroy() {
-		mActivity = null;
-		mCallback = null;
-		super.onDestroy();
-	}
+                                    if (Globals.getSupportedExtensions().contains("*" + extension + "*")) {
 
-	public void refresh() {
-		getDir(currPath);
-	}
+                                        path.add(file.getAbsolutePath());
+                                        fname.add(file.getName());
+                                    }
+                                } else if (file.getName().endsWith(File.separator)) {
+                                    path.add(file.getAbsolutePath() + File.separator);
+                                    fname.add(file.getName() + File.separator);
+                                }
 
-	public void getDir(String dirPath) {
-		if (dirPath.matches(Globals.repeatedSeparatorString) && !new File(dirPath).canRead()) {
-			return;
-		}
-		if (!new File(dirPath).canRead() && (dirPath.toLowerCase(Locale.US).equals("/storage/emulated") || dirPath.toLowerCase(Locale.US).equals("/storage/emulated/"))) {
-			getDir(new File(dirPath).getParent());
-			return;
-		}
-		currPath = dirPath;
-		List<String> fname = new ArrayList<>();
-		path = new ArrayList<>();
-		if (currPath != null) {
-			File f = new File(currPath);
-			if (f.exists()) {
-				File[] files = f.listFiles();
-				if (files != null && files.length > 0) {
-					Arrays.sort(files, new FileComparator());
-					if (!currPath.matches(Globals.repeatedSeparatorString) && !((currPath.equals(File.separator + "storage" + File.separator) || currPath.equals(File.separator + "storage")) && !(new File(File.separator).canRead()))) {
-						fname.add(Globals.parentString);
-						// Thank you Marshmallow.
-						// Disallowing access to /storage/emulated has now
-						// prevent billions of hacking attempts daily.
-						if (new File(f.getParent()).canRead()) {
-							path.add(f.getParent() + File.separator);
-						} else if (new File(File.separator).canRead()) {
-							path.add(File.separator);
-						} else {
-							path.add(File.separator + "storage" + File.separator);
-						}
-						mCallback.needFileBackCallback(true);
-					} else {
-						mCallback.needFileBackCallback(false);
-					}
-					for (File file : files) {
-						if ((!file.getName().startsWith(".") && !SettingsStorage.showHiddenFiles) || SettingsStorage.showHiddenFiles) {
-							if (file.isFile()) {
-								String extension = Globals.getFileExtension(file);
-								if (extension != null) {
+                            } else {
+                                path.add(file.getAbsolutePath() + File.separator);
+                                fname.add(file.getName() + File.separator);
+                            }
+                        }
+                    }
+                } else {
+                    if (!currPath.matches(Globals.repeatedSeparatorString) && !(currPath.equals(File.separator + "storage" + File.separator) && !(new File(File.separator).canRead()))) {
+                        fname.add(Globals.parentString);
+                        // Thank you Marshmallow.
+                        // Disallowing access to /storage/emulated has now prevent billions of hacking attempts daily.
+                        if (new File(f.getParent()).canRead()) {
+                            path.add(f.getParent() + File.separator);
+                        } else if (new File(File.separator).canRead()) { // N seems to block reading /
+                            path.add(File.separator);
+                        } else {
+                            path.add(File.separator + "storage" + File.separator);
+                        }
 
-									if (Globals.getSupportedExtensions().contains("*" + extension + "*")) {
+                    }
+                }
+                ArrayAdapter<String> fileList = new ArrayAdapter<>(mActivity, R.layout.row, fname);
+                getListView().setFastScrollEnabled(true);
+                getListView().setOnItemLongClickListener(longClick);
+                setListAdapter(fileList);
+            }
+        }
+    }
 
-										path.add(file.getAbsolutePath());
-										fname.add(file.getName());
-									}
-								} else if (file.getName().endsWith(File.separator)) {
-									path.add(file.getAbsolutePath() + File.separator);
-									fname.add(file.getName() + File.separator);
-								}
+    public void fixLongClick() {
+        if (getListView() != null) {
+            getListView().setOnItemLongClickListener(longClick);
+        }
+    }
 
-							} else {
-								path.add(file.getAbsolutePath() + File.separator);
-								fname.add(file.getName() + File.separator);
-							}
-						}
-					}
-				} else {
-					if (!currPath.matches(Globals.repeatedSeparatorString) && !(currPath.equals(File.separator + "storage" + File.separator) && !(new File(File.separator).canRead()))) {
-						fname.add(Globals.parentString);
-						// Thank you Marshmallow.
-						// Disallowing access to /storage/emulated has now prevent billions of hacking attempts daily.
-						if (new File(f.getParent()).canRead()) {
-							path.add(f.getParent() + File.separator);
-						} else if (new File(File.separator).canRead()) { // N seems to block reading /
-							path.add(File.separator);
-						} else {
-							path.add(File.separator + "storage" + File.separator);
-						}
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        File file = new File(path.get(position));
+        if (file.isDirectory()) {
+            if (file.canRead()) {
+                getDir(path.get(position));
+            } else if (file.getAbsolutePath().equals("/storage/emulated") &&
+                    ((new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) ||
+                            (new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead()) ||
+                            (new File("/storage/self/primary").exists() && new File("/storage/self/primary").canRead()))) {
+                if (new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) {
+                    getDir("/storage/emulated/0");
+                } else if ((new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead())) {
+                    getDir("/storage/emulated/legacy");
+                } else {
+                    getDir("/storage/self/primary");
+                }
+            } else {
+                AlertDialog.Builder unreadableDialog = new AlertDialog.Builder(mActivity);
+                unreadableDialog = unreadableDialog.setIcon(R.drawable.ic_launcher);
+                unreadableDialog = unreadableDialog.setTitle(String.format("[%1$s] %2$s", file.getName(), mActivity.getResources().getString(R.string.fb_cread)));
+                unreadableDialog = unreadableDialog.setPositiveButton(mActivity.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                unreadableDialog.show();
+            }
+        } else {
+            if (file.canRead()) {
+                ArrayList<String> files = new ArrayList<>();
+                int firstFile = -1;
+                for (int i = 0; i < path.size(); i++) {
+                    if (!path.get(i).endsWith(File.separator)) {
+                        files.add(path.get(i));
+                        if (firstFile == -1) {
+                            firstFile = i;
+                        }
+                    }
+                }
+                ((TimidityActivity) mActivity).selectedSong(files, position - firstFile, true, false, true);
+            }
+        }
+        fixLongClick();
+    }
 
-					}
-				}
-				ArrayAdapter<String> fileList = new ArrayAdapter<>(mActivity, R.layout.row, fname);
-				getListView().setFastScrollEnabled(true);
-				getListView().setOnItemLongClickListener(longClick);
-				setListAdapter(fileList);
-			}
-		}
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Constants.currFoldKey, currPath);
+    }
 
-	public void fixLongClick()
-	{
-		if(getListView()!=null)
-		{
-			getListView().setOnItemLongClickListener(longClick);
-		}
-	}
-
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		File file = new File(path.get(position));
-		if (file.isDirectory()) {
-			if (file.canRead()) {
-				getDir(path.get(position));
-			} else if (file.getAbsolutePath().equals("/storage/emulated") &&
-					((new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) ||
-							(new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead()) ||
-							(new File("/storage/self/primary").exists() && new File("/storage/self/primary").canRead()))) {
-				if (new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) {
-					getDir("/storage/emulated/0");
-				} else if ((new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead())) {
-					getDir("/storage/emulated/legacy");
-				} else {
-					getDir("/storage/self/primary");
-				}
-			} else {
-				AlertDialog.Builder unreadableDialog = new AlertDialog.Builder(mActivity);
-				unreadableDialog = unreadableDialog.setIcon(R.drawable.ic_launcher);
-				unreadableDialog = unreadableDialog.setTitle(String.format("[%1$s] %2$s", file.getName(), mActivity.getResources().getString(R.string.fb_cread)));
-				unreadableDialog = unreadableDialog.setPositiveButton(mActivity.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-					}
-				});
-				unreadableDialog.show();
-			}
-		} else {
-			if (file.canRead()) {
-				ArrayList<String> files = new ArrayList<>();
-				int firstFile = -1;
-				for (int i = 0; i < path.size(); i++) {
-					if (!path.get(i).endsWith(File.separator)) {
-						files.add(path.get(i));
-						if (firstFile == -1) {
-							firstFile = i;
-						}
-					}
-				}
-				((TimidityActivity) mActivity).selectedSong(files, position - firstFile, true, false, true);
-			}
-		}
-		fixLongClick();
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(Constants.currFoldKey, currPath);
-	}
+    public interface ActionFileBackListener {
+        void needFileBackCallback(boolean yes);
+    }
 }

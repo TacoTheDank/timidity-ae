@@ -21,42 +21,42 @@ import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.util.Globals;
 
 public class ArtFragment extends Fragment {
-	private ImageView mImg;
-	private boolean artOk = false;
+    private ImageView mImg;
+    private boolean artOk = false;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.art_fragment, container, false);
-		mImg = (ImageView) v.findViewById(R.id.albumArt);
-		return v;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.art_fragment, container, false);
+        mImg = (ImageView) v.findViewById(R.id.albumArt);
+        return v;
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// If the view is set up, we can set the album art
-		artOk = true;
-		setArt(Globals.currArt, getActivity());
-	}
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        // If the view is set up, we can set the album art
+        artOk = true;
+        setArt(Globals.currArt, getActivity());
+    }
 
-	public void setArt(final Bitmap art, Activity a) {
-		if (artOk) {
-			if (art != null) {
-				a.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mImg.setImageBitmap(art);
-						mImg.invalidate();
-					}
-				});
-			} else {
-				a.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mImg.setImageResource(R.drawable.timidity);
-						mImg.invalidate();
-					}
-				});
-			}
-		}
-	}
+    public void setArt(final Bitmap art, Activity a) {
+        if (artOk) {
+            if (art != null) {
+                a.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImg.setImageBitmap(art);
+                        mImg.invalidate();
+                    }
+                });
+            } else {
+                a.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImg.setImageResource(R.drawable.timidity);
+                        mImg.invalidate();
+                    }
+                });
+            }
+        }
+    }
 }

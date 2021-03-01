@@ -14,20 +14,17 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import com.xperia64.timidityae.SettingsActivity;
 
 public class SoxPrefsFragment extends PreferenceFragmentCompat {
-	SettingsActivity s;
+    SettingsActivity s;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		s = (SettingsActivity) getActivity();
-		// Load the preferences from an XML resource
-		// TODO addPreferencesFromResource(R.xml.settings_sox);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        s = (SettingsActivity) getActivity();
+        // Load the preferences from an XML resource
+        // TODO addPreferencesFromResource(R.xml.settings_sox);
+    }
 
-	}
-
-	@Override
-	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-
-	}
-
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    }
 }

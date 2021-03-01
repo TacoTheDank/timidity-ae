@@ -20,41 +20,39 @@ import com.xperia64.timidityae.JNIHandler;
 import com.xperia64.timidityae.R;
 
 public class LyricFragment extends Fragment {
-	private TextView lyrics;
-	private ScrollView scrollContainer;
-	private boolean ready;
+    private TextView lyrics;
+    private ScrollView scrollContainer;
+    private boolean ready;
+    private String oldLyrics;
 
-	private String oldLyrics;
+    // TODO Make lyrics shiny-er
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ready = false;
+        View root = inflater.inflate(R.layout.lyrical_fragment, container, false);
+        lyrics = (TextView) root.findViewById(R.id.lyrics);
+        scrollContainer = (ScrollView) root.findViewById(R.id.lyric_holder);
+        return root;
+    }
 
-	// TODO Make lyrics shiny-er
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		ready = false;
-		View root = inflater.inflate(R.layout.lyrical_fragment, container, false);
-		lyrics = (TextView) root.findViewById(R.id.lyrics);
-		scrollContainer = (ScrollView) root.findViewById(R.id.lyric_holder);
-		return root;
-	}
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ready = true;
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		ready = true;
-	}
-
-	public void updateLyrics() {
-		if (ready && getActivity() != null) {
-			getActivity().runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					oldLyrics = lyrics.getText().toString();
-					lyrics.setText(JNIHandler.currentLyric.isEmpty() ? "(No Lyrics)" : JNIHandler.currentLyric);
-					lyrics.invalidate();
-					if (scrollContainer != null && !oldLyrics.equals(lyrics.getText().toString()))
-						scrollContainer.fullScroll(ScrollView.FOCUS_DOWN);
-				}
-			});
-		}
-
-	}
+    public void updateLyrics() {
+        if (ready && getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    oldLyrics = lyrics.getText().toString();
+                    lyrics.setText(JNIHandler.currentLyric.isEmpty() ? "(No Lyrics)" : JNIHandler.currentLyric);
+                    lyrics.invalidate();
+                    if (scrollContainer != null && !oldLyrics.equals(lyrics.getText().toString()))
+                        scrollContainer.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
+        }
+    }
 }

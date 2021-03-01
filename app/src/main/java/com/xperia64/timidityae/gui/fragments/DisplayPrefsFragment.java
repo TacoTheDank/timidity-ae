@@ -29,92 +29,89 @@ import java.io.IOException;
 import java.util.List;
 
 public class DisplayPrefsFragment extends PreferenceFragmentCompat {
-	SettingsActivity s;
+    SettingsActivity s;
 
-	private ListPreference themePref; // Theme selection
-	//private CheckBoxPreference hiddenFold; // Show hidden files or folders
-	//private CheckBoxPreference showVids; // Show video files in the file browser
-	private Preference defaultFoldPreference; // Browse for the default folder
-	private EditTextPreference manHomeFolder; // Enter the default folder manually
+    private ListPreference themePref; // Theme selection
+    //private CheckBoxPreference hiddenFold; // Show hidden files or folders
+    //private CheckBoxPreference showVids; // Show video files in the file browser
+    private Preference defaultFoldPreference; // Browse for the default folder
+    private EditTextPreference manHomeFolder; // Enter the default folder manually
 
 
-	// API 14+
-	//private CheckBoxPreference fplist; // Reorderable playlists
+    // API 14+
+    //private CheckBoxPreference fplist; // Reorderable playlists
 
-	// API 21+
-	private Preference lolPref; // Select external storage to write to
-	//private CheckBoxPreference lolNag; // Notify user about external storage
+    // API 21+
+    private Preference lolPref; // Select external storage to write to
+    //private CheckBoxPreference lolNag; // Notify user about external storage
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		s = (SettingsActivity) getActivity();
-		// Load the preferences from an XML resource
-		addPreferencesFromResource(R.xml.settings_disp);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        s = (SettingsActivity) getActivity();
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.settings_disp);
 
-		themePref = (ListPreference) findPreference("fbTheme");
-		//hiddenFold = (CheckBoxPreference) findPreference("hiddenSwitch");
-		//showVids = (CheckBoxPreference) findPreference("videoSwitch");
-		//fplist = (CheckBoxPreference) findPreference("fpSwitch");
-		defaultFoldPreference = findPreference("defFold");
-		manHomeFolder = (EditTextPreference) findPreference("defaultPath");
-		lolPref = findPreference("lolWrite");
-		//lolNag = (CheckBoxPreference) findPreference("shouldLolNag");
+        themePref = (ListPreference) findPreference("fbTheme");
+        //hiddenFold = (CheckBoxPreference) findPreference("hiddenSwitch");
+        //showVids = (CheckBoxPreference) findPreference("videoSwitch");
+        //fplist = (CheckBoxPreference) findPreference("fpSwitch");
+        defaultFoldPreference = findPreference("defFold");
+        manHomeFolder = (EditTextPreference) findPreference("defaultPath");
+        lolPref = findPreference("lolWrite");
+        //lolNag = (CheckBoxPreference) findPreference("shouldLolNag");
 
-		themePref.setEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH);
+        themePref.setEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 
-		if (lolPref != null) {
-			lolPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-				public boolean onPreferenceClick(Preference preference) {
-					// dialog code here
-					List<UriPermission> permissions = s.getContentResolver().getPersistedUriPermissions();
-					if (!permissions.isEmpty()) {
-						for (UriPermission p : permissions) {
-							s.getContentResolver().releasePersistableUriPermission(p.getUri(), Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-						}
-					}
-					Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-					s.startActivityForResult(intent, 42);
-					return true;
-				}
-			});
-		}
+        if (lolPref != null) {
+            lolPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                public boolean onPreferenceClick(Preference preference) {
+                    // dialog code here
+                    List<UriPermission> permissions = s.getContentResolver().getPersistedUriPermissions();
+                    if (!permissions.isEmpty()) {
+                        for (UriPermission p : permissions) {
+                            s.getContentResolver().releasePersistableUriPermission(p.getUri(), Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        }
+                    }
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                    s.startActivityForResult(intent, 42);
+                    return true;
+                }
+            });
+        }
 
-		themePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+        themePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SettingsStorage.theme = Integer.parseInt((String) newValue);
 
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				SettingsStorage.theme = Integer.parseInt((String) newValue);
+                // Just to be safe
+                try {
+                    s.prefs.edit().putString("tplusSoundfonts", ObjectSerializer.serialize(s.tmpSounds)).commit();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-				// Just to be safe
-				try {
-					s.prefs.edit().putString("tplusSoundfonts", ObjectSerializer.serialize(s.tmpSounds)).commit();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+                Intent intent = s.getIntent();
+                intent.putExtra("returnToDisp", true);
+                s.finish();
+                startActivity(intent);
+                return true;
+            }
+        });
 
-				Intent intent = s.getIntent();
-				intent.putExtra("returnToDisp", true);
-				s.finish();
-				startActivity(intent);
-				return true;
-			}
+        defaultFoldPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                s.tmpItemEdit = manHomeFolder;
+                s.tmpItemScreen = getPreferenceScreen();
+                new FileBrowserDialog().create(3, null, s, s, s.getLayoutInflater(), true, s.prefs.getString("defaultPath", Environment.getExternalStorageDirectory().getAbsolutePath()), getResources().getString(R.string.fb_add));
+                return true;
+            }
+        });
+    }
 
-		});
-
-		defaultFoldPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			public boolean onPreferenceClick(Preference preference) {
-				s.tmpItemEdit = manHomeFolder;
-				s.tmpItemScreen = getPreferenceScreen();
-				new FileBrowserDialog().create(3, null, s, s, s.getLayoutInflater(), true, s.prefs.getString("defaultPath", Environment.getExternalStorageDirectory().getAbsolutePath()), getResources().getString(R.string.fb_add));
-				return true;
-			}
-		});
-	}
-
-	@Override
-	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-
-	}
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    }
 }

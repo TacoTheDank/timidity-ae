@@ -27,60 +27,59 @@ import java.util.List;
 
 class SoundfontArrayAdapter extends ArrayAdapter<String> {
 
-	interface SoundfontArrayAdapterListener {
-		void setSFEnabled(int position, boolean yes);
-	}
+    private SoundfontArrayAdapterListener mc;
+    private LayoutInflater inflater;
+    private ArrayList<Boolean> itemChecked = new ArrayList<>();
 
-	private SoundfontArrayAdapterListener mc;
-	private LayoutInflater inflater;
-	private ArrayList<Boolean> itemChecked = new ArrayList<>();
+    SoundfontArrayAdapter(SoundfontArrayAdapterListener c, Context context, List<String> sfList) {
+        super(context, R.layout.row_check, R.id.checkText, sfList);
+        mc = c;
+        inflater = LayoutInflater.from(context);
+        for (int i = 0; i < sfList.size(); i++) {
+            itemChecked.add(i, !sfList.get(i).startsWith("#"));
+        }
+    }
 
-	SoundfontArrayAdapter(SoundfontArrayAdapterListener c, Context context, List<String> sfList) {
-		super(context, R.layout.row_check, R.id.checkText, sfList);
-		mc = c;
-		inflater = LayoutInflater.from(context);
-		for (int i = 0; i < sfList.size(); i++) {
-			itemChecked.add(i, !sfList.get(i).startsWith("#"));
-		}
-	}
+    @NonNull
+    @Override
+    public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
+        View view = convertView;
+        final SoundfontHolder viewHolder;
+        if (view == null) {
+            view = inflater.inflate(R.layout.row_check, null);
+            viewHolder = new SoundfontHolder();
+            viewHolder.name = (TextView) view.findViewById(R.id.checkText);
+            viewHolder.b = (ToggleButton) view.findViewById(R.id.sfSwitch);
 
-	@NonNull
-	@Override
-	public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
-		View view = convertView;
-		final SoundfontHolder viewHolder;
-		if (view == null) {
-			view = inflater.inflate(R.layout.row_check, null);
-			viewHolder = new SoundfontHolder();
-			viewHolder.name = (TextView) view.findViewById(R.id.checkText);
-			viewHolder.b = (ToggleButton) view.findViewById(R.id.sfSwitch);
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (SoundfontHolder) view.getTag();
+        }
+        String tmp = getItem(position);
+        viewHolder.name.setText(tmp.substring(tmp.lastIndexOf(File.separator) + 1));
+        viewHolder.b.setOnClickListener(new View.OnClickListener() {
 
-			view.setTag(viewHolder);
-		} else {
-			viewHolder = (SoundfontHolder) view.getTag();
-		}
-		String tmp = getItem(position);
-		viewHolder.name.setText(tmp.substring(tmp.lastIndexOf(File.separator) + 1));
-		viewHolder.b.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mc.setSFEnabled(position, viewHolder.b.isChecked());
+            }
+        });
+        viewHolder.b.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-			public void onClick(View v) {
-				mc.setSFEnabled(position, viewHolder.b.isChecked());
-			}
-		});
-		viewHolder.b.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                itemChecked.set(position, isChecked);
+            }
+        });
+        viewHolder.b.setChecked(itemChecked.get(position));
+        return view;
+    }
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				itemChecked.set(position, isChecked);
-			}
-		});
-		viewHolder.b.setChecked(itemChecked.get(position));
-		return view;
-	}
+    interface SoundfontArrayAdapterListener {
+        void setSFEnabled(int position, boolean yes);
+    }
 
-	private static class SoundfontHolder {
-
-		TextView name;
-		ToggleButton b;
-	}
+    private static class SoundfontHolder {
+        TextView name;
+        ToggleButton b;
+    }
 }

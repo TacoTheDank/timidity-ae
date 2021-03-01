@@ -1,55 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-				  android:layout_width="match_parent"
-				  android:layout_height="match_parent">
-	<PreferenceCategory android:title="@string/sett_ds">
-		<ListPreference
-			android:defaultValue="1"
-			android:entries="@array/theme_items"
-			android:entryValues="@array/background_theme_items"
-			android:key="fbTheme"
-			android:summary="@string/sett_theme_sum"
-			android:title="@string/sett_theme"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-		<CheckBoxPreference
-			android:defaultValue="false"
-			android:key="hiddenSwitch"
-			android:summary="@string/sett_shf_sum"
-			android:title="@string/sett_shf"/>
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="videoSwitch"
-			android:summary="@string/sett_shv_sum"
-			android:title="@string/sett_shv"/>
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="fpSwitch"
-			android:summary="@string/sett_fancy_plist_sum"
-			android:title="@string/sett_fancy_plist"/>
+    <PreferenceCategory android:title="@string/sett_ds">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/theme_items"
+            android:entryValues="@array/background_theme_items"
+            android:key="fbTheme"
+            android:summary="@string/sett_theme_sum"
+            android:title="@string/sett_theme" />
 
-		<Preference
-			android:key="defFold"
-			android:summary="@string/sett_brows4fb_sum"
-			android:title="@string/sett_brows4fb"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="hiddenSwitch"
+            android:summary="@string/sett_shf_sum"
+            android:title="@string/sett_shf" />
 
-		<EditTextPreference
-			android:defaultValue="/sdcard/"
-			android:key="defaultPath"
-			android:inputType="text"
-			android:maxLines="1"
-			android:summary="@string/sett_fbpath"
-			android:title="@string/sett_fbpath"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="videoSwitch"
+            android:summary="@string/sett_shv_sum"
+            android:title="@string/sett_shv" />
 
-		<Preference
-			android:key="lolWrite"
-			android:summary="@string/sett_lolrw_sum"
-			android:title="@string/sett_lolrw"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="fpSwitch"
+            android:summary="@string/sett_fancy_plist_sum"
+            android:title="@string/sett_fancy_plist" />
 
-		<CheckBoxPreference
-			android:defaultValue="true"
-			android:key="shouldLolNag"
-			android:summary="@string/sett_lolnag_sum"
-			android:title="@string/sett_lolnag"/>
+        <Preference
+            android:key="defFold"
+            android:summary="@string/sett_brows4fb_sum"
+            android:title="@string/sett_brows4fb" />
 
-	</PreferenceCategory>
+        <EditTextPreference
+            android:defaultValue="/sdcard/"
+            android:inputType="text"
+            android:key="defaultPath"
+            android:maxLines="1"
+            android:summary="@string/sett_fbpath"
+            android:title="@string/sett_fbpath" />
+
+        <Preference
+            android:key="lolWrite"
+            android:summary="@string/sett_lolrw_sum"
+            android:title="@string/sett_lolrw" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="shouldLolNag"
+            android:summary="@string/sett_lolnag_sum"
+            android:title="@string/sett_lolnag" />
+    </PreferenceCategory>
 </PreferenceScreen>
