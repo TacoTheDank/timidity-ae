@@ -13,7 +13,7 @@ import java.text.Collator;
 import java.util.Comparator;
 
 public class FileComparator implements Comparator<Object> {
-    private Collator c = Collator.getInstance();
+    private final Collator c = Collator.getInstance();
 
     public int compare(Object o1, Object o2) {
         if (o1 == o2)

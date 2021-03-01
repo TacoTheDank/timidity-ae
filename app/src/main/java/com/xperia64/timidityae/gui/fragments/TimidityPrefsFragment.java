@@ -82,7 +82,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             CharSequence[] hz = new CharSequence[values.length];
             CharSequence[] hzItems = new CharSequence[values.length];
             for (int i = 0; i < values.length; i++) {
-                hz[i] = Integer.toString(values[i]) + "Hz";
+                hz[i] = values[i] + "Hz";
                 hzItems[i] = Integer.toString(values[i]);
             }
             rates.setEntries(hz);
@@ -132,7 +132,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
         resampMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!(resampMode.getValue()).equals(newValue)) {
+                if (!resampMode.getValue().equals(newValue)) {
                     s.needRestart = true;
                 }
                 return true;
@@ -169,7 +169,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
         rates.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!(rates.getValue()).equals(newValue)) {
+                if (!rates.getValue().equals(newValue)) {
                     s.needRestart = true;
                     String stereo = stereoMode.getValue();
                     String sixteen = "16";// s.bitMode.getValue();
@@ -323,7 +323,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
         manDataFolder.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!(manDataFolder.getText()).equals(newValue)) {
+                if (!manDataFolder.getText().equals(newValue)) {
                     s.needRestart = true;
                 }
                 return true;

@@ -99,7 +99,7 @@ public class SettingsStorage {
         prefs = PreferenceManager.getDefaultSharedPreferences(c);
         firstRun = prefs.getBoolean(Constants.sett_first_run, true);
         // The light theme is broken below ICS it seems.
-        theme = (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) ? 0 : Integer.parseInt(prefs.getString(Constants.sett_theme, "1"));
+        theme = Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH ? 0 : Integer.parseInt(prefs.getString(Constants.sett_theme, "1"));
         showHiddenFiles = prefs.getBoolean(Constants.sett_show_hidden_files, false);
         homeFolder = prefs.getString(Constants.sett_home_folder, Environment.getExternalStorageDirectory().getAbsolutePath());
         dataFolder = prefs.getString(Constants.sett_data_folder, Environment.getExternalStorageDirectory() + "/TimidityAE/");
@@ -140,7 +140,7 @@ public class SettingsStorage {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             UiModeManager uiModeManager = (UiModeManager) c.getSystemService(Context.UI_MODE_SERVICE);
-            isTV = (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION);
+            isTV = uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
         }
 
     }
@@ -390,7 +390,7 @@ public class SettingsStorage {
                             DocumentFileUtils.tryToDeleteFile(c, path);
                         } else {
                             Toast.makeText(c, "Renaming manually edited cfg... (7)", Toast.LENGTH_LONG).show();
-                            DocumentFileUtils.renameDocumentFile(c, path, needRename + ".manualTimidityCfg." + Long.toString(System.currentTimeMillis()));
+                            DocumentFileUtils.renameDocumentFile(c, path, needRename + ".manualTimidityCfg." + System.currentTimeMillis());
                         }
                     }
 
@@ -437,7 +437,7 @@ public class SettingsStorage {
                         theConfig.delete(); // Auto config, safe to delete
                     } else {
                         Toast.makeText(c, "Renaming manually edited cfg... (6)", Toast.LENGTH_LONG).show();
-                        theConfig.renameTo(new File(path + ".manualTimidityCfg." + Long.toString(System.currentTimeMillis()))); // manual config, rename for later
+                        theConfig.renameTo(new File(path + ".manualTimidityCfg." + System.currentTimeMillis())); // manual config, rename for later
                     }
                 } else {
                     File parent = new File(path.substring(0, path.lastIndexOf(File.separator)));
@@ -499,7 +499,7 @@ public class SettingsStorage {
         ArrayList<Integer> valid = new ArrayList<>();
         for (int rate : new int[]{8000, 11025, 16000, 22050, 44100, 48000, 88200, 96000}) {
 
-            int bufferSize = AudioTrack.getMinBufferSize(rate, (stereo) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO, (sixteen) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT);
+            int bufferSize = AudioTrack.getMinBufferSize(rate, stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO, sixteen ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT);
             if (bufferSize > 0) {
                 // buffer size is valid, Sample rate supported
                 valid.add(rate);
@@ -514,7 +514,7 @@ public class SettingsStorage {
     public static SparseIntArray validBuffers(int[] rates, boolean stereo, boolean sixteen) {
         SparseIntArray buffers = new SparseIntArray();
         for (int rate : rates) {
-            buffers.put(rate, AudioTrack.getMinBufferSize(rate, (stereo) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO, (sixteen) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT));
+            buffers.put(rate, AudioTrack.getMinBufferSize(rate, stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO, sixteen ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT));
         }
         return buffers;
     }

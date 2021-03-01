@@ -77,7 +77,7 @@ public class Globals {
     public static String getFileExtension(File f) {
         int dotPosition = f.getName().lastIndexOf(".");
         if (dotPosition != -1) {
-            return (f.getName().substring(dotPosition)).toLowerCase(Locale.US);
+            return f.getName().substring(dotPosition).toLowerCase(Locale.US);
         }
         return null;
     }
@@ -85,7 +85,7 @@ public class Globals {
     public static String getFileExtension(String s) {
         int dotPosition = s.lastIndexOf(".");
         if (dotPosition != -1) {
-            return (s.substring(dotPosition)).toLowerCase(Locale.US);
+            return s.substring(dotPosition).toLowerCase(Locale.US);
         }
         return null;
     }
@@ -165,7 +165,7 @@ public class Globals {
         }
     }
 
-    @SuppressLint({"SdCardPath"})
+    @SuppressLint("SdCardPath")
     public static String getLibDir(Context c) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             String s = c.getApplicationInfo().nativeLibraryDir;
@@ -244,7 +244,7 @@ public class Globals {
             }
             if (out == null)
                 return -1;
-            byte buf[] = new byte[1024];
+            byte[] buf = new byte[1024];
             int len;
             try {
                 while ((len = in.read(buf)) > 0)
@@ -277,7 +277,7 @@ public class Globals {
             }
             if (out == null)
                 return -1;
-            byte buf[] = new byte[1024];
+            byte[] buf = new byte[1024];
             int len;
             try {
                 while ((len = in.read(buf)) > 0)

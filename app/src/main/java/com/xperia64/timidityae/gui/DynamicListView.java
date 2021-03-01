@@ -111,12 +111,11 @@ public class DynamicListView extends ListView {
     private boolean mIsWaitingForScrollFinish = false;
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
     private DragState dragState = DRAG_DISABLED;
-    private DraggerCallback arrayListCallback;
     /**
      * Listens for long clicks on any items in the listview. When a cell has
      * been selected, the hover cell is created and set up.
      */
-    private AdapterView.OnItemLongClickListener mOnItemLongClickListener =
+    private final AdapterView.OnItemLongClickListener mOnItemLongClickListener =
             new AdapterView.OnItemLongClickListener() {
                 public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
                     if (dragState == DRAG_ENABLED) {
@@ -142,6 +141,7 @@ public class DynamicListView extends ListView {
                     return false;
                 }
             };
+    private DraggerCallback arrayListCallback;
     /**
      * This scroll listener is added to the listview in order to handle cell swapping
      * when the cell is either at the top or bottom edge of the listview. If the hover
@@ -149,7 +149,7 @@ public class DynamicListView extends ListView {
      * scrolling takes place, the listview continuously checks if new cells became visible
      * and determines whether they are potential candidates for a cell swap.
      */
-    private AbsListView.OnScrollListener mScrollListener = new AbsListView.OnScrollListener() {
+    private final AbsListView.OnScrollListener mScrollListener = new AbsListView.OnScrollListener() {
 
         private int mPreviousFirstVisibleItem = -1;
         private int mPreviousVisibleItemCount = -1;
@@ -162,9 +162,9 @@ public class DynamicListView extends ListView {
             mCurrentFirstVisibleItem = firstVisibleItem;
             mCurrentVisibleItemCount = visibleItemCount;
 
-            mPreviousFirstVisibleItem = (mPreviousFirstVisibleItem == -1) ? mCurrentFirstVisibleItem
+            mPreviousFirstVisibleItem = mPreviousFirstVisibleItem == -1 ? mCurrentFirstVisibleItem
                     : mPreviousFirstVisibleItem;
-            mPreviousVisibleItemCount = (mPreviousVisibleItemCount == -1) ? mCurrentVisibleItemCount
+            mPreviousVisibleItemCount = mPreviousVisibleItemCount == -1 ? mCurrentVisibleItemCount
                     : mPreviousVisibleItemCount;
 
             checkAndHandleFirstVisibleCellChange();
@@ -320,7 +320,7 @@ public class DynamicListView extends ListView {
      */
     private void updateNeighborViewsForID(long itemID) {
         int position = getPositionForID(itemID);
-        StableArrayAdapter adapter = ((StableArrayAdapter) getAdapter());
+        StableArrayAdapter adapter = (StableArrayAdapter) getAdapter();
         mAboveItemId = adapter.getItemId(position - 1);
         mBelowItemId = adapter.getItemId(position + 1);
     }
@@ -330,7 +330,7 @@ public class DynamicListView extends ListView {
      */
     public View getViewForID(long itemID) {
         int firstVisiblePosition = getFirstVisiblePosition();
-        StableArrayAdapter adapter = ((StableArrayAdapter) getAdapter());
+        StableArrayAdapter adapter = (StableArrayAdapter) getAdapter();
         for (int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
             int position = firstVisiblePosition + i;
@@ -443,8 +443,8 @@ public class DynamicListView extends ListView {
         View mobileView = getViewForID(mMobileItemId);
         View aboveView = getViewForID(mAboveItemId);
 
-        boolean isBelow = (belowView != null) && (deltaYTotal > belowView.getTop());
-        boolean isAbove = (aboveView != null) && (deltaYTotal < aboveView.getTop());
+        boolean isBelow = belowView != null && deltaYTotal > belowView.getTop();
+        boolean isAbove = aboveView != null && deltaYTotal < aboveView.getTop();
 
         if (isBelow || isAbove) {
 
@@ -595,7 +595,7 @@ public class DynamicListView extends ListView {
             return true;
         }
 
-        if (hoverViewTop + hoverHeight >= height && (offset + extent) < range) {
+        if (hoverViewTop + hoverHeight >= height && offset + extent < range) {
             smoothScrollBy(mSmoothScrollAmountAtEdge, 0);
             return true;
         }

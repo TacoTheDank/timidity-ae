@@ -39,7 +39,7 @@ public class DocumentFileUtils {
         if (new File(filename).exists()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && docFileDevice != null) {
                 DocumentFile df = DocumentFile.fromTreeUri(c, docFileDevice);
-                String split[] = filename.split("/");
+                String[] split = filename.split("/");
                 int i;
                 for (i = 0; i < split.length; i++) {
                     // Did we find the document file?
@@ -74,10 +74,10 @@ public class DocumentFileUtils {
 
     public static boolean tryToCreateFile(Context context, String filename, String mimetype) {
         filename = fixRepeatedSeparator(filename);
-        if (!(new File(filename).exists())) {
+        if (!new File(filename).exists()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && docFileDevice != null) {
                 DocumentFile df = DocumentFile.fromTreeUri(context, docFileDevice);
-                String split[] = filename.split("/");
+                String[] split = filename.split("/");
                 int i;
                 for (i = 0; i < split.length; i++) {
                     if (split[i].equals(df.getName())) {
@@ -129,7 +129,7 @@ public class DocumentFileUtils {
         from = fixRepeatedSeparator(from);
         subTo = fixRepeatedSeparator(subTo);
         DocumentFile df = DocumentFile.fromTreeUri(context, docFileDevice);
-        String split[] = from.split(File.separator);
+        String[] split = from.split(File.separator);
         int i;
 
         // Locate the filesystem-relative path by comparing it to the
@@ -160,7 +160,7 @@ public class DocumentFileUtils {
         from = fixRepeatedSeparator(from);
         subTo = fixRepeatedSeparator(subTo);
         DocumentFile in = DocumentFile.fromTreeUri(context, docFileDevice);
-        String insplit[] = from.split(File.separator);
+        String[] insplit = from.split(File.separator);
         int i;
         for (i = 0; i < insplit.length; i++) {
             if (insplit[i].equals(in.getName())) {
@@ -176,7 +176,7 @@ public class DocumentFileUtils {
                 return false;
             }
         }
-        String outsplit[] = subTo.split(File.separator);
+        String[] outsplit = subTo.split(File.separator);
         DocumentFile out = DocumentFile.fromTreeUri(context, docFileDevice);
         for (i = 0; i < outsplit.length - 1; i++) {
             if (out.findFile(outsplit[i]) != null) {

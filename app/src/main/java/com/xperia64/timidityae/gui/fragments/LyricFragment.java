@@ -30,8 +30,8 @@ public class LyricFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ready = false;
         View root = inflater.inflate(R.layout.lyrical_fragment, container, false);
-        lyrics = (TextView) root.findViewById(R.id.lyrics);
-        scrollContainer = (ScrollView) root.findViewById(R.id.lyric_holder);
+        lyrics = root.findViewById(R.id.lyrics);
+        scrollContainer = root.findViewById(R.id.lyric_holder);
         return root;
     }
 

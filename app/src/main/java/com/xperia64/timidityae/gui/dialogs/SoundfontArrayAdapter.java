@@ -27,9 +27,9 @@ import java.util.List;
 
 class SoundfontArrayAdapter extends ArrayAdapter<String> {
 
-    private SoundfontArrayAdapterListener mc;
-    private LayoutInflater inflater;
-    private ArrayList<Boolean> itemChecked = new ArrayList<>();
+    private final SoundfontArrayAdapterListener mc;
+    private final LayoutInflater inflater;
+    private final ArrayList<Boolean> itemChecked = new ArrayList<>();
 
     SoundfontArrayAdapter(SoundfontArrayAdapterListener c, Context context, List<String> sfList) {
         super(context, R.layout.row_check, R.id.checkText, sfList);
@@ -48,8 +48,8 @@ class SoundfontArrayAdapter extends ArrayAdapter<String> {
         if (view == null) {
             view = inflater.inflate(R.layout.row_check, null);
             viewHolder = new SoundfontHolder();
-            viewHolder.name = (TextView) view.findViewById(R.id.checkText);
-            viewHolder.b = (ToggleButton) view.findViewById(R.id.sfSwitch);
+            viewHolder.name = view.findViewById(R.id.checkText);
+            viewHolder.b = view.findViewById(R.id.sfSwitch);
 
             view.setTag(viewHolder);
         } else {

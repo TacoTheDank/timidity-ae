@@ -23,9 +23,9 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
 
     private final List<Integer> realPositions;
     private final boolean shouldHighlight;
+    private final Context context;
     private List<String> list;
     private List<String> displayedList; // Values to be displayed
-    private Context context;
 
     public SearchableArrayAdapter(Context context, int resource, List<String> objects, boolean shouldHighlight) {
         super(context, resource, objects);
@@ -60,13 +60,13 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
             view = inflater.inflate(R.layout.row, null);
         }
 
-        TextView listItemText = (TextView) view.findViewById(R.id.rowtext);
+        TextView listItemText = view.findViewById(R.id.rowtext);
         String xx = displayedList.get(position);
         listItemText.setText(xx.substring(xx.lastIndexOf('/') + 1));
 
         if (shouldHighlight) {
             if (Globals.defaultListColor == -1) {
-                Globals.defaultListColor = Globals.getBackgroundColor(((TextView) view));
+                Globals.defaultListColor = Globals.getBackgroundColor((TextView) view);
             }
             if (position == Globals.highlightMe) {
                 // TODO Choose a nicer color in settings?

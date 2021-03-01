@@ -143,7 +143,7 @@ public class FileBrowserFragment extends ListFragment {
                 File[] files = f.listFiles();
                 if (files != null && files.length > 0) {
                     Arrays.sort(files, new FileComparator());
-                    if (!currPath.matches(Globals.repeatedSeparatorString) && !((currPath.equals(File.separator + "storage" + File.separator) || currPath.equals(File.separator + "storage")) && !(new File(File.separator).canRead()))) {
+                    if (!currPath.matches(Globals.repeatedSeparatorString) && !((currPath.equals(File.separator + "storage" + File.separator) || currPath.equals(File.separator + "storage")) && !new File(File.separator).canRead())) {
                         fname.add(Globals.parentString);
                         // Thank you Marshmallow.
                         // Disallowing access to /storage/emulated has now
@@ -160,7 +160,7 @@ public class FileBrowserFragment extends ListFragment {
                         mCallback.needFileBackCallback(false);
                     }
                     for (File file : files) {
-                        if ((!file.getName().startsWith(".") && !SettingsStorage.showHiddenFiles) || SettingsStorage.showHiddenFiles) {
+                        if (!file.getName().startsWith(".") || SettingsStorage.showHiddenFiles) {
                             if (file.isFile()) {
                                 String extension = Globals.getFileExtension(file);
                                 if (extension != null) {
@@ -182,7 +182,7 @@ public class FileBrowserFragment extends ListFragment {
                         }
                     }
                 } else {
-                    if (!currPath.matches(Globals.repeatedSeparatorString) && !(currPath.equals(File.separator + "storage" + File.separator) && !(new File(File.separator).canRead()))) {
+                    if (!currPath.matches(Globals.repeatedSeparatorString) && !(currPath.equals(File.separator + "storage" + File.separator) && !new File(File.separator).canRead())) {
                         fname.add(Globals.parentString);
                         // Thank you Marshmallow.
                         // Disallowing access to /storage/emulated has now prevent billions of hacking attempts daily.
@@ -217,12 +217,12 @@ public class FileBrowserFragment extends ListFragment {
             if (file.canRead()) {
                 getDir(path.get(position));
             } else if (file.getAbsolutePath().equals("/storage/emulated") &&
-                    ((new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) ||
-                            (new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead()) ||
-                            (new File("/storage/self/primary").exists() && new File("/storage/self/primary").canRead()))) {
+                    (new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead() ||
+                            new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead() ||
+                            new File("/storage/self/primary").exists() && new File("/storage/self/primary").canRead())) {
                 if (new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) {
                     getDir("/storage/emulated/0");
-                } else if ((new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead())) {
+                } else if (new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead()) {
                     getDir("/storage/emulated/legacy");
                 } else {
                     getDir("/storage/self/primary");

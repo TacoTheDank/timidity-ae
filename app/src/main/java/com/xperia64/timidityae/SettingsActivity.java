@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR && Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             this.setTheme(android.support.v7.appcompat.R.style.Theme_AppCompat);
         } else {
-            this.setTheme((SettingsStorage.theme == 1) ? android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : android.support.v7.appcompat.R.style.Theme_AppCompat);
+            this.setTheme(SettingsStorage.theme == 1 ? android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : android.support.v7.appcompat.R.style.Theme_AppCompat);
         }
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -31,7 +31,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DownloadTask extends AsyncTask<String, Integer, String> {
 
-    private Context context;
+    private final Context context;
     private PowerManager.WakeLock mWakeLock;
     private ProgressDialog prog;
     private String theUrl = "";

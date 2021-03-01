@@ -32,11 +32,11 @@ import java.io.IOException;
 import java.util.Locale;
 
 public class WavSaver implements TimidityActivity.SpecialAction {
-    private Activity context;
-    private String currSongName;
+    private final Activity context;
+    private final String currSongName;
+    private final boolean playingExport; // export while playing
     private boolean localfinished;
     private AlertDialog exportAlert;
-    private boolean playingExport; // export while playing
 
     public WavSaver(Activity context, String currSongName, boolean playingExport) {
         this.context = context;
@@ -99,7 +99,7 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                     final boolean canWrite = normalWrite;
                     final String needToRename = needRename;
                     final String probRoot = probablyTheRoot;
-                    if (new File(finalval).exists() || (new File(probRoot + needRename).exists() && needToRename != null)) {
+                    if (new File(finalval).exists() || new File(probRoot + needRename).exists() && needToRename != null) {
                         AlertDialog dialog2 = new AlertDialog.Builder(context).create();
                         dialog2.setTitle(context.getResources().getString(R.string.warning));
                         dialog2.setMessage(context.getResources().getString(R.string.dynex_alert2_msg));
@@ -199,7 +199,7 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                         @Override
                         public void run() {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                TextView messageView = (TextView) prog.findViewById(android.R.id.message);
+                                TextView messageView = prog.findViewById(android.R.id.message);
                                 messageView.setText("Copying... Please wait...");
                                 messageView.invalidate();
                             }

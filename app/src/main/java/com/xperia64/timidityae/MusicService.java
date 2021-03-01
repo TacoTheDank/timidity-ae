@@ -111,7 +111,7 @@ public class MusicService extends Service {
     };
     MediaSession audioSession;
     private Handler handler;
-    private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
 
         @SuppressWarnings("unchecked")
         @Override
@@ -333,7 +333,7 @@ public class MusicService extends Service {
                             @Override
                             public void run() {
                                 // Wait for TiMidity to start or until canceled or aborted.
-                                while (!breakLoops && ((JNIHandler.state != JNIHandler.PlaybackState.STATE_PLAYING))) {
+                                while (!breakLoops && JNIHandler.state != JNIHandler.PlaybackState.STATE_PLAYING) {
                                     if (JNIHandler.state == JNIHandler.PlaybackState.STATE_IDLE) {
                                         // LOADING -> IDLE = Error
                                         breakLoops = true;
@@ -346,7 +346,7 @@ public class MusicService extends Service {
                                 if (new File(input + ".def.tcf").exists() || new File(input + ".def.tzf").exists()) {
                                     String suffix;
                                     if (new File(input + ".def.tcf").exists() && new File(input + ".def.tzf").exists()) {
-                                        suffix = (SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf");
+                                        suffix = SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf";
                                     } else if (new File(input + ".def.tcf").exists()) {
                                         suffix = ".def.tcf";
                                     } else {
@@ -808,7 +808,6 @@ public class MusicService extends Service {
         if (tmpTitle == null || tmpTitle.isEmpty()) {
             tmpTitle = fileName.substring(fileName.lastIndexOf('/') + 1);
         }
-        ;
         setupMediaArtAndWidget(fileName, mmr);
         return tmpTitle;
     }
@@ -855,7 +854,7 @@ public class MusicService extends Service {
                     new Thread(new Runnable() {
                         public void run() {
                             // Wait for timidity to actually start playing
-                            while (!breakLoops && (JNIHandler.state == JNIHandler.PlaybackState.STATE_LOADING && shouldAdvance)) {
+                            while (!breakLoops && JNIHandler.state == JNIHandler.PlaybackState.STATE_LOADING && shouldAdvance) {
 								/*if (!JNIHandler.isBlocking)
 									breakLoops = true;*/
                                 try {
@@ -876,7 +875,7 @@ public class MusicService extends Service {
                             if (new File(fileName + ".def.tcf").exists() || new File(fileName + ".def.tzf").exists()) {
                                 String suffix;
                                 if (new File(fileName + ".def.tcf").exists() && new File(fileName + ".def.tzf").exists()) {
-                                    suffix = (SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf");
+                                    suffix = SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf";
                                 } else if (new File(fileName + ".def.tcf").exists()) {
                                     suffix = ".def.tcf";
                                 } else {
@@ -924,7 +923,7 @@ public class MusicService extends Service {
                             }
                             if (shouldAdvance && !breakLoops) {
                                 shouldAdvance = false;
-                                if (playList.size() > 1 && (((songIndex + 1 < playList.size() && loopMode == 0)) || loopMode == 1)) {
+                                if (playList.size() > 1 && (songIndex + 1 < playList.size() && loopMode == 0 || loopMode == 1)) {
                                     final Intent nextIntent = new Intent();
                                     nextIntent.setAction(Constants.msrv_rec);
                                     nextIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_next);
@@ -1050,7 +1049,7 @@ public class MusicService extends Service {
 
         remoteViews = new RemoteViews(getPackageName(), R.layout.music_notification);
         remoteViews.setTextViewText(R.id.titley, title);
-        remoteViews.setImageViewResource(R.id.notPause, (paused) ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+        remoteViews.setImageViewResource(R.id.notPause, paused ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
         // Previous
         final Intent prevIntent = new Intent();
         // newIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);

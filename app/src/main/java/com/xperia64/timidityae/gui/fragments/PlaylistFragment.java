@@ -88,7 +88,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
     }
 
     boolean shouldUseDragNDrop() {
-        return (SettingsStorage.enableDragNDrop && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH));
+        return SettingsStorage.enableDragNDrop && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
         } else {
             v = inflater.inflate(R.layout.plist, container, false);
         }
-        searchTxt = (EditText) v.findViewById(R.id.searchText);
+        searchTxt = v.findViewById(R.id.searchText);
         if (!isPlaylist) {
             searchTxt.setVisibility(View.GONE);
         }
@@ -280,7 +280,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
                         copyPlist = false;
                         for (String xx : currPlist) {
                             path.add(xx);
-                            fname.add(xx.substring(xx.lastIndexOf('/') + 1, xx.length()));
+                            fname.add(xx.substring(xx.lastIndexOf('/') + 1));
                         }
                     }
                 }
@@ -292,7 +292,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
                 }
             }
             path = Globals.normalToUuid(path);
-            ((DynamicListView) getListView()).setDragState(which.equals("CURRENT") ? DynamicListView.DragState.DRAG_DISABLED : (searchTxt.getText().toString().isEmpty() ? DynamicListView.DragState.DRAG_ENABLED : DynamicListView.DragState.DRAG_WARNING));
+            ((DynamicListView) getListView()).setDragState(which.equals("CURRENT") ? DynamicListView.DragState.DRAG_DISABLED : searchTxt.getText().toString().isEmpty() ? DynamicListView.DragState.DRAG_ENABLED : DynamicListView.DragState.DRAG_WARNING);
             ada = fileList = new StableArrayAdapter(getActivity(), R.layout.row_menu, path, this, which.equals("CURRENT"));
         }
         if (ada != null)
@@ -341,7 +341,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
                         copyPlist = false;
                         for (String xx : currPlist) {
                             path.add(xx);
-                            fname.add(xx.substring(xx.lastIndexOf('/') + 1, xx.length()));
+                            fname.add(xx.substring(xx.lastIndexOf('/') + 1));
                         }
                     }
                 }
@@ -387,7 +387,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
             if (!searchTxt.getText().toString().isEmpty() && ada != null) {
                 position = ada.currentToReal(position);
             }
-            ArrayList<String> paths = (shouldUseDragNDrop() ? Globals.uuidToNormal(path) : path);
+            ArrayList<String> paths = shouldUseDragNDrop() ? Globals.uuidToNormal(path) : path;
             ((TimidityActivity) getActivity()).selectedSong(paths, position, true, true, copyPlist);
         } else {
             getPlaylists(plistName = path.get(position));
@@ -658,7 +658,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
         if (!isPlaylist) {
             AlertDialog.Builder builderSingle = new AlertDialog.Builder(getActivity());
             builderSingle.setIcon(R.drawable.ic_launcher);
-            builderSingle.setTitle(getActivity().getResources().getString((pos == 0) ? R.string.plist_save2 : R.string.plist_mod));
+            builderSingle.setTitle(getActivity().getResources().getString(pos == 0 ? R.string.plist_save2 : R.string.plist_mod));
             builderSingle.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 
                 @Override

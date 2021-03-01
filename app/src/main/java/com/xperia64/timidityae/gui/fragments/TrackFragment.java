@@ -55,7 +55,7 @@ public class TrackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.track_fragment, container, false);
-        trackList = (ListView) v.findViewById(R.id.trackList);
+        trackList = v.findViewById(R.id.trackList);
         return v;
     }
 
@@ -65,7 +65,7 @@ public class TrackFragment extends Fragment {
 
         trackListAdapter = new ArrayAdapter<>(getActivity(), R.layout.row);
         for (int i = 0; i < JNIHandler.MAX_CHANNELS; i++) {
-            trackListAdapter.add(String.format(getActivity().getResources().getString(R.string.trk_form), (getActivity().getResources().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2)), (i + 1), JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1, localVol.get(i)));
+            trackListAdapter.add(String.format(getActivity().getResources().getString(R.string.trk_form), getActivity().getResources().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2), i + 1, JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1, localVol.get(i)));
         }
         trackList.setAdapter(trackListAdapter);
         trackList.setOnItemClickListener(new OnItemClickListener() {
@@ -75,12 +75,12 @@ public class TrackFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
                 AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                 View v = getActivity().getLayoutInflater().inflate(R.layout.track_dialog, null);
-                final Spinner instSpin = (Spinner) v.findViewById(R.id.instSpin);
+                final Spinner instSpin = v.findViewById(R.id.instSpin);
                 instSpin.setClickable(JNIHandler.custInst.get(arg2) && !JNIHandler.drums.get(arg2));
                 instSpin.setOnLongClickListener(null);
                 instSpin.setEnabled(JNIHandler.custInst.get(arg2) && !JNIHandler.drums.get(arg2));
                 List<String> arrayAdapter = new ArrayList<>();
-                final int offset = (!JNIHandler.drums.get(arg2)) ? 0 : 34;
+                final int offset = !JNIHandler.drums.get(arg2) ? 0 : 34;
                 if (!JNIHandler.drums.get(arg2)) {
                     Collections.addAll(arrayAdapter, getActivity().getResources().getStringArray(R.array.midi_instruments));
                 } else {
@@ -98,12 +98,12 @@ public class TrackFragment extends Fragment {
                     instSpin.setAdapter(dataAdapter);
                     instSpin.setSelection(localInst.get(arg2) - offset);
                 }
-                final EditText txtVol = (EditText) v.findViewById(R.id.txtVol);
+                final EditText txtVol = v.findViewById(R.id.txtVol);
                 txtVol.setText(Integer.toString(localVol.get(arg2)));
                 txtVol.setClickable(JNIHandler.custVol.get(arg2));
                 txtVol.setEnabled(JNIHandler.custVol.get(arg2));
 
-                final SeekBar volSeek = (SeekBar) v.findViewById(R.id.volSeek);
+                final SeekBar volSeek = v.findViewById(R.id.volSeek);
                 volSeek.setClickable(JNIHandler.custVol.get(arg2));
                 volSeek.setEnabled(JNIHandler.custVol.get(arg2));
                 volSeek.setMax(127);
@@ -161,7 +161,7 @@ public class TrackFragment extends Fragment {
                     }
                 });
 
-                final CheckBox inst = (CheckBox) v.findViewById(R.id.defInstr);
+                final CheckBox inst = v.findViewById(R.id.defInstr);
                 inst.setEnabled(!JNIHandler.drums.get(arg2));
                 inst.setChecked(!JNIHandler.custInst.get(arg2));
                 inst.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -172,7 +172,7 @@ public class TrackFragment extends Fragment {
                     }
                 });
 
-                final CheckBox vol = (CheckBox) v.findViewById(R.id.defVol);
+                final CheckBox vol = v.findViewById(R.id.defVol);
                 vol.setChecked(!JNIHandler.custVol.get(arg2));
                 // System.out.println("Def inst:
                 // "+(!JNIHandler.custInst.get(arg2)?"true":"false")+" def vol:
@@ -209,7 +209,7 @@ public class TrackFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
-                b.setTitle(String.format((getActivity().getResources().getString(R.string.trk_form2)), (arg2 + 1)));
+                b.setTitle(String.format(getActivity().getResources().getString(R.string.trk_form2), arg2 + 1));
                 ddd = b.create();
                 ddd.show();
             }
@@ -261,8 +261,8 @@ public class TrackFragment extends Fragment {
                 trackListAdapter.clear();
                 for (int i = 0; i < JNIHandler.MAX_CHANNELS; i++) {
                     trackListAdapter.add(String.format(getActivity().getResources().getString(R.string.trk_form),
-                            (getActivity().getResources().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2)),
-                            (i + 1), JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1,
+                            getActivity().getResources().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2),
+                            i + 1, JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1,
                             localVol.get(i)));
                 }
                 trackListAdapter.notifyDataSetChanged();

@@ -49,7 +49,7 @@ public class SoundfontDialog implements OnItemLongClickListener, FileBrowserDial
         mCallback = sl;
         AlertDialog.Builder b = new AlertDialog.Builder(context);
         LinearLayout mLayout = (LinearLayout) f.inflate(R.layout.list, null);
-        mList = (ListView) mLayout.findViewById(android.R.id.list);
+        mList = mLayout.findViewById(android.R.id.list);
 
         SoundfontArrayAdapter fileList = new SoundfontArrayAdapter(this, context, sfList);
         mList.setAdapter(fileList);

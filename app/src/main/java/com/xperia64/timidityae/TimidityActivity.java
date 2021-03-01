@@ -94,7 +94,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     private FileBrowserFragment fileFrag;
     private PlayerFragment playFrag;
     private PlaylistFragment plistFrag;
-    private BroadcastReceiver activityReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver activityReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -106,13 +106,13 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                         menuButtonR.setTitle(getResources().getString(R.string.view));
                         menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                        menuButtonR.setVisible((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
-                        menuButtonR.setEnabled((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
+                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                         menuButtonL.setIcon(R.drawable.ic_menu_info_details);
                         menuButtonL.setTitle(getResources().getString(R.string.playback));
                         menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                        menuButtonL.setVisible((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
-                        menuButtonL.setEnabled((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
+                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                     }
                     playFrag.play(intent.getIntExtra(Constants.ta_startt, 0), intent.getStringExtra(Constants.ta_songttl));
                     if (plistFrag != null) {
@@ -146,13 +146,13 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                         menuButtonR.setTitle(getResources().getString(R.string.view));
                         menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                        menuButtonR.setVisible((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
-                        menuButtonR.setEnabled((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
+                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                         menuButtonL.setIcon(R.drawable.ic_menu_info_details);
                         menuButtonL.setTitle(getResources().getString(R.string.playback));
                         menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                        menuButtonL.setVisible((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
-                        menuButtonL.setEnabled((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
+                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                     }
                     playFrag.play(intent.getIntExtra(Constants.ta_startt, 0), intent.getStringExtra(Constants.ta_songttl), intent.getIntExtra(Constants.ta_shufmode, 0), intent.getIntExtra(Constants.ta_loopmode, 1));
                     break;
@@ -314,10 +314,10 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
     @TargetApi(23)
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case PERMISSION_REQUEST: {
+            case PERMISSION_REQUEST:
                 // If request is cancelled, the result arrays are empty.
                 boolean good = true;
                 if (permissions.length != NUM_PERMISSIONS || grantResults.length != NUM_PERMISSIONS) {
@@ -356,7 +356,6 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     }
                     yetAnotherInit();
                 }
-            }
         }
     }
 
@@ -401,7 +400,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
         oldTheme = SettingsStorage.theme;
         oldPlist = SettingsStorage.enableDragNDrop;
-        this.setTheme((SettingsStorage.theme == 1) ? android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : android.support.v7.appcompat.R.style.Theme_AppCompat);
+        this.setTheme(SettingsStorage.theme == 1 ? android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : android.support.v7.appcompat.R.style.Theme_AppCompat);
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             Log.i("Timidity", "Initializing");
@@ -468,7 +467,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             startService(new Intent(this, MusicService.class));
         }
 
-        viewPager = (ViewPager) findViewById(R.id.vp_main);
+        viewPager = findViewById(R.id.vp_main);
         viewPager.setAdapter(new TimidityFragmentPagerAdapter());
         viewPager.addOnPageChangeListener(new OnPageChangeListener() {
 
@@ -506,15 +505,15 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                                 menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                                 menuButtonR.setTitle(getResources().getString(R.string.view));
                                 menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                                menuButtonR.setVisible((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
-                                menuButtonR.setEnabled((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
+                                menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                                menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                             }
                             if (menuButtonL != null) {
                                 menuButtonL.setIcon(R.drawable.ic_menu_info_details);
                                 menuButtonL.setTitle(getResources().getString(R.string.playback));
                                 menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                                menuButtonL.setVisible((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
-                                menuButtonL.setEnabled((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
+                                menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                                menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                             }
                             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                             getSupportActionBar().setHomeButtonEnabled(false);
@@ -744,7 +743,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                                 if (fileFrag != null) {
                                     fileFrag.getDir(Globals.getExternalCacheDir(this).getAbsolutePath());
                                 } else {
-                                    fileFragDir = (Globals.getExternalCacheDir(this).getAbsolutePath());
+                                    fileFragDir = Globals.getExternalCacheDir(this).getAbsolutePath();
                                 }
                                 if (serviceStarted) {
                                     selectedSong(files, position, true, false, true);
@@ -852,15 +851,15 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                         menuButtonR.setTitle(getResources().getString(R.string.view));
                         menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                        menuButtonR.setVisible((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
-                        menuButtonR.setEnabled((JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) && JNIHandler.isActive());
+                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                     }
                     if (menuButtonL != null) {
                         menuButtonL.setIcon(R.drawable.ic_menu_info_details);
                         menuButtonL.setTitle(getResources().getString(R.string.playback));
                         menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                        menuButtonL.setVisible((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
-                        menuButtonL.setEnabled((JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) && JNIHandler.isActive());
+                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                     }
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     getSupportActionBar().setHomeButtonEnabled(false);
@@ -913,7 +912,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     }
                     break;
                 case 1:
-                    if (playFrag != null && (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY)) {
+                    if (playFrag != null && JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) {
                         playFrag.incrementInterface();
                     }
                     break;
@@ -1012,7 +1011,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             case 0:
                 if (fileFrag != null)
                     if (fileFrag.currPath != null)
-                        if (!(fileFrag.currPath.matches(Globals.repeatedSeparatorString))) {
+                        if (!fileFrag.currPath.matches(Globals.repeatedSeparatorString)) {
                             fileFrag.getDir(new File(fileFrag.currPath).getParent());
                         } else {
                             if (SettingsStorage.useDefaultBack) {
@@ -1027,7 +1026,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     super.onBackPressed();
                     return;
                 }
-                viewPager.setCurrentItem((fromPlaylist) ? 2 : 0);
+                viewPager.setCurrentItem(fromPlaylist ? 2 : 0);
                 break;
             case 2:
                 if (plistFrag.isPlaylist)

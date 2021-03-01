@@ -57,8 +57,8 @@ public class ObjectSerializer {
         StringBuilder strBuf = new StringBuilder();
 
         for (byte aByte : bytes) {
-            strBuf.append((char) (((aByte >> 4) & 0xF) + ((int) 'a')));
-            strBuf.append((char) (((aByte) & 0xF) + ((int) 'a')));
+            strBuf.append((char) ((aByte >> 4 & 0xF) + (int) 'a'));
+            strBuf.append((char) ((aByte & 0xF) + (int) 'a'));
         }
 
         return strBuf.toString();
@@ -68,9 +68,9 @@ public class ObjectSerializer {
         byte[] bytes = new byte[str.length() / 2];
         for (int i = 0; i < str.length(); i += 2) {
             char c = str.charAt(i);
-            bytes[i / 2] = (byte) ((c - 'a') << 4);
+            bytes[i / 2] = (byte) (c - 'a' << 4);
             c = str.charAt(i + 1);
-            bytes[i / 2] += (c - 'a');
+            bytes[i / 2] += c - 'a';
         }
         return bytes;
     }

@@ -31,14 +31,14 @@ public class WavWriter {
     private byte[] intToByteArray(int i) {
         byte[] b = new byte[4];
         b[0] = (byte) (i & 0xFF);
-        b[1] = (byte) ((i >> 8) & 0xFF);
-        b[2] = (byte) ((i >> 16) & 0xFF);
-        b[3] = (byte) ((i >> 24) & 0xFF);
+        b[1] = (byte) (i >> 8 & 0xFF);
+        b[2] = (byte) (i >> 16 & 0xFF);
+        b[3] = (byte) (i >> 24 & 0xFF);
         return b;
     }
 
     private byte[] shortToByteArray(short data) {
-        return new byte[]{(byte) (data & 0xff), (byte) ((data >>> 8) & 0xff)};
+        return new byte[]{(byte) (data & 0xff), (byte) (data >>> 8 & 0xff)};
     }
 
     public void setupOutputFile(String filename, boolean mono, long mySampleRate) {
@@ -51,7 +51,7 @@ public class WavWriter {
             long mySubChunk1Size = 16;
             int myBitsPerSample = 16;
             int myFormat = 1;
-            long myChannels = ((mono) ? 1 : 2);
+            long myChannels = mono ? 1 : 2;
             //long mySampleRate = sampleRate;
             long myByteRate = mySampleRate * myChannels * myBitsPerSample / 8;
             int myBlockAlign = (int) (myChannels * myBitsPerSample / 8);
@@ -100,7 +100,7 @@ public class WavWriter {
         finishedWriting = true;
         long myDataSize = filesize; // this changes
         int myBitsPerSample = 16;
-        long myChannels = ((mono) ? 1 : 2);
+        long myChannels = mono ? 1 : 2;
         long myChunk2Size = myDataSize * myChannels * myBitsPerSample / 8;
         long myChunkSize = 36 + myChunk2Size;
 

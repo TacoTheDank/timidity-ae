@@ -63,7 +63,6 @@ public class JNIHandler {
     public static int playbackTempo; // This number is not the tempo in BPM, but some number that can be used to calculate the real tempo
     public static int tempoCount = 0; // How many times the tempo up/down buttons have been pressed
 
-    ;
     public static int voice;
     public static int maxvoice = 256;
     public static int keyOffset = 0;
@@ -104,8 +103,6 @@ public class JNIHandler {
     public static native int soxInit(int jreloading, int jrate);
 
     public static native int soxPlay(String jfileName, String[][] jeffects, int jignoreSafety);
-
-    ;
 
     public static native void soxSeek(int jtime);
 
@@ -280,7 +277,7 @@ public class JNIHandler {
 
     public static void setupOutputFile(String filename) {
         currentWavWriter = new WavWriter();
-        currentWavWriter.setupOutputFile(filename, (channelMode < 2), rate);
+        currentWavWriter.setupOutputFile(filename, channelMode < 2, rate);
     }
 
     // Used by native (TiMidity++)
@@ -294,10 +291,10 @@ public class JNIHandler {
                 for (int i = 0; i < mono.length / 2; ++i) {
                     int HI = 1;
                     int LO = 0;
-                    int left = (data[i * 4 + HI] << 8) | (data[i * 4 + LO] & 0xff);
-                    int right = (data[i * 4 + 2 + HI] << 8) | (data[i * 4 + 2 + LO] & 0xff);
+                    int left = data[i * 4 + HI] << 8 | data[i * 4 + LO] & 0xff;
+                    int right = data[i * 4 + 2 + HI] << 8 | data[i * 4 + 2 + LO] & 0xff;
                     int avg = (left + right) / 2;
-                    mono[i * 2 + HI] = (byte) ((avg >> 8) & 0xff);
+                    mono[i * 2 + HI] = (byte) (avg >> 8 & 0xff);
                     mono[i * 2 + LO] = (byte) (avg & 0xff);
                 }
                 if (currentWavWriter != null && !currentWavWriter.finishedWriting) {
@@ -355,7 +352,7 @@ public class JNIHandler {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mAudioAttributes = new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA).build();
             }
-            System.out.println(String.format(Locale.US, "Opening Timidity: Path: %s cfgFile: %s resample: %s mono: %s buffer: %d rate: %d", path, file, Globals.sampls[resamp], ((mono == 1) ? "true" : "false"), b, r));
+            System.out.println(String.format(Locale.US, "Opening Timidity: Path: %s cfgFile: %s resample: %s mono: %s buffer: %d rate: %d", path, file, Globals.sampls[resamp], mono == 1 ? "true" : "false", b, r));
             System.out.println("Max channels: " + MAX_CHANNELS);
             for (int i = 0; i < MAX_CHANNELS; i++) {
                 volumes.add(75); // Assuming not XG
@@ -370,7 +367,7 @@ public class JNIHandler {
             if (mMediaPlayer == null)
                 mMediaPlayer = new MediaPlayer();
 
-            int code = prepareTimidity(path, path + file, (channelMode == 1) ? 1 : 0, resamp, preserveSilence ? 1 : 0, reloading ? 1 : 0, freeInsts ? 1 : 0, verbosity, v)
+            int code = prepareTimidity(path, path + file, channelMode == 1 ? 1 : 0, resamp, preserveSilence ? 1 : 0, reloading ? 1 : 0, freeInsts ? 1 : 0, verbosity, v)
                     + soxInit(reloading ? 1 : 0, rate);
             state = STATE_IDLE; // TODO: Maybe keep as UNINIT if code != 0?
             return code;
@@ -484,11 +481,11 @@ public class JNIHandler {
                         playThread = new Thread(new Runnable() {
                             public void run() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    mAudioTrack = new AudioTrack(mAudioAttributes, new AudioFormat.Builder().setChannelMask((channelMode == 2) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO).setEncoding(AudioFormat.ENCODING_PCM_16BIT).setSampleRate(rate).build(),
+                                    mAudioTrack = new AudioTrack(mAudioAttributes, new AudioFormat.Builder().setChannelMask(channelMode == 2 ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO).setEncoding(AudioFormat.ENCODING_PCM_16BIT).setSampleRate(rate).build(),
                                             buffer, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
                                 } else {
                                     mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, rate,
-                                            (channelMode == 2) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO,
+                                            channelMode == 2 ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO,
                                             AudioFormat.ENCODING_PCM_16BIT,
                                             buffer, AudioTrack.MODE_STREAM);
                                 }
@@ -578,8 +575,8 @@ public class JNIHandler {
         }
         try {
             // Samples * Number of Channels * sample size
-            return (mAudioTrack.getPlaybackHeadPosition() *
-                    mAudioTrack.getChannelCount() * 2); // 16 bit is 2
+            return mAudioTrack.getPlaybackHeadPosition() *
+                    mAudioTrack.getChannelCount() * 2; // 16 bit is 2
         } catch (IllegalStateException e) {
             return 0;
         }
@@ -623,9 +620,9 @@ public class JNIHandler {
         }
         final StringBuilder stb = new StringBuilder(currentLyric);
         final StringBuilder tmpBuild = new StringBuilder();
-        boolean isNormalLyric = (b[0] == 'L');
-        boolean isNewline = (b[0] == 'N');
-        boolean isComment = (b[0] == 'Q');
+        boolean isNormalLyric = b[0] == 'L';
+        boolean isNewline = b[0] == 'N';
+        boolean isComment = b[0] == 'Q';
 
         for (int i = 2; i < b.length; i++) {
             if (b[i] == 0)
@@ -684,7 +681,7 @@ public class JNIHandler {
     @SuppressWarnings("unused")
     public static void updateDrumInfo(int ch, int isDrum) {
         if (ch < MAX_CHANNELS)
-            drums.set(ch, (isDrum != 0));
+            drums.set(ch, isDrum != 0);
     }
 
     // Used by native (TiMidity++)
@@ -718,7 +715,7 @@ public class JNIHandler {
                 // Write an extra two seconds of silence to ensure we've flushed fully
                 if (state != STATE_REQSTOP) {
                     state = STATE_STOPPING;
-                    buffsox(new short[(rate) * 2], ((rate) * 2));
+                    buffsox(new short[rate * 2], rate * 2);
                     mAudioTrack.flush();
                 }
                 mAudioTrack.stop();

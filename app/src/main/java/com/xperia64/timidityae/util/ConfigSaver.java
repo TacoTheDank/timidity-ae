@@ -31,8 +31,8 @@ import java.util.Locale;
 
 public class ConfigSaver implements TimidityActivity.SpecialAction {
 
-    private Activity context;
-    private String currSongName;
+    private final Activity context;
+    private final String currSongName;
     private AlertDialog alerty;
     private boolean localfinished;
 
@@ -73,7 +73,7 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
 
     private void beginConfigFileSave(String configFileName) {
         if (!configFileName.toLowerCase(Locale.US).endsWith(SettingsStorage.compressCfg ? ".tzf" : ".tcf")) {
-            configFileName += (SettingsStorage.compressCfg ? ".tzf" : ".tcf");
+            configFileName += SettingsStorage.compressCfg ? ".tzf" : ".tcf";
         }
         String parent = currSongName.substring(0, currSongName.lastIndexOf('/') + 1);
         boolean canReallyWrite = true;
@@ -121,7 +121,7 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
         final boolean canWrite = canReallyWrite;
         final String needToRename = needRename;
         final String probRoot = probablyTheRoot;
-        if (new File(finalval).exists() || (new File(probRoot + needRename).exists() && needToRename != null)) {
+        if (new File(finalval).exists() || new File(probRoot + needRename).exists() && needToRename != null) {
             AlertDialog deletionDialog = new AlertDialog.Builder(context).create();
             deletionDialog.setTitle("Warning");
             deletionDialog.setMessage("Overwrite config file?");

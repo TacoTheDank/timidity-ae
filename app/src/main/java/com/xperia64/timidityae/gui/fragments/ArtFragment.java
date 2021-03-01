@@ -27,7 +27,7 @@ public class ArtFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.art_fragment, container, false);
-        mImg = (ImageView) v.findViewById(R.id.albumArt);
+        mImg = v.findViewById(R.id.albumArt);
         return v;
     }
 

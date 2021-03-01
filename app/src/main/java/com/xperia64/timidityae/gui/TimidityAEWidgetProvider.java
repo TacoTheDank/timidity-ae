@@ -45,8 +45,8 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
             currSize = photo.getRowBytes() * photo.getHeight();
         }
         if (currSize > maxBitmap) {
-            int h = (int) (Math.sqrt(maxBitmap)) / (photo.getRowBytes() / photo.getWidth());
-            int w = (int) (h * photo.getWidth() / ((double) photo.getHeight()));
+            int h = (int) Math.sqrt(maxBitmap) / (photo.getRowBytes() / photo.getWidth());
+            int w = (int) (h * photo.getWidth() / (double) photo.getHeight());
             return Bitmap.createScaledBitmap(photo, w, h, true);
         } else {
             return photo;
@@ -111,7 +111,7 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
             Display display = wm.getDefaultDisplay();
             Point size = getDisplaySize(display);
             maxBitmap = size.x * size.y * 1.5;
-            if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR1)) // TODO Seems safe
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR1) // TODO Seems safe
                 maxBitmap *= 4;
         }
 
@@ -123,7 +123,7 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
             // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             views.setTextViewText(R.id.titley_widget, currTitle);
-            views.setImageViewResource(R.id.notPause_widget, (paused) ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+            views.setImageViewResource(R.id.notPause_widget, paused ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
             if (art)
                 if (Globals.currArt != null) {
                     views.setImageViewBitmap(R.id.art_widget, scaleDownBitmap(Globals.currArt));

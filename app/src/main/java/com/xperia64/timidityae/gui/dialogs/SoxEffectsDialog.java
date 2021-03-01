@@ -68,24 +68,24 @@ public class SoxEffectsDialog {
         double d;
         int i, offset;
 
-        speedChk = (CheckBox) mLayout.findViewById(R.id.soxSpeedChk);
-        speedSeek = (SeekBar) mLayout.findViewById(R.id.speedSeek);
-        speedVal = (EditText) mLayout.findViewById(R.id.speedValue);
+        speedChk = mLayout.findViewById(R.id.soxSpeedChk);
+        speedSeek = mLayout.findViewById(R.id.speedSeek);
+        speedVal = mLayout.findViewById(R.id.speedValue);
 
-        tempoChk = (CheckBox) mLayout.findViewById(R.id.soxTempoChk);
-        tempoSeek = (SeekBar) mLayout.findViewById(R.id.tempoSeek);
-        tempoVal = (EditText) mLayout.findViewById(R.id.tempoValue);
+        tempoChk = mLayout.findViewById(R.id.soxTempoChk);
+        tempoSeek = mLayout.findViewById(R.id.tempoSeek);
+        tempoVal = mLayout.findViewById(R.id.tempoValue);
 
-        pitchChk = (CheckBox) mLayout.findViewById(R.id.soxPitchChk);
-        pitchSeek = (SeekBar) mLayout.findViewById(R.id.pitchSeek);
-        pitchVal = (EditText) mLayout.findViewById(R.id.pitchValue);
+        pitchChk = mLayout.findViewById(R.id.soxPitchChk);
+        pitchSeek = mLayout.findViewById(R.id.pitchSeek);
+        pitchVal = mLayout.findViewById(R.id.pitchValue);
 
-        delayChk = (CheckBox) mLayout.findViewById(R.id.soxDelayChk);
-        delayValL = (EditText) mLayout.findViewById(R.id.delayValueL);
-        delayValR = (EditText) mLayout.findViewById(R.id.delayValueR);
+        delayChk = mLayout.findViewById(R.id.soxDelayChk);
+        delayValL = mLayout.findViewById(R.id.delayValueL);
+        delayValR = mLayout.findViewById(R.id.delayValueR);
 
-        equivCmd = (TextView) mLayout.findViewById(R.id.equivSoxCmd);
-        manCmd = (EditText) mLayout.findViewById(R.id.custSoxCmd);
+        equivCmd = mLayout.findViewById(R.id.equivSoxCmd);
+        manCmd = mLayout.findViewById(R.id.custSoxCmd);
 
         TextView.OnEditorActionListener focusClearer = new TextView.OnEditorActionListener() {
             @Override
@@ -118,9 +118,9 @@ public class SoxEffectsDialog {
             } else if (d < speedVals[0]) {
                 offset = 0;
             } else if (d < 1) {
-                offset = ((int) (d * 10));
+                offset = (int) (d * 10);
             } else {
-                offset = ((int) d) + 9;
+                offset = (int) d + 9;
             }
             speedSeek.setProgress(offset);
             speedVal.setText(String.format(Locale.US, "%.4f", d));
@@ -174,9 +174,9 @@ public class SoxEffectsDialog {
                         } else if (d < speedVals[0]) {
                             offset = 0;
                         } else if (d < 1) {
-                            offset = ((int) (d * 10));
+                            offset = (int) (d * 10);
                         } else {
-                            offset = ((int) d) + 9;
+                            offset = (int) d + 9;
                         }
                         speedSeek.setProgress(offset);
                         speedFromSetter = false;
@@ -209,7 +209,7 @@ public class SoxEffectsDialog {
             } else if (d < 1) {
                 offset = (int) (d * 10) - 1;
             } else {
-                offset = ((int) d) + 10;
+                offset = (int) d + 10;
             }
             tempoSeek.setProgress(offset);
             tempoVal.setText(String.format(Locale.US, "%.4f", d));
@@ -265,7 +265,7 @@ public class SoxEffectsDialog {
                         } else if (d < 1) {
                             offset = (int) (d * 10) - 1;
                         } else {
-                            offset = ((int) d) + 10;
+                            offset = (int) d + 10;
                         }
                         tempoSeek.setProgress(offset);
                         tempoFromSetter = false;
@@ -297,7 +297,7 @@ public class SoxEffectsDialog {
         } else if (i < 0) {
             offset = (i + 500) / 100;
         } else {
-            offset = (i / 100) + 5;
+            offset = i / 100 + 5;
         }
         pitchSeek.setProgress(offset);
         pitchSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -352,7 +352,7 @@ public class SoxEffectsDialog {
                         } else if (i < 0) {
                             offset = (i + 500) / 100;
                         } else {
-                            offset = (i / 100) + 5;
+                            offset = i / 100 + 5;
                         }
                         pitchSeek.setProgress(offset);
                         pitchFromSetter = false;

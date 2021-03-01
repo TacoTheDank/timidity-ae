@@ -38,9 +38,9 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
     private final int INVALID_ID = -1;
     private final List<Integer> realPositions;
     private final boolean shouldHighlight;
-    private HashMap<String, Integer> mIdMap = new HashMap<>();
-    private Context context;
-    private PlistMenuCallback ayylmao;
+    private final HashMap<String, Integer> mIdMap = new HashMap<>();
+    private final Context context;
+    private final PlistMenuCallback ayylmao;
     private List<String> list;
     private List<String> displayedList; // Values to be displayed
 
@@ -91,7 +91,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
         }
 
         //Handle TextView and display string from your list
-        TextView listItemText = (TextView) view.findViewById(R.id.menuRowText);
+        TextView listItemText = view.findViewById(R.id.menuRowText);
         String xx = displayedList.get(position);
         if (xx.contains("*")) {
             listItemText.setText(xx.substring(xx.lastIndexOf('/') + 1, xx.indexOf("*")));
@@ -100,7 +100,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
         }
 
         //Handle buttons and add onClickListeners
-        ImageView deleteBtn = (ImageView) view.findViewById(R.id.menuRowButton);
+        ImageView deleteBtn = view.findViewById(R.id.menuRowButton);
         if (shouldHighlight) {
             deleteBtn.setVisibility(View.GONE);
         } else {
