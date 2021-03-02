@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,7 +14,7 @@
         android:layout_alignTop="@+id/notNext_widget"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     <ImageButton
         android:id="@+id/notPrev_widget"
@@ -21,7 +22,7 @@
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:src="@android:drawable/ic_media_previous" />
+        app:srcCompat="@android:drawable/ic_media_previous" />
 
     <ImageButton
         android:id="@+id/notPause_widget"
@@ -29,7 +30,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/notPrev_widget"
-        android:src="@android:drawable/ic_media_play" />
+        app:srcCompat="@android:drawable/ic_media_play" />
 
     <ImageButton
         android:id="@+id/notNext_widget"
@@ -37,7 +38,7 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/notPause_widget"
-        android:src="@android:drawable/ic_media_next" />
+        app:srcCompat="@android:drawable/ic_media_next" />
 
     <TextView
         android:id="@+id/titley_widget"
@@ -57,6 +58,6 @@
         android:layout_height="fill_parent"
         android:layout_above="@+id/titley_widget"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/timidity" />
+        app:srcCompat="@drawable/timidity" />
 
 </RelativeLayout>

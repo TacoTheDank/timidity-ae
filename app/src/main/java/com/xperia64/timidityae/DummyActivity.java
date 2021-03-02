@@ -8,8 +8,9 @@
  ******************************************************************************/
 package com.xperia64.timidityae;
 
-import android.app.Activity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 // @formatter:off
 /*
@@ -48,7 +49,7 @@ ddoo;...........coookMMMMMMMMMKk0MM,
            ,MMMMMMMMMMMMMMMMMMMMMMMMMMMM
 */
 // @formatter:on
-public class DummyActivity extends Activity {
+public class DummyActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle potato) {
         // Because JB's/KK's/LP's task handling is dumb.

@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +28,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.xperia64.timidityae.JNIHandler;

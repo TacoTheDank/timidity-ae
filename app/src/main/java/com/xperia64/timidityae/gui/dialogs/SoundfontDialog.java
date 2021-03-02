@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +21,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.xperia64.timidityae.JNIHandler;
 import com.xperia64.timidityae.R;

@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +19,8 @@ import android.text.InputType;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.xperia64.timidityae.JNIHandler;
 import com.xperia64.timidityae.R;

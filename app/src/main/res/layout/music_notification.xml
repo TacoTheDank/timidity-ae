@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/music_notification_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:src="@drawable/ic_launcher" />
+        app:srcCompat="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/titley"
@@ -34,7 +35,7 @@
         android:layout_alignStart="@+id/titley"
         android:layout_alignLeft="@+id/titley"
         android:layout_alignBottom="@+id/imagey"
-        android:src="@android:drawable/ic_media_previous" />
+        app:srcCompat="@android:drawable/ic_media_previous" />
 
     <ImageButton
         android:id="@+id/notStop"
@@ -44,7 +45,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
     <ImageButton
         android:id="@+id/notPause"
@@ -54,7 +55,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/notPrev"
         android:layout_toRightOf="@+id/notPrev"
-        android:src="@android:drawable/ic_media_pause" />
+        app:srcCompat="@android:drawable/ic_media_pause" />
 
     <ImageButton
         android:id="@+id/notNext"
@@ -64,6 +65,6 @@
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/notPause"
         android:layout_toRightOf="@+id/notPause"
-        android:src="@android:drawable/ic_media_next" />
+        app:srcCompat="@android:drawable/ic_media_next" />
 
 </RelativeLayout>

@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -26,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.PreferenceManager;
 
 import com.xperia64.timidityae.R;

@@ -10,7 +10,6 @@ package com.xperia64.timidityae.gui.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -22,6 +21,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.util.FileComparator;

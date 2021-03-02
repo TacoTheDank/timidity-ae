@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.xperia64.timidityae.gui.fragments;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.media.AudioTrack;
@@ -19,6 +18,7 @@ import android.text.InputType;
 import android.util.SparseIntArray;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;

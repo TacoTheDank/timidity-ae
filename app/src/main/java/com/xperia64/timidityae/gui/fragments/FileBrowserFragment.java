@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.ListFragment;
 
 import com.xperia64.timidityae.R;
