@@ -29,13 +29,13 @@ public class RootPrefsFragment extends PreferenceFragmentCompat {
     private Preference tplus;
     private Preference sox;
 
-    //private CheckBoxPreference reShuffle; // Reshuffle playlist after stopping
-    //private CheckBoxPreference nativeMidi; // Use MediaPlayer for MIDI playback
-    //private CheckBoxPreference nativeMedia;
-    //private CheckBoxPreference unsafeSox;
-    //private CheckBoxPreference keepWav; // Keep broken wav files
-    //private CheckBoxPreference useDefBack; // Use default back button behavior instead of swapping screens
-    //private CheckBoxPreference compressCfg; // Compress config files
+    //private SwitchPreferenceCompat reShuffle; // Reshuffle playlist after stopping
+    //private SwitchPreferenceCompat nativeMidi; // Use MediaPlayer for MIDI playback
+    //private SwitchPreferenceCompat nativeMedia;
+    //private SwitchPreferenceCompat unsafeSox;
+    //private SwitchPreferenceCompat keepWav; // Keep broken wav files
+    //private SwitchPreferenceCompat useDefBack; // Use default back button behavior instead of swapping screens
+    //private SwitchPreferenceCompat compressCfg; // Compress config files
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -46,13 +46,13 @@ public class RootPrefsFragment extends PreferenceFragmentCompat {
         tplus = findPreference("tplusKey");
         sox = findPreference("soxKey");
 
-        //reShuffle = (CheckBoxPreference) findPreference("reShuffle");
-        //nativeMidi = (CheckBoxPreference) findPreference("nativeMidiSwitch");
-        //nativeMedia = (CheckBoxPreference) findPreference("nativeMediaSwitch");
-        //unsafeSox = (CheckBoxPreference) findPreference("unsafeSoxSwitch");
-        //keepWav = (CheckBoxPreference) findPreference("keepPartialWav");
-        //useDefBack = (CheckBoxPreference) findPreference("useDefBack");
-        //compressCfg = (CheckBoxPreference) findPreference("compressCfg");
+        //reShuffle = findPreference("reShuffle");
+        //nativeMidi = findPreference("nativeMidiSwitch");
+        //nativeMedia = findPreference("nativeMediaSwitch");
+        //unsafeSox = findPreference("unsafeSoxSwitch");
+        //keepWav = findPreference("keepPartialWav");
+        //useDefBack = findPreference("useDefBack");
+        //compressCfg = findPreference("compressCfg");
 
         disp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

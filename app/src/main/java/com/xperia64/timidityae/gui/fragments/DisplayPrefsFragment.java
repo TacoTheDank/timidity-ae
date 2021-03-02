@@ -33,18 +33,16 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
     SettingsActivity s;
 
     private ListPreference themePref; // Theme selection
-    //private CheckBoxPreference hiddenFold; // Show hidden files or folders
-    //private CheckBoxPreference showVids; // Show video files in the file browser
+    //private SwitchPreferenceCompat hiddenFold; // Show hidden files or folders
+    //private SwitchPreferenceCompat showVids; // Show video files in the file browser
     private Preference defaultFoldPreference; // Browse for the default folder
     private EditTextPreference manHomeFolder; // Enter the default folder manually
 
-
-    // API 14+
-    //private CheckBoxPreference fplist; // Reorderable playlists
+    //private SwitchPreferenceCompat fplist; // Reorderable playlists
 
     // API 21+
     private Preference lolPref; // Select external storage to write to
-    //private CheckBoxPreference lolNag; // Notify user about external storage
+    //private SwitchPreferenceCompat lolNag; // Notify user about external storage
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -53,13 +51,13 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
         addPreferencesFromResource(R.xml.settings_disp);
 
         themePref = findPreference("fbTheme");
-        //hiddenFold = (CheckBoxPreference) findPreference("hiddenSwitch");
-        //showVids = (CheckBoxPreference) findPreference("videoSwitch");
-        //fplist = (CheckBoxPreference) findPreference("fpSwitch");
+        //hiddenFold = findPreference("hiddenSwitch");
+        //showVids = findPreference("videoSwitch");
+        //fplist = findPreference("fpSwitch");
         defaultFoldPreference = findPreference("defFold");
         manHomeFolder = findPreference("defaultPath");
         lolPref = findPreference("lolWrite");
-        //lolNag = (CheckBoxPreference) findPreference("shouldLolNag");
+        //lolNag = findPreference("shouldLolNag");
 
         themePref.setEnabled(true);
 

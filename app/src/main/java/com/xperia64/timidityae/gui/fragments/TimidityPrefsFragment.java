@@ -19,11 +19,11 @@ import android.util.SparseIntArray;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.SettingsActivity;
@@ -40,10 +40,10 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
     SettingsActivity s;
 
     // TiMidity++ Settings
-    private CheckBoxPreference manTcfg; // Use manual timidity.cfg?
+    private SwitchPreferenceCompat manTcfg; // Use manual timidity.cfg?
     private Preference sfPref; // Open soundfont manager
-    private CheckBoxPreference psilence; // Preserve silence and beginning of midi
-    private CheckBoxPreference unload; // Unload instruments
+    private SwitchPreferenceCompat psilence; // Preserve silence and beginning of midi
+    private SwitchPreferenceCompat unload; // Unload instruments
     private ListPreference resampMode; // Default resampling algorithm
     private ListPreference stereoMode; // Synth Mono, Downmixed Mono, or Stereo
     private ListPreference rates; // Audio rates

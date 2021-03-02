@@ -8,7 +8,7 @@
         android:title="@string/sett_plus"
         app:iconSpaceReserved="false">
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="manualConfig"
             android:summary="@string/sett_mancfg_sum"
@@ -21,14 +21,14 @@
             android:title="@string/soundfont"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="tplusSilKey"
             android:summary="@string/sett_sil_sum"
             android:title="@string/sett_sil"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="tplusUnload"
             android:summary="@string/sett_unload_sum"

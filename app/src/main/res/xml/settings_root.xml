@@ -31,49 +31,49 @@
         android:title="@string/sett_other"
         app:iconSpaceReserved="false">
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="reShuffle"
             android:summary="@string/sett_reshuff_sum"
             android:title="@string/sett_reshuff"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="nativeMidiSwitch"
             android:summary="@string/sett_nm_sum"
             android:title="@string/sett_nm"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="nativeMediaSwitch"
             android:summary="@string/sett_sox_use_sum"
             android:title="@string/sett_sox_use"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="unsafeSoxSwitch"
             android:summary="@string/sett_sox_unsafe_sum"
             android:title="@string/sett_sox_unsafe"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="keepPartialWav"
             android:summary="@string/sett_kpw_sum"
             android:title="@string/sett_kpw"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="useDefBack"
             android:summary="@string/sett_defback_sum"
             android:title="@string/sett_defback"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="compressCfg"
             android:summary="@string/sett_compcfg_sum"
