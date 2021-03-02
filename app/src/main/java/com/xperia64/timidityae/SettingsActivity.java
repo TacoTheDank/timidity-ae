@@ -27,7 +27,7 @@ import androidx.preference.PreferenceScreen;
 
 import com.xperia64.timidityae.gui.dialogs.FileBrowserDialog.FileBrowserDialogListener;
 import com.xperia64.timidityae.gui.dialogs.SoundfontDialog.SoundfontDialogListener;
-import com.xperia64.timidityae.gui.fragments.RootPrefsFragment;
+import com.xperia64.timidityae.gui.fragments.preferences.RootPrefsFragment;
 import com.xperia64.timidityae.util.Constants;
 import com.xperia64.timidityae.util.DocumentFileUtils;
 import com.xperia64.timidityae.util.ObjectSerializer;

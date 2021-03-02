@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/gpl.html
  ******************************************************************************/
-package com.xperia64.timidityae.gui.fragments;
+package com.xperia64.timidityae.gui.fragments.preferences;
 
 import android.os.Bundle;
 
