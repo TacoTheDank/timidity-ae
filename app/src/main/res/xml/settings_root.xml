@@ -1,66 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <PreferenceCategory android:title="@string/sett_title">
+    <PreferenceCategory
+        android:title="@string/sett_title"
+        app:iconSpaceReserved="false">
+
         <Preference
             android:key="dsKey"
             android:summary="@string/sett_ds_sum"
-            android:title="@string/sett_ds" />
+            android:title="@string/sett_ds"
+            app:iconSpaceReserved="false" />
 
         <Preference
             android:key="tplusKey"
             android:summary="@string/sett_plus_sum"
-            android:title="@string/sett_plus" />
+            android:title="@string/sett_plus"
+            app:iconSpaceReserved="false" />
 
         <Preference
             android:key="soxKey"
             android:summary="@string/sett_sox_sum"
-            android:title="@string/sett_sox" />
+            android:title="@string/sett_sox"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/sett_other">
+    <PreferenceCategory
+        android:title="@string/sett_other"
+        app:iconSpaceReserved="false">
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="reShuffle"
             android:summary="@string/sett_reshuff_sum"
-            android:title="@string/sett_reshuff" />
+            android:title="@string/sett_reshuff"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="nativeMidiSwitch"
             android:summary="@string/sett_nm_sum"
-            android:title="@string/sett_nm" />
+            android:title="@string/sett_nm"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="nativeMediaSwitch"
             android:summary="@string/sett_sox_use_sum"
-            android:title="@string/sett_sox_use" />
+            android:title="@string/sett_sox_use"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="unsafeSoxSwitch"
             android:summary="@string/sett_sox_unsafe_sum"
-            android:title="@string/sett_sox_unsafe" />
+            android:title="@string/sett_sox_unsafe"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="keepPartialWav"
             android:summary="@string/sett_kpw_sum"
-            android:title="@string/sett_kpw" />
+            android:title="@string/sett_kpw"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="useDefBack"
             android:summary="@string/sett_defback_sum"
-            android:title="@string/sett_defback" />
+            android:title="@string/sett_defback"
+            app:iconSpaceReserved="false" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="compressCfg"
             android:summary="@string/sett_compcfg_sum"
-            android:title="@string/sett_compcfg" />
+            android:title="@string/sett_compcfg"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>
