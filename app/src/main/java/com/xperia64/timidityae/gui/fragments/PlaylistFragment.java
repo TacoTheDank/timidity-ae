@@ -12,7 +12,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -29,7 +28,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.ListFragment;
 
 import com.xperia64.timidityae.R;
@@ -90,7 +88,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
     }
 
     boolean shouldUseDragNDrop() {
-        return SettingsStorage.enableDragNDrop && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+        return SettingsStorage.enableDragNDrop;
     }
 
     @Override
@@ -135,10 +133,8 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
                     if (getListView() instanceof DynamicListView && plistName != null) {
                         if (cs.toString().isEmpty()) {
                             // If the ListView is a DynamicListView, we are already on high enough of an API
-                            //noinspection NewApi
                             ((DynamicListView) getListView()).setDragState(plistName.equals("CURRENT") ? DynamicListView.DragState.DRAG_DISABLED : DynamicListView.DragState.DRAG_ENABLED);
                         } else {
-                            //noinspection NewApi
                             ((DynamicListView) getListView()).setDragState(plistName.equals("CURRENT") ? DynamicListView.DragState.DRAG_DISABLED : DynamicListView.DragState.DRAG_WARNING);
                         }
                     }
@@ -162,7 +158,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
         super.onViewCreated(view, savedInstanceState);
         if (shouldUseDragNDrop()) {
             // We already check for this in the above statement
-            //noinspection NewApi
+
             ((DynamicListView) getListView()).setDraggerCallback(this);
         }
         if (!gotPlaylists) {
@@ -213,11 +209,10 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
                 getplaylisthreadrunning = true;
                 ListAdapter l;
                 if (shouldUseDragNDrop()) {
-                    // We alread check for this in the above statement
-                    //noinspection NewApi
-                    l = getPlaylists14(which);
+                    // We already check for this in the above statement
+                    l = getPlaylistsReorderable(which);
                 } else {
-                    l = getPlaylists13(which);
+                    l = getPlaylistsFixed(which);
                 }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -237,13 +232,11 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
         }).run();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public ListAdapter getPlaylists14(final String which) {
+    public ListAdapter getPlaylistsReorderable(final String which) {
         StableArrayAdapter fileList = null;
         if (which == null) // Root playlist dir.
         {
             isPlaylist = false;
-
             mCallback.needPlaylistBackCallback(false, false);
             fname = new ArrayList<>();
             path = new ArrayList<>();
@@ -303,7 +296,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
         return fileList;
     }
 
-    ListAdapter getPlaylists13(final String which) {
+    ListAdapter getPlaylistsFixed(final String which) {
         if (which == null) // Root playlist dir.
         {
             isPlaylist = false;

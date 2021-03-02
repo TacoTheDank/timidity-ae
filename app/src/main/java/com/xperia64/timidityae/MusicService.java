@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.xperia64.timidityae;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -625,7 +624,6 @@ public class MusicService extends Service {
         return musicBind;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onTaskRemoved(Intent rootIntent) {
 
@@ -795,7 +793,6 @@ public class MusicService extends Service {
         }
     }
 
-    @SuppressLint("NewApi")
     public String handleMetadata(String fileName) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
@@ -1145,21 +1142,16 @@ public class MusicService extends Service {
         }
     }
 
-    @SuppressLint("NewApi")
     public void setupMediaArtAndWidget(String fileName, MediaMetadataRetriever mmr) {
         Globals.currArt = null;
         boolean goodart = false;
-        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD_MR1) // Please work
-        {
-            try {
-
-                byte[] art = mmr.getEmbeddedPicture();
-                if (art != null) {
-                    Globals.currArt = BitmapFactory.decodeByteArray(art, 0, art.length);
-                    goodart = Globals.currArt != null;
-                }
-            } catch (Exception ignored) {
+        try {
+            byte[] art = mmr.getEmbeddedPicture();
+            if (art != null) {
+                Globals.currArt = BitmapFactory.decodeByteArray(art, 0, art.length);
+                goodart = Globals.currArt != null;
             }
+        } catch (Exception ignored) {
         }
         if (!goodart) {
             String goodPath = fileName.substring(0, fileName.lastIndexOf('/') + 1) + "folder.jpg";

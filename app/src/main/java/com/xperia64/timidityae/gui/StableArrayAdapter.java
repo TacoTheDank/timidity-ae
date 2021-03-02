@@ -17,6 +17,7 @@
 package com.xperia64.timidityae.gui;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
 
     @Override
     public boolean hasStableIds() {
-        return android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP;
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
     }
 
     @NonNull

@@ -29,7 +29,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -40,8 +39,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
@@ -70,7 +67,6 @@ import static com.xperia64.timidityae.gui.DynamicListView.DragState.DRAG_WARNING
  * When the hover cell is either above or below the bounds of the listview, this
  * listview also scrolls on its own so as to reveal additional content.
  */
-@RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class DynamicListView extends ListView {
 
     /**

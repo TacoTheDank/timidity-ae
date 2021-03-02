@@ -61,7 +61,7 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
         lolPref = findPreference("lolWrite");
         //lolNag = (CheckBoxPreference) findPreference("shouldLolNag");
 
-        themePref.setEnabled(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH);
+        themePref.setEnabled(true);
 
         if (lolPref != null) {
             lolPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

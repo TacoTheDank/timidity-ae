@@ -13,7 +13,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -949,8 +948,6 @@ public class PlayerFragment extends Fragment {
 
         });
         x.setSelection(JNIHandler.currsamp);
-        if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            midiDialogView.setBackgroundColor(SettingsStorage.theme == 1 ? Color.WHITE : Color.BLACK);
 
         midiInfoDialogBuilder.setView(midiDialogView);
         midiInfoDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {

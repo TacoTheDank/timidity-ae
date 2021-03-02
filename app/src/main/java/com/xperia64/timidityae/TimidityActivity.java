@@ -300,7 +300,6 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void actuallyRequestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
     }
@@ -313,7 +312,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         }
     }
 
-    @TargetApi(23)
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -570,9 +569,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         }
     }
 
-    @SuppressLint("NewApi")
     public void initCallback() {
-        if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             List<UriPermission> permissions = getContentResolver().getPersistedUriPermissions();
             int trueExt = 0;
             for (File f : getExternalFilesDirs(null)) {
@@ -676,7 +674,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     } else {
                         Toast.makeText(this, getResources().getString(R.string.srv_fnf), Toast.LENGTH_SHORT).show();
                     }
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO && in.getData().getScheme().equals("http") || in.getData().getScheme().equals("https")) {
+                } else if (in.getData().getScheme().equals("http") || in.getData().getScheme().equals("https")) {
                     if (!data.endsWith("/")) {
                         if (!Globals.getExternalCacheDir(this).exists()) {
                             Globals.getExternalCacheDir(this).mkdirs();

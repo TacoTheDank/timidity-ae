@@ -100,7 +100,7 @@ public class SettingsStorage {
         prefs = PreferenceManager.getDefaultSharedPreferences(c);
         firstRun = prefs.getBoolean(Constants.sett_first_run, true);
         // The light theme is broken below ICS it seems.
-        theme = Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH ? 0 : Integer.parseInt(prefs.getString(Constants.sett_theme, "1"));
+        theme = Integer.parseInt(prefs.getString(Constants.sett_theme, "1"));
         showHiddenFiles = prefs.getBoolean(Constants.sett_show_hidden_files, false);
         homeFolder = prefs.getString(Constants.sett_home_folder, Environment.getExternalStorageDirectory().getAbsolutePath());
         dataFolder = prefs.getString(Constants.sett_data_folder, Environment.getExternalStorageDirectory() + "/TimidityAE/");
@@ -139,11 +139,8 @@ public class SettingsStorage {
 
         unsafeSoxSwitch = prefs.getBoolean(Constants.sett_sox_unsafe, false);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            UiModeManager uiModeManager = (UiModeManager) c.getSystemService(Context.UI_MODE_SERVICE);
-            isTV = uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
-        }
-
+        UiModeManager uiModeManager = (UiModeManager) c.getSystemService(Context.UI_MODE_SERVICE);
+        isTV = uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
     }
     // -----------------------------------
 

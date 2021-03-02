@@ -11,8 +11,6 @@ package com.xperia64.timidityae.gui.fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,7 +34,6 @@ import androidx.fragment.app.Fragment;
 import com.xperia64.timidityae.JNIHandler;
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.util.Constants;
-import com.xperia64.timidityae.util.SettingsStorage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,11 +85,7 @@ public class TrackFragment extends Fragment {
                     Collections.addAll(arrayAdapter, getActivity().getResources().getStringArray(R.array.midi_drums));
                 }
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arrayAdapter);
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-                } else {
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                }
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                 dataAdapter.setNotifyOnChange(false);
                 if (!JNIHandler.drums.get(arg2)) {
@@ -187,8 +180,6 @@ public class TrackFragment extends Fragment {
                         txtVol.setEnabled(!arg1);
                     }
                 });
-                if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-                    v.setBackgroundColor(SettingsStorage.theme == 1 ? Color.WHITE : Color.BLACK);
                 b.setView(v);
                 b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 

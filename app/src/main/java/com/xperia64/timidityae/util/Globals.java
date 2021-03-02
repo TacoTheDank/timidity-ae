@@ -8,12 +8,10 @@
  ******************************************************************************/
 package com.xperia64.timidityae.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.TextView;
@@ -26,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -135,47 +132,21 @@ public class Globals {
         Drawable drawable = textView.getBackground();
         if (drawable instanceof ColorDrawable) {
             ColorDrawable colorDrawable = (ColorDrawable) drawable;
-            if (Build.VERSION.SDK_INT >= 11) {
-                return colorDrawable.getColor();
-            }
-
-            //noinspection TryWithIdenticalCatches
-            try {
-                Field field = colorDrawable.getClass().getDeclaredField("mState");
-                field.setAccessible(true);
-                Object object = field.get(colorDrawable);
-                field = object.getClass().getDeclaredField("mUseColor");
-                field.setAccessible(true);
-                return field.getInt(object);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            return colorDrawable.getColor();
         }
         return 0;
     }
 
-    @SuppressLint("SdCardPath")
     public static File getExternalCacheDir(Context c) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            return c.getExternalCacheDir();
-        } else {
-            return new File("/sdcard/Android/data/com.xperia64.timidityae/cache/");
-        }
+        return c.getExternalCacheDir();
     }
 
-    @SuppressLint("SdCardPath")
     public static String getLibDir(Context c) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            String s = c.getApplicationInfo().nativeLibraryDir;
-            if (!s.endsWith(File.separator)) {
-                s += File.separator;
-            }
-            return s;
-        } else {
-            return "/data/data/com.xperia64.timidityae/lib/";
+        String s = c.getApplicationInfo().nativeLibraryDir;
+        if (!s.endsWith(File.separator)) {
+            s += File.separator;
         }
+        return s;
     }
 
     public static JNIHandler.MediaFormat determineFormat(String songFileName) {

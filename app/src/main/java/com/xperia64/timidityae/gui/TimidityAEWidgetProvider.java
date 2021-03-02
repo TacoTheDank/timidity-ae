@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.xperia64.timidityae.gui;
 
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -17,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
@@ -38,12 +36,7 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
 
     public static Bitmap scaleDownBitmap(Bitmap photo) {
 
-        int currSize;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
-            currSize = photo.getByteCount();
-        } else {
-            currSize = photo.getRowBytes() * photo.getHeight();
-        }
+        int currSize = photo.getByteCount();
         if (currSize > maxBitmap) {
             int h = (int) Math.sqrt(maxBitmap) / (photo.getRowBytes() / photo.getWidth());
             int w = (int) (h * photo.getWidth() / (double) photo.getHeight());
@@ -53,8 +46,6 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    @SuppressLint("NewApi")
-    @SuppressWarnings("deprecation")
     private static Point getDisplaySize(final Display display) {
         final Point point = new Point();
         try {
@@ -111,8 +102,7 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
             Display display = wm.getDefaultDisplay();
             Point size = getDisplaySize(display);
             maxBitmap = size.x * size.y * 1.5;
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR1) // TODO Seems safe
-                maxBitmap *= 4;
+            maxBitmap *= 4;
         }
 
         // Perform this loop procedure for each App Widget that belongs to this provider
