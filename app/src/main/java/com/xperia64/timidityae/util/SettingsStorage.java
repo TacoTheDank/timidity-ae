@@ -22,9 +22,10 @@ import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.SparseIntArray;
 import android.widget.Toast;
+
+import androidx.preference.PreferenceManager;
 
 import com.xperia64.timidityae.JNIHandler;
 import com.xperia64.timidityae.R;

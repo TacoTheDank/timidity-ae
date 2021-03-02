@@ -30,14 +30,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -47,6 +39,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.xperia64.timidityae.gui.dialogs.FileBrowserDialog;
 import com.xperia64.timidityae.gui.dialogs.SoxEffectsDialog;
@@ -400,7 +401,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
         oldTheme = SettingsStorage.theme;
         oldPlist = SettingsStorage.enableDragNDrop;
-        this.setTheme(SettingsStorage.theme == 1 ? android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : android.support.v7.appcompat.R.style.Theme_AppCompat);
+        this.setTheme(SettingsStorage.theme == 1 ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : androidx.appcompat.R.style.Theme_AppCompat);
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             Log.i("Timidity", "Initializing");

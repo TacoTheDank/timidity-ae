@@ -14,15 +14,16 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.PreferenceScreen;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.EditTextPreference;
+import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
 
 import com.xperia64.timidityae.gui.dialogs.FileBrowserDialog.FileBrowserDialogListener;
 import com.xperia64.timidityae.gui.dialogs.SoundfontDialog.SoundfontDialogListener;
@@ -56,9 +57,9 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
     protected void onCreate(Bundle savedInstanceState) {
         mInstance = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ECLAIR && Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            this.setTheme(android.support.v7.appcompat.R.style.Theme_AppCompat);
+            this.setTheme(androidx.appcompat.R.style.Theme_AppCompat);
         } else {
-            this.setTheme(SettingsStorage.theme == 1 ? android.support.v7.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : android.support.v7.appcompat.R.style.Theme_AppCompat);
+            this.setTheme(SettingsStorage.theme == 1 ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : androidx.appcompat.R.style.Theme_AppCompat);
         }
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

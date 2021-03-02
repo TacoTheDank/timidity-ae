@@ -15,13 +15,14 @@ import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.SparseIntArray;
 import android.widget.Toast;
+
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.SettingsActivity;
@@ -55,8 +56,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
     private EditTextPreference manDataFolder;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         s = (SettingsActivity) getActivity();
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_tim);
@@ -329,9 +329,5 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     }
 }

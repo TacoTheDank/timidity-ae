@@ -9,9 +9,10 @@
 package com.xperia64.timidityae.gui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.SettingsActivity;
@@ -37,8 +38,7 @@ public class RootPrefsFragment extends PreferenceFragmentCompat {
     //private CheckBoxPreference compressCfg; // Compress config files
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         s = (SettingsActivity) getActivity();
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_root);
@@ -106,9 +106,5 @@ public class RootPrefsFragment extends PreferenceFragmentCompat {
             mFragmentTransaction.addToBackStack(SettingsActivity.ROOT_PREFS);
             mFragmentTransaction.commit();
         }
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     }
 }

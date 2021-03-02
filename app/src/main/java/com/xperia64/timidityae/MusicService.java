@@ -29,7 +29,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -37,6 +36,8 @@ import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.xperia64.timidityae.gui.TimidityAEWidgetProvider;
 import com.xperia64.timidityae.util.Constants;

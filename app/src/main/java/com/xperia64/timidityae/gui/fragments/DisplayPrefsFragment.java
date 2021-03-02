@@ -13,11 +13,12 @@ import android.content.UriPermission;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+
+import androidx.annotation.RequiresApi;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.SettingsActivity;
@@ -46,8 +47,7 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
     //private CheckBoxPreference lolNag; // Notify user about external storage
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         s = (SettingsActivity) getActivity();
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_disp);
@@ -109,9 +109,5 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
-    }
-
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     }
 }
