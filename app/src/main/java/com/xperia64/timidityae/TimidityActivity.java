@@ -45,10 +45,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.xperia64.timidityae.gui.dialogs.FileBrowserDialog;
 import com.xperia64.timidityae.gui.dialogs.SoxEffectsDialog;
 import com.xperia64.timidityae.gui.fragments.FileBrowserFragment;
@@ -73,10 +75,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TimidityActivity extends AppCompatActivity implements FileBrowserFragment.ActionFileBackListener, PlaylistFragment.ActionPlaylistBackListener, FileBrowserDialog.FileBrowserDialogListener {
+    private static final int POS_FILES = 0;
+    private static final int POS_PLAYER = 1;
+    private static final int POS_PLAYLIST = 2;
     final int PERMISSION_REQUEST = 177;
     final int NUM_PERMISSIONS = 3;
+    final String[] pages = {"Files", "Player", "Playlists"};
+    private final PageChangeCallback pageChangeCallback = new PageChangeCallback();
     public String currSongName;
-    ViewPager viewPager;
+    ViewPager2 viewPager2;
     boolean needFileBack = false;
     boolean needPlaylistBack = false;
     boolean fromPlaylist = false;
@@ -96,14 +103,13 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     private PlayerFragment playFrag;
     private PlaylistFragment plistFrag;
     private final BroadcastReceiver activityReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             int cmd = intent.getIntExtra(Constants.ta_cmd, Constants.ta_cmd_error); // -V
             switch (cmd) {
                 case Constants.ta_cmd_gui_play:
                     currSongName = intent.getStringExtra(Constants.ta_filename);
-                    if (viewPager.getCurrentItem() == 1) {
+                    if (viewPager2.getCurrentItem() == 1) {
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                         menuButtonR.setTitle(getResources().getString(R.string.view));
                         menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
@@ -143,7 +149,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     break;
                 case Constants.ta_cmd_gui_play_full:
                     currSongName = intent.getStringExtra(Constants.ta_filename);
-                    if (viewPager.getCurrentItem() == 1 && menuButtonR != null && menuButtonL != null) {
+                    if (viewPager2.getCurrentItem() == 1 && menuButtonR != null && menuButtonL != null) {
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                         menuButtonR.setTitle(getResources().getString(R.string.view));
                         menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
@@ -174,7 +180,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 case Constants.ta_cmd_pause_stop: // Notifiy pause/stop
                     if (!intent.getBooleanExtra(Constants.ta_pause, false) && Globals.hardStop) {
                         Globals.hardStop = false;
-                        if (viewPager.getCurrentItem() == 1) {
+                        if (viewPager2.getCurrentItem() == 1) {
                             menuButtonR.setIcon(R.drawable.ic_menu_agenda);
                             menuButtonR.setTitle(getResources().getString(R.string.view));
                             menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
@@ -428,9 +434,9 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             if (!isMyServiceRunning(MusicService.class)) {
                 SettingsStorage.reloadSettings(this, getAssets());
                 initCallback2();
-                if (viewPager != null) {
-                    if (viewPager.getCurrentItem() == 1) {
-                        viewPager.setCurrentItem(0);
+                if (viewPager2 != null) {
+                    if (viewPager2.getCurrentItem() == 1) {
+                        viewPager2.setCurrentItem(0);
                     }
                 }
             }
@@ -467,106 +473,16 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             startService(new Intent(this, MusicService.class));
         }
 
-        viewPager = findViewById(R.id.vp_main);
-        viewPager.setAdapter(new TimidityFragmentPagerAdapter());
-        viewPager.addOnPageChangeListener(new OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int index) {
-                switch (index) {
-                    case 0:
-                        fromPlaylist = false;
-                        if (getSupportActionBar() != null) {
-                            if (menuButtonR != null) {
-                                menuButtonR.setIcon(R.drawable.ic_menu_refresh);
-                                menuButtonR.setVisible(true);
-                                menuButtonR.setEnabled(true);
-                                menuButtonR.setTitle(getResources().getString(R.string.refreshfld));
-                                menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
-                            }
-                            if (menuButtonL != null) {
-                                menuButtonL.setIcon(R.drawable.ic_menu_home);
-                                menuButtonL.setTitle(getResources().getString(R.string.homefld));
-                                menuButtonL.setTitleCondensed(getResources().getString(R.string.homecon));
-                                menuButtonL.setVisible(true);
-                                menuButtonL.setEnabled(true);
-                            }
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(needFileBack);
-                        }
-                        if (fileFrag != null)
-                            if (fileFrag.getListView() != null) {
-                                fileFrag.getListView().setFastScrollEnabled(true);
-                                fileFrag.fixLongClick();
-                            }
-                        break;
-                    case 1:
-                        if (getSupportActionBar() != null) {
-                            if (menuButtonR != null) {
-                                menuButtonR.setIcon(R.drawable.ic_menu_agenda);
-                                menuButtonR.setTitle(getResources().getString(R.string.view));
-                                menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                                menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
-                                menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
-                            }
-                            if (menuButtonL != null) {
-                                menuButtonL.setIcon(R.drawable.ic_menu_info_details);
-                                menuButtonL.setTitle(getResources().getString(R.string.playback));
-                                menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                                menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
-                                menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
-                            }
-                            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                            getSupportActionBar().setHomeButtonEnabled(false);
-                        }
-                        break;
-                    case 2:
-                        fromPlaylist = true;
-                        if (getSupportActionBar() != null) {
-                            if (menuButtonR != null) {
-                                menuButtonR.setIcon(R.drawable.ic_menu_refresh);
-                                menuButtonR.setTitle(getResources().getString(R.string.refreshpls));
-                                menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
-                                menuButtonR.setVisible(true);
-                                menuButtonR.setEnabled(true);
-                            }
-                            if (menuButtonL != null) {
-                                menuButtonL.setIcon(R.drawable.ic_menu_add);
-                                menuButtonL.setTitle(getResources().getString(R.string.add));
-                                menuButtonL.setTitleCondensed(getResources().getString(R.string.addcon));
-                                if (plistFrag != null) {
-                                    // Enable if:
-                                    // Not currently in a playlist OR
-                                    // the playlist is not in the current playlist.
-                                    // TODO: This could probably be simplified further
-                                    menuButtonL.setVisible(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
-                                    menuButtonL.setEnabled(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
-                                }
-                            }
-                            if (plistFrag != null)
-                                if (plistFrag.getListView() != null)
-                                    plistFrag.getListView().setFastScrollEnabled(true);
-                            if (needPlaylistBack) {
-                                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                            }
-                        }
-                        break;
-                }
-
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-
-            }
-        });
+        viewPager2 = findViewById(R.id.main_viewpager2);
+        viewPager2.setAdapter(new TimidityStateAdapter(this));
+        viewPager2.registerOnPageChangeCallback(pageChangeCallback);
         if (extras != null && extras.getInt("fragmentpage", -1) >= 0) {
-            viewPager.setCurrentItem(extras.getInt("fragmentpage", -1));
+            viewPager2.setCurrentItem(extras.getInt("fragmentpage", -1));
         }
+        final TabLayout tabLayout = findViewById(R.id.main_tablayout);
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) ->
+                tab.setText(pages[position])
+        ).attach();
     }
 
     public void initCallback() {
@@ -789,6 +705,9 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             unregisterReceiver(activityReceiver);
         } catch (IllegalArgumentException ignored) {
         }
+        if (viewPager2 != null) {
+            viewPager2.unregisterOnPageChangeCallback(pageChangeCallback);
+        }
         super.onDestroy();
     }
 
@@ -820,8 +739,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         inflater.inflate(R.menu.main_menu, menu);
         menuButtonR = menu.findItem(R.id.menuBtn1);
         menuButtonL = menu.findItem(R.id.menuBtn2);
-        switch (viewPager.getCurrentItem()) {
-            case 0:
+        switch (viewPager2.getCurrentItem()) {
+            case POS_FILES:
                 fromPlaylist = false;
                 if (getSupportActionBar() != null) {
                     if (menuButtonR != null) {
@@ -844,7 +763,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     if (fileFrag.getListView() != null)
                         fileFrag.getListView().setFastScrollEnabled(true);
                 break;
-            case 1:
+            case POS_PLAYER:
                 if (getSupportActionBar() != null) {
                     if (menuButtonR != null) {
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
@@ -864,7 +783,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     getSupportActionBar().setHomeButtonEnabled(false);
                 }
                 break;
-            case 2:
+            case POS_PLAYLIST:
                 fromPlaylist = true;
                 if (getSupportActionBar() != null) {
                     if (menuButtonR != null) {
@@ -902,20 +821,20 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menuBtn1) { // menuButtonR
-            switch (viewPager.getCurrentItem()) {
-                case 0:
+            switch (viewPager2.getCurrentItem()) {
+                case POS_FILES:
                     if (fileFrag != null) {
                         int x = fileFrag.getListView().getFirstVisiblePosition();
                         fileFrag.refresh();
                         fileFrag.setSelection(x);
                     }
                     break;
-                case 1:
+                case POS_PLAYER:
                     if (playFrag != null && JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) {
                         playFrag.incrementInterface();
                     }
                     break;
-                case 2:
+                case POS_PLAYLIST:
                     if (plistFrag != null) {
                         int position = plistFrag.getListView().getFirstVisiblePosition();
                         plistFrag.getPlaylists(plistFrag.isPlaylist ? plistFrag.plistName : null);
@@ -924,12 +843,12 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     break;
             }
         } else if (item.getItemId() == R.id.menuBtn2) { // menuButtonL
-            switch (viewPager.getCurrentItem()) {
-                case 0:
+            switch (viewPager2.getCurrentItem()) {
+                case POS_FILES:
                     if (fileFrag != null)
                         fileFrag.getDir(SettingsStorage.homeFolder);
                     break;
-                case 1:
+                case POS_PLAYER:
                     if (playFrag != null) {
                         if (JNIHandler.isActive()) {
                             if (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) {
@@ -940,7 +859,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         }
                     }
                     break;
-                case 2:
+                case POS_PLAYLIST:
                     if (plistFrag != null) {
                         plistFrag.add();
                     }
@@ -1005,9 +924,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
     @Override
     public void onBackPressed() {
-
-        switch (viewPager.getCurrentItem()) {
-            case 0:
+        switch (viewPager2.getCurrentItem()) {
+            case POS_FILES:
                 if (fileFrag != null)
                     if (fileFrag.currPath != null)
                         if (!fileFrag.currPath.matches(Globals.repeatedSeparatorString)) {
@@ -1017,17 +935,17 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                                 super.onBackPressed();
                                 return;
                             }
-                            viewPager.setCurrentItem(1);
+                            viewPager2.setCurrentItem(1);
                         }
                 break;
-            case 1:
+            case POS_PLAYER:
                 if (SettingsStorage.useDefaultBack) {
                     super.onBackPressed();
                     return;
                 }
-                viewPager.setCurrentItem(fromPlaylist ? 2 : 0);
+                viewPager2.setCurrentItem(fromPlaylist ? 2 : 0);
                 break;
-            case 2:
+            case POS_PLAYLIST:
                 if (plistFrag.isPlaylist)
                     plistFrag.getPlaylists(null);
                 else {
@@ -1035,7 +953,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         super.onBackPressed();
                         return;
                     }
-                    viewPager.setCurrentItem(1);
+                    viewPager2.setCurrentItem(1);
                 }
                 break;
         }
@@ -1047,8 +965,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             return;
         }
         this.fromPlaylist = fromPlaylist;
-        if (viewPager != null) {
-            viewPager.setCurrentItem(1);
+        if (viewPager2 != null) {
+            viewPager2.setCurrentItem(1);
         }
         Globals.plist = files;
         if (plistFrag != null && copyPlist) {
@@ -1076,8 +994,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     public void needFileBackCallback(boolean yes) {
         needFileBack = yes;
         if (getSupportActionBar() != null) {
-            if (viewPager != null) {
-                if (viewPager.getCurrentItem() == 0) {
+            if (viewPager2 != null) {
+                if (viewPager2.getCurrentItem() == 0) {
                     if (needFileBack) {
                         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     } else {
@@ -1095,7 +1013,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             return;
         needPlaylistBack = yes;
         if (getSupportActionBar() != null) {
-            if (viewPager.getCurrentItem() == 2) {
+            if (viewPager2.getCurrentItem() == 2) {
                 if (needPlaylistBack) {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     menuButtonL.setVisible(!current);
@@ -1190,7 +1108,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 Intent intent = getIntent();
                 intent.putExtra("justtheme", true);
                 intent.putExtra("needservice", false);
-                intent.putExtra("fragmentpage", viewPager.getCurrentItem());
+                intent.putExtra("fragmentpage", viewPager2.getCurrentItem());
                 finish();
                 startActivity(intent);
             }
@@ -1273,39 +1191,116 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         void setLocalFinished(boolean finished);
     }
 
-    public class TimidityFragmentPagerAdapter extends FragmentPagerAdapter {
-        final String[] pages = {"Files", "Player", "Playlists"};
+    private class PageChangeCallback extends ViewPager2.OnPageChangeCallback {
+        @Override
+        public void onPageSelected(int index) {
+            switch (index) {
+                case POS_FILES:
+                    fromPlaylist = false;
+                    if (getSupportActionBar() != null) {
+                        if (menuButtonR != null) {
+                            menuButtonR.setIcon(R.drawable.ic_menu_refresh);
+                            menuButtonR.setVisible(true);
+                            menuButtonR.setEnabled(true);
+                            menuButtonR.setTitle(getResources().getString(R.string.refreshfld));
+                            menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
+                        }
+                        if (menuButtonL != null) {
+                            menuButtonL.setIcon(R.drawable.ic_menu_home);
+                            menuButtonL.setTitle(getResources().getString(R.string.homefld));
+                            menuButtonL.setTitleCondensed(getResources().getString(R.string.homecon));
+                            menuButtonL.setVisible(true);
+                            menuButtonL.setEnabled(true);
+                        }
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(needFileBack);
+                    }
+                    if (fileFrag != null)
+                        if (fileFrag.getListView() != null) {
+                            fileFrag.getListView().setFastScrollEnabled(true);
+                            fileFrag.fixLongClick();
+                        }
+                    break;
+                case POS_PLAYER:
+                    if (getSupportActionBar() != null) {
+                        if (menuButtonR != null) {
+                            menuButtonR.setIcon(R.drawable.ic_menu_agenda);
+                            menuButtonR.setTitle(getResources().getString(R.string.view));
+                            menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
+                            menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                            menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        }
+                        if (menuButtonL != null) {
+                            menuButtonL.setIcon(R.drawable.ic_menu_info_details);
+                            menuButtonL.setTitle(getResources().getString(R.string.playback));
+                            menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
+                            menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                            menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        }
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        getSupportActionBar().setHomeButtonEnabled(false);
+                    }
+                    break;
+                case POS_PLAYLIST:
+                    fromPlaylist = true;
+                    if (getSupportActionBar() != null) {
+                        if (menuButtonR != null) {
+                            menuButtonR.setIcon(R.drawable.ic_menu_refresh);
+                            menuButtonR.setTitle(getResources().getString(R.string.refreshpls));
+                            menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
+                            menuButtonR.setVisible(true);
+                            menuButtonR.setEnabled(true);
+                        }
+                        if (menuButtonL != null) {
+                            menuButtonL.setIcon(R.drawable.ic_menu_add);
+                            menuButtonL.setTitle(getResources().getString(R.string.add));
+                            menuButtonL.setTitleCondensed(getResources().getString(R.string.addcon));
+                            if (plistFrag != null) {
+                                // Enable if:
+                                // Not currently in a playlist OR
+                                // the playlist is not in the current playlist.
+                                // TODO: This could probably be simplified further
+                                menuButtonL.setVisible(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
+                                menuButtonL.setEnabled(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
+                            }
+                        }
+                        if (plistFrag != null)
+                            if (plistFrag.getListView() != null)
+                                plistFrag.getListView().setFastScrollEnabled(true);
+                        if (needPlaylistBack) {
+                            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 
-        TimidityFragmentPagerAdapter() {
-            super(getSupportFragmentManager());
+    private class TimidityStateAdapter extends FragmentStateAdapter {
+        TimidityStateAdapter(final FragmentActivity fa) {
+            super(fa);
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return pages.length;
         }
 
         @NonNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             switch (position) {
                 default:
-                case 0:
+                case POS_FILES:
                     fileFrag = FileBrowserFragment.create(fileFragDir == null ? SettingsStorage.homeFolder : fileFragDir);
                     fileFragDir = null;
                     return fileFrag;
-                case 1:
+                case POS_PLAYER:
                     playFrag = PlayerFragment.create();
                     return playFrag;
-                case 2:
+                case POS_PLAYLIST:
                     plistFrag = PlaylistFragment.create(SettingsStorage.dataFolder + "playlists/");
                     return plistFrag;
             }
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return pages[position];
         }
     }
 }
