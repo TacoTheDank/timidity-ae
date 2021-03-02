@@ -28,6 +28,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.ListFragment;
 
@@ -108,7 +109,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v;
         if (shouldUseDragNDrop()) {
             v = inflater.inflate(R.layout.plist_reorder, container, false);
@@ -181,7 +182,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
     }
 
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(@NonNull Context activity) {
         super.onAttach(activity);
         try {
             mCallback = (ActionPlaylistBackListener) activity;
@@ -383,7 +384,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
         if (isPlaylist) {
             if (!searchTxt.getText().toString().isEmpty() && ada != null) {
                 position = ada.currentToReal(position);

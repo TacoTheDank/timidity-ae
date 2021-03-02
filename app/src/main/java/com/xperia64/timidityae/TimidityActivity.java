@@ -805,7 +805,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle icicle) {
+    protected void onSaveInstanceState(@NonNull Bundle icicle) {
         super.onSaveInstanceState(icicle);
         icicle.putBoolean("justtheme", true);
         if (playFrag != null)
@@ -1185,6 +1185,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     @SuppressLint("NewApi")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // Check which request we're responding to
         if (requestCode == 1) {
             if (oldTheme != SettingsStorage.theme || oldPlist != SettingsStorage.enableDragNDrop) {
@@ -1286,9 +1287,11 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             return pages.length;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             switch (position) {
+                default:
                 case 0:
                     fileFrag = FileBrowserFragment.create(fileFragDir == null ? SettingsStorage.homeFolder : fileFragDir);
                     fileFragDir = null;
@@ -1299,8 +1302,6 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 case 2:
                     plistFrag = PlaylistFragment.create(SettingsStorage.dataFolder + "playlists/");
                     return plistFrag;
-                default:
-                    return null;
             }
         }
 

@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.ListFragment;
 
 import com.xperia64.timidityae.R;
@@ -91,7 +92,7 @@ public class FileBrowserFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(@NonNull Context activity) {
         super.onAttach(activity);
         if (activity instanceof Activity) {
             mActivity = (Activity) activity;
@@ -212,7 +213,7 @@ public class FileBrowserFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
         File file = new File(path.get(position));
         if (file.isDirectory()) {
             if (file.canRead()) {

@@ -33,6 +33,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -212,7 +213,7 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(@NonNull Context activity) {
         super.onAttach(activity);
         if (Globals.shouldRestore) {
             Intent new_intent = new Intent();
@@ -271,7 +272,7 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getParentFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         artsy = new ArtFragment();
@@ -563,7 +564,7 @@ public class PlayerFragment extends Fragment {
                 }
             });
             if (JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_TIMIDITY && fragMode != 0) {
-                FragmentManager fm = getFragmentManager();
+                FragmentManager fm = getParentFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 fragMode = 0;
                 artsy = new ArtFragment();
@@ -601,7 +602,7 @@ public class PlayerFragment extends Fragment {
             });
         }
         if (JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_TIMIDITY && fragMode != 0) {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getParentFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             fragMode = 0;
             artsy = new ArtFragment();
@@ -611,7 +612,7 @@ public class PlayerFragment extends Fragment {
     }
 
     public void incrementInterface() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getParentFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         if (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive()) {
@@ -640,7 +641,7 @@ public class PlayerFragment extends Fragment {
     }
 
     public void setInterface(int which) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getParentFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         fragMode = which;
         if (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive()) {

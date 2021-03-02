@@ -50,7 +50,6 @@
 
         <EditTextPreference
             android:defaultValue="70"
-            android:inputType="number"
             android:key="tplusVol"
             android:maxLines="1"
             android:summary="@string/sett_vol_sum"
@@ -58,7 +57,6 @@
 
         <EditTextPreference
             android:defaultValue="192000"
-            android:inputType="number"
             android:key="tplusBuff"
             android:maxLines="1"
             android:summary="@string/sett_buff_sum"
@@ -86,7 +84,6 @@
 
         <EditTextPreference
             android:defaultValue="@string/sett_def_dir"
-            android:inputType="text"
             android:key="dataDir"
             android:maxLines="1"
             android:summary="@string/sett_mandir_sum"

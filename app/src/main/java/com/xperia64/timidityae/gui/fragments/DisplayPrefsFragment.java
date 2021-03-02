@@ -52,12 +52,12 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_disp);
 
-        themePref = (ListPreference) findPreference("fbTheme");
+        themePref = findPreference("fbTheme");
         //hiddenFold = (CheckBoxPreference) findPreference("hiddenSwitch");
         //showVids = (CheckBoxPreference) findPreference("videoSwitch");
         //fplist = (CheckBoxPreference) findPreference("fpSwitch");
         defaultFoldPreference = findPreference("defFold");
-        manHomeFolder = (EditTextPreference) findPreference("defaultPath");
+        manHomeFolder = findPreference("defaultPath");
         lolPref = findPreference("lolWrite");
         //lolNag = (CheckBoxPreference) findPreference("shouldLolNag");
 

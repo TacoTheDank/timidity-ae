@@ -139,6 +139,7 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // Check which request we're responding to
         if (requestCode == 42) {
             if (resultCode == RESULT_OK) {

@@ -15,6 +15,7 @@ import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.util.SparseIntArray;
 import android.widget.Toast;
 
@@ -61,20 +62,20 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_tim);
 
-        manTcfg = (CheckBoxPreference) findPreference("manualConfig");
+        manTcfg = findPreference("manualConfig");
         sfPref = findPreference("sfConfig");
-        psilence = (CheckBoxPreference) findPreference("tplusSilKey");
-        unload = (CheckBoxPreference) findPreference("tplusUnload");
-        resampMode = (ListPreference) findPreference("tplusResamp");
-        stereoMode = (ListPreference) findPreference("sdlChanValue");
-        rates = (ListPreference) findPreference("tplusRate");
-        volume = (EditTextPreference) findPreference("tplusVol");
-        bufferSize = (EditTextPreference) findPreference("tplusBuff");
-        verbosity = (ListPreference) findPreference("timidityVerbosity");
+        psilence = findPreference("tplusSilKey");
+        unload = findPreference("tplusUnload");
+        resampMode = findPreference("tplusResamp");
+        stereoMode = findPreference("sdlChanValue");
+        rates = findPreference("tplusRate");
+        volume = findPreference("tplusVol");
+        bufferSize = findPreference("tplusBuff");
+        verbosity = findPreference("timidityVerbosity");
 
         reinstallSoundfont = findPreference("reSF");
         dataFoldPreference = findPreference("defData");
-        manDataFolder = (EditTextPreference) findPreference("dataDir");
+        manDataFolder = findPreference("dataDir");
 
         SettingsStorage.updateBuffers(SettingsStorage.updateRates());
         int[] values = SettingsStorage.updateRates();
@@ -193,6 +194,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        volume.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER));
         volume.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -215,6 +217,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        bufferSize.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER));
         bufferSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, final Object newValue) {
@@ -320,6 +323,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        manDataFolder.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_TEXT));
         manDataFolder.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
