@@ -215,7 +215,7 @@ public class SettingsStorage {
                     eee.putBoolean("manConfig", true);
                 } else {
                     eee.putBoolean("manConfig", false);
-                    ArrayList<String> soundfonts = new ArrayList<String>();
+                    ArrayList<String> soundfonts = new ArrayList<>();
                     FileInputStream fstream = null;
                     try {
                         fstream = new FileInputStream(dataFolder + "/timidity/timidity.cfg");
@@ -302,7 +302,7 @@ public class SettingsStorage {
                                 return;
                             }
                         }
-                        ArrayList<String> tmpConfig = new ArrayList<String>();
+                        ArrayList<String> tmpConfig = new ArrayList<>();
                         tmpConfig.add(rootStorage.getAbsolutePath() + "/soundfonts/8Rock11e.sf2");
                         try {
                             eee.putString(Constants.sett_soundfonts, ObjectSerializer.serialize(tmpConfig));

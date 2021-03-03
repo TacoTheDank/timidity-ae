@@ -603,15 +603,10 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     // TODO: Better heuristics on content:// type
                 } else if (in.getData().getScheme().equals("content") && (data.contains("downloads") || data.contains("audio"))) {
                     String filename = null;
-                    Cursor cursor = null;
-                    try {
-                        cursor = this.getContentResolver().query(in.getData(), new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE}, null, null, null);
+                    try (Cursor cursor = this.getContentResolver().query(in.getData(), new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE}, null, null, null)) {
                         if (cursor != null && cursor.moveToFirst()) {
                             filename = cursor.getString(0);
                         }
-                    } finally {
-                        if (cursor != null)
-                            cursor.close();
                     }
                     try {
                         InputStream input = getContentResolver().openInputStream(in.getData());
