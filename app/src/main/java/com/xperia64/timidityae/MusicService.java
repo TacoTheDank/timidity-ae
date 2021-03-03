@@ -1094,7 +1094,7 @@ public class MusicService extends Service {
             mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID).setSmallIcon(R.drawable.ic_lol);
 
         } else {
-            mBuilder = new NotificationCompat.Builder(this);
+            mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mBuilder.setSmallIcon(R.drawable.ic_lol);
             } else {
