@@ -11,7 +11,6 @@
     <string name="warning">Warning</string>
     <string name="dynex_alert2_msg">Overwrite WAV file?</string>
     <string name="cancel">Cancel</string>
-    <string name="sett_file">File Browser Options</string>
     <string name="sett_shf">Show Hidden Files</string>
     <string name="sett_shf_sum">Show files and folders beginning with a .</string>
     <string name="sett_shv">Show Video Files</string>
@@ -48,8 +47,6 @@
     <string name="sett_unload_sum">Unload instruments between songs (recommended)</string>
     <string name="sett_res">Default Resampling Mode</string>
     <string name="sett_res_sum">Algorithm to convert sample rate</string>
-    <string name="sett_bits">Audio Bit Depth</string>
-    <string name="sett_bits_sum">Bits per sample</string>
     <string name="sett_ddir">Browse For Data Folder</string>
     <string name="sett_ddir_sum">Browse for Timidity AE\'s system folder</string>
     <string name="sett_mandir">Manually Enter Data Folder</string>
@@ -84,12 +81,6 @@
     <string name="addcon">Add</string>
     <string name="tcfg_error">Could not load config. Some file types will be unavailable (%d)</string>
     <string name="mop">TiMidity++ Controls</string>
-    <string name="mop_up">Key Up</string>
-    <string name="mop_down">Key Down</string>
-    <string name="mop_fast">Faster</string>
-    <string name="mop_slow">Slower</string>
-    <string name="mop_vplus">Voices+</string>
-    <string name="mop_vminus">Voices-</string>
     <string name="mop_resamp">Resampling Algorithm</string>
     <string name="mop_tempo">Tempo: %2$d BPM (%1$d%%)</string>
     <string name="mop_pitch">Pitch: %s</string>
@@ -139,7 +130,6 @@
     <string name="extract_def">To use 8Rock11e.sf2, please re-add it to the config via the \'Choose Soundfonts\' button above</string>
     <string name="invalidbuff">Invalid buffer size, reverting to minimum</string>
     <string name="invalidfold">Invalid folder</string>
-    <string name="restart">Restart app to apply changes</string>
     <string name="sf_man">Manage Soundfonts</string>
     <string name="sf_rem">Remove Soundfont</string>
     <string name="sf_rem2">Remove</string>
@@ -271,14 +261,6 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
-    </string-array>
-    <string-array name="select_bit_items">
-        <item>8-Bit</item>
-        <item>16-Bit</item>
-    </string-array>
-    <string-array name="background_bit_items">
-        <item>8</item>
-        <item>16</item>
     </string-array>
     <string-array name="midi_instruments">
         <item>1. Acoustic Grand Piano</item>

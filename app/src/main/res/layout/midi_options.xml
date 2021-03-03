@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/midi_opt_dlg"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:descendantFocusability="beforeDescendants"
@@ -8,7 +7,6 @@
     android:padding="3dp">
 
     <LinearLayout
-        android:id="@+id/rootMidiView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -18,7 +16,6 @@
         android:paddingRight="5dp">
 
         <LinearLayout
-            android:id="@+id/speedRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
@@ -50,7 +47,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/pitchRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
@@ -82,7 +78,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/voiceRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
@@ -114,7 +109,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/resampTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -133,7 +127,6 @@
             android:text="@string/mop_export" />
 
         <LinearLayout
-            android:id="@+id/sav1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
@@ -155,7 +148,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sav2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="false"
