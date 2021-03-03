@@ -82,7 +82,7 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -131,7 +131,6 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
                 return results;
             }
         };
-        return filter;
     }
 
     @Override

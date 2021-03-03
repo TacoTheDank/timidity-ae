@@ -133,7 +133,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -182,7 +182,6 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
                 return results;
             }
         };
-        return filter;
     }
 
     @Override
