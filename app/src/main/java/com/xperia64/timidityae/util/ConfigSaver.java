@@ -158,8 +158,7 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
         new_intent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_save_cfg);
         new_intent.putExtra(Constants.msrv_outfile, finalval);
         context.sendBroadcast(new_intent);
-        final ProgressDialog prog;
-        prog = new ProgressDialog(context);
+        final ProgressDialog prog = new ProgressDialog(context);
         prog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

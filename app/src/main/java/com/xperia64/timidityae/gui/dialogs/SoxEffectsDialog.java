@@ -66,8 +66,7 @@ public class SoxEffectsDialog {
         AlertDialog.Builder b = new AlertDialog.Builder(context);
         final ScrollView mLayout = (ScrollView) f.inflate(R.layout.sox_options, null);
 
-        double d;
-        int i, offset;
+        int offset;
 
         speedChk = mLayout.findViewById(R.id.soxSpeedChk);
         speedSeek = mLayout.findViewById(R.id.speedSeek);
@@ -112,7 +111,7 @@ public class SoxEffectsDialog {
         });
 
         speedSeek.setEnabled(SettingsStorage.soxEnableSpeed);
-        d = SettingsStorage.soxSpeedVal;
+        double d = SettingsStorage.soxSpeedVal;
         if (d > 0) {
             if (d > speedVals[speedVals.length - 1]) {
                 offset = speedVals.length - 1;
@@ -290,7 +289,7 @@ public class SoxEffectsDialog {
         });
 
         pitchSeek.setEnabled(SettingsStorage.soxEnablePitch);
-        i = SettingsStorage.soxPitchVal;
+        int i = SettingsStorage.soxPitchVal;
         if (i > pitchVals[pitchVals.length - 1]) {
             offset = pitchVals.length - 1;
         } else if (i < pitchVals[0]) {

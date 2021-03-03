@@ -185,7 +185,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ActionPlaylistBackListener");
         }
-        if (Globals.shouldRestore && (Globals.plist == null || Globals.plist.size() == 0)) {
+        if (Globals.shouldRestore && (Globals.plist == null || Globals.plist.isEmpty())) {
             Intent new_intent = new Intent();
             new_intent.setAction(Constants.msrv_rec);
             new_intent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_get_plist);

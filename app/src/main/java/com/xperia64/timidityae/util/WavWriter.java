@@ -62,8 +62,7 @@ public class WavWriter {
             // long myChunk2Size = myDataSize * myChannels * myBitsPerSample/8;
             // long myChunkSize = 36 + myChunk2Size;
 
-            OutputStream os;
-            os = new FileOutputStream(new File(fileToWrite));
+            OutputStream os = new FileOutputStream(new File(fileToWrite));
             BufferedOutputStream bos = new BufferedOutputStream(os);
             outFile = new DataOutputStream(bos);
 
