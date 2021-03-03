@@ -112,7 +112,7 @@ public class WavWriter {
         }
 
         try {
-            raf.seek(04);
+            raf.seek(4);
             raf.write(intToByteArray((int) myChunkSize));
             raf.seek(40);
             raf.write(intToByteArray((int) myDataSize));
