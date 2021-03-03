@@ -132,10 +132,8 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
                     if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         if (needToRename != null) {
                             DocumentFileUtils.tryToDeleteFile(context, probRoot + needToRename);
-                            DocumentFileUtils.tryToDeleteFile(context, finalval);
-                        } else {
-                            DocumentFileUtils.tryToDeleteFile(context, finalval);
                         }
+                        DocumentFileUtils.tryToDeleteFile(context, finalval);
                     } else {
                         new File(finalval).delete();
                     }

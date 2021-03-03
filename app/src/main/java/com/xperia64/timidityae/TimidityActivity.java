@@ -322,46 +322,44 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_REQUEST:
-                // If request is cancelled, the result arrays are empty.
-                boolean good = true;
-                if (permissions.length != NUM_PERMISSIONS || grantResults.length != NUM_PERMISSIONS) {
+        if (requestCode == PERMISSION_REQUEST) {// If request is cancelled, the result arrays are empty.
+            boolean good = true;
+            if (permissions.length != NUM_PERMISSIONS || grantResults.length != NUM_PERMISSIONS) {
+                good = false;
+            }
+
+            for (int i = 0; i < grantResults.length && good; i++) {
+                if (permissions[i].equals(Manifest.permission.READ_PHONE_STATE)) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        Globals.phoneState = false;
+                    }
+                    continue;
+                }
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     good = false;
                 }
 
-                for (int i = 0; i < grantResults.length && good; i++) {
-                    if (permissions[i].equals(Manifest.permission.READ_PHONE_STATE)) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            Globals.phoneState = false;
-                        }
-                        continue;
-                    }
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                        good = false;
+            }
+            if (!good) {
+
+                // permission denied, boo! Disable the app.
+                new AlertDialog.Builder(TimidityActivity.this).setTitle("Error").setMessage("Timidity AE cannot proceed without these permissions.").setPositiveButton("OK", new OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TimidityActivity.this.finish();
                     }
 
+                }).setCancelable(false).show();
+            } else {
+                if (!Environment.getExternalStorageDirectory().canRead()) {
+                    // Buggy emulator? Try restarting the app
+                    AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                    alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 237462, new Intent(this, TimidityActivity.class), PendingIntent.FLAG_ONE_SHOT));
+                    System.exit(0);
                 }
-                if (!good) {
-
-                    // permission denied, boo! Disable the app.
-                    new AlertDialog.Builder(TimidityActivity.this).setTitle("Error").setMessage("Timidity AE cannot proceed without these permissions.").setPositiveButton("OK", new OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            TimidityActivity.this.finish();
-                        }
-
-                    }).setCancelable(false).show();
-                } else {
-                    if (!Environment.getExternalStorageDirectory().canRead()) {
-                        // Buggy emulator? Try restarting the app
-                        AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                        alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 237462, new Intent(this, TimidityActivity.class), PendingIntent.FLAG_ONE_SHOT));
-                        System.exit(0);
-                    }
-                    yetAnotherInit();
-                }
+                yetAnotherInit();
+            }
         }
     }
 

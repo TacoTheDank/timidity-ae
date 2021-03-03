@@ -154,7 +154,6 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                 if (connection != null)
                     connection.disconnect();
             }
-            return null;
         } else {
             HttpsURLConnection connection = null;
             try {
@@ -207,7 +206,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                 if (connection != null)
                     connection.disconnect();
             }
-            return null;
         }
+        return null;
     }
 }

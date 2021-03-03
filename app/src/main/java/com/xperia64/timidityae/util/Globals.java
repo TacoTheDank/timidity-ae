@@ -191,8 +191,8 @@ public class Globals {
             e.printStackTrace();
         }
 
+        File f = new File(SettingsStorage.dataFolder + "/soundfonts/8Rock11e.sfArk");
         if (needLol != null) {
-            File f = new File(SettingsStorage.dataFolder + "/soundfonts/8Rock11e.sfArk");
             if (f.exists())
                 DocumentFileUtils.tryToDeleteFile(c, SettingsStorage.dataFolder + "/soundfonts/8Rock11e.sfArk");
             OutputStream out = null;
@@ -237,7 +237,6 @@ public class Globals {
             DocumentFileUtils.renameDocumentFile(c, value2, needRename);
             DocumentFileUtils.tryToDeleteFile(c, value);
         } else {
-            File f = new File(SettingsStorage.dataFolder + "/soundfonts/8Rock11e.sfArk");
             if (f.exists())
                 f.delete();
             OutputStream out = null;

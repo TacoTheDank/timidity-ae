@@ -563,9 +563,9 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
             e.printStackTrace();
         }
 
+        FileWriter writer = null;
         if (needLol != null) {
 
-            FileWriter writer = null;
             if (new File(tmpName).exists())
                 DocumentFileUtils.tryToDeleteFile(getActivity(), tmpName);
 
@@ -601,7 +601,6 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
             }
             DocumentFileUtils.renameDocumentFile(getActivity(), fileToWrite, needRename);
         } else {
-            FileWriter writer = null;
             if (new File(tmpName).exists())
                 DocumentFileUtils.tryToCreateFile(getActivity(), tmpName, "timidityae/tpl");
             try {
