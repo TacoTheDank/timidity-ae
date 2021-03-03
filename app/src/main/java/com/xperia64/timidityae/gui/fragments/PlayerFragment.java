@@ -90,7 +90,7 @@ public class PlayerFragment extends Fragment {
     private int totalSeconds;
     private int currMinutes;
     private int currSeconds;
-    private int fragMode = 0; // 0 = AlbumArt, 1 = midi controls, 2 = Kareoke
+    private int fragMode = 0; // 0 = AlbumArt, 1 = midi controls, 2 = Karaoke
     Runnable lyricUpdater = new Runnable() {
         @Override
         public void run() {

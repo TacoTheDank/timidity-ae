@@ -267,7 +267,7 @@ public class Globals {
                 e.printStackTrace();
             }
             JNIHandler.decompressSFArk(SettingsStorage.dataFolder + "/soundfonts/8Rock11e.sfArk", "8Rock11e.sf2");
-            //System.out.println("decompresed sfark");
+            //System.out.println("decompressed sfark");
             new File(SettingsStorage.dataFolder + "/soundfonts/8Rock11e.sfArk").delete();
         }
 

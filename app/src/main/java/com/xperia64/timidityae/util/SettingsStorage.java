@@ -113,7 +113,7 @@ public class SettingsStorage {
         showVideos = prefs.getBoolean(Constants.sett_show_videos, true);
         shouldExtStorageNag = prefs.getBoolean(Constants.sett_should_ext_storage_nag, true);
         verbosity = Integer.parseInt(prefs.getString(Constants.sett_t_verbosity, "-1"));
-        keepPartialWav = prefs.getBoolean(Constants.sett_keep_partal_wave, false);
+        keepPartialWav = prefs.getBoolean(Constants.sett_keep_partial_wave, false);
         useDefaultBack = prefs.getBoolean(Constants.sett_default_back_btn, false);
         compressCfg = prefs.getBoolean(Constants.sett_compress_midi_cfg, true);
         reShuffle = prefs.getBoolean(Constants.sett_reshuffle_plist, false);

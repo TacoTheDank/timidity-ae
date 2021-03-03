@@ -60,7 +60,7 @@ public class Constants {
     public static final String sett_buffer_size = "tplusBuff";
     public static final String sett_show_videos = "videoSwitch";
     public static final String sett_should_ext_storage_nag = "shouldLolNag";
-    public static final String sett_keep_partal_wave = "keepPartialWave";
+    public static final String sett_keep_partial_wave = "keepPartialWave";
     public static final String sett_default_back_btn = "useDefBack";
     public static final String sett_compress_midi_cfg = "compressCfg";
     public static final String sett_reshuffle_plist = "reShuffle";

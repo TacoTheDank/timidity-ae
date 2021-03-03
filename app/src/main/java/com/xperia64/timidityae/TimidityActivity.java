@@ -177,7 +177,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         }
                     }
                     break;
-                case Constants.ta_cmd_pause_stop: // Notifiy pause/stop
+                case Constants.ta_cmd_pause_stop: // Notify pause/stop
                     if (!intent.getBooleanExtra(Constants.ta_pause, false) && Globals.hardStop) {
                         Globals.hardStop = false;
                         if (viewPager2.getCurrentItem() == 1) {
@@ -602,7 +602,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         Toast.makeText(this, "This is a directory, not a file", Toast.LENGTH_SHORT).show();
                     }
 
-                    // TODO: Better hereustics on content:// type
+                    // TODO: Better heuristics on content:// type
                 } else if (in.getData().getScheme().equals("content") && (data.contains("downloads") || data.contains("audio"))) {
                     String filename = null;
                     Cursor cursor = null;
