@@ -80,6 +80,7 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
         return view;
     }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         return new Filter() {

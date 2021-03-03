@@ -154,7 +154,7 @@ public class PlaylistFragment extends ListFragment implements FileBrowserDialogL
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (shouldUseDragNDrop()) {
             // We already check for this in the above statement

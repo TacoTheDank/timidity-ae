@@ -152,7 +152,7 @@ public class SettingsStorage {
             for (int i = 0; i < values.length; i++) {
                 //hz[i] = Integer.toString(values[i]) + "Hz";
                 hzItems[i] = Integer.toString(values[i]);
-                if (prefs.getString("tplusRate", Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))).equals(hzItems[i])) {
+                if (prefs.getString("tplusRate", Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))).contentEquals(hzItems[i])) {
                     validRate = true;
                     break;
                 }

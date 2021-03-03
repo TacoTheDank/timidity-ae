@@ -131,6 +131,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
         return view;
     }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         return new Filter() {

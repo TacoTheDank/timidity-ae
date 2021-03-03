@@ -36,6 +36,7 @@ import android.view.KeyEvent;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.xperia64.timidityae.gui.TimidityAEWidgetProvider;
@@ -675,7 +676,7 @@ public class MusicService extends Service {
                 audioSession = new MediaSession(getApplicationContext(), "TimidityAE");
                 audioSession.setCallback(new MediaSession.Callback() {
                     @Override
-                    public boolean onMediaButtonEvent(final Intent mediaButtonIntent) {
+                    public boolean onMediaButtonEvent(@NonNull final Intent mediaButtonIntent) {
                         String intentAction = mediaButtonIntent.getAction();
                         if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
                             KeyEvent event = mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
