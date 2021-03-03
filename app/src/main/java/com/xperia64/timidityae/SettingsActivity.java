@@ -172,9 +172,7 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
         }
         if (needUpdateSf) {
             tmpSounds.clear();
-            for (String foo : l) {
-                tmpSounds.add(foo);
-            }
+            tmpSounds.addAll(l);
         }
     }
 }

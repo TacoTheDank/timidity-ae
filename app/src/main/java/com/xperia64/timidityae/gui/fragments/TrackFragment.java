@@ -217,12 +217,8 @@ public class TrackFragment extends Fragment {
                 ddd = null;
             }
         }
-        for (Integer x : JNIHandler.programs) {
-            localInst.add(x);
-        }
-        for (Integer x : JNIHandler.volumes) {
-            localVol.add(x);
-        }
+        localInst.addAll(JNIHandler.programs);
+        localVol.addAll(JNIHandler.volumes);
     }
 
     public void updateList() {

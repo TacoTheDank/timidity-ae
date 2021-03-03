@@ -43,9 +43,7 @@ public class SoundfontDialog implements OnItemLongClickListener, FileBrowserDial
 
     public void create(ArrayList<String> currList, SoundfontDialogListener sl, final Activity c, final LayoutInflater f, final String path) {
         sfList = new ArrayList<>(currList.size());
-        for (String foo : currList) {
-            sfList.add(foo);
-        }
+        sfList.addAll(currList);
         context = c;
         mCallback = sl;
         AlertDialog.Builder b = new AlertDialog.Builder(context);
