@@ -293,7 +293,7 @@ public class PlayerFragment extends Fragment {
             public void onClick(View arg0) {
                 ffrw = true;
                 int to = trackBar.getProgress() - (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 3000 : 3);
-                to = to > trackBar.getMax() ? trackBar.getMax() : to < 0 ? 0 : to;
+                to = (to > trackBar.getMax()) ? trackBar.getMax() : Math.max(to, 0);
                 trackBar.setProgress(to);
             }
 
@@ -307,7 +307,7 @@ public class PlayerFragment extends Fragment {
                 public void run() {
                     changingTime = true;
                     int to = trackBar.getProgress() - 3 * mult * (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 1000 : 1);
-                    to = to > trackBar.getMax() ? trackBar.getMax() : to < 0 ? 0 : to;
+                    to = to > trackBar.getMax() ? trackBar.getMax() : Math.max(to, 0);
                     trackBar.setProgress(to);
                     if (rewindButton.isPressed()) {
                         if (count++ > 5) {
@@ -354,7 +354,7 @@ public class PlayerFragment extends Fragment {
             public void onClick(View arg0) {
                 ffrw = true;
                 int to = trackBar.getProgress() + (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 3000 : 3);
-                to = to > trackBar.getMax() ? trackBar.getMax() : to < 0 ? 0 : to;
+                to = to > trackBar.getMax() ? trackBar.getMax() : Math.max(to, 0);
                 trackBar.setProgress(to);
             }
         });
@@ -367,7 +367,7 @@ public class PlayerFragment extends Fragment {
                 public void run() {
                     changingTime = true;
                     int to = trackBar.getProgress() + 3 * mult * (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 1000 : 1);
-                    to = to > trackBar.getMax() ? trackBar.getMax() : to < 0 ? 0 : to;
+                    to = to > trackBar.getMax() ? trackBar.getMax() : Math.max(to, 0);
                     trackBar.setProgress(to);
                     if (fastForwardButton.isPressed()) {
                         if (count++ > 5) {
