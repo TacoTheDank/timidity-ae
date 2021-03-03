@@ -9,7 +9,5 @@ import android.widget.Filter;
 public interface SearchableAdapter {
     Filter getFilter();
 
-    void notifyDataSetChanged();
-
     int currentToReal(int position);
 }

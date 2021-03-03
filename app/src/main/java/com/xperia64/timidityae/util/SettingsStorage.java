@@ -15,7 +15,6 @@ import android.app.UiModeManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.media.AudioFormat;
 import android.media.AudioTrack;
@@ -95,7 +94,7 @@ public class SettingsStorage {
     // ---------SETTINGS STORAGE----------
     private static SharedPreferences prefs; // The preferences used by this class
 
-    public static void reloadSettings(Activity c, AssetManager assets) {
+    public static void reloadSettings(Activity c) {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(c);
         firstRun = prefs.getBoolean(Constants.sett_first_run, true);
@@ -167,16 +166,14 @@ public class SettingsStorage {
         return null;
     }
 
-    public static boolean updateBuffers(int[] rata) {
+    public static void updateBuffers(int[] rata) {
         if (rata != null) {
             SparseIntArray buffMap = validBuffers(rata, prefs.getString(Constants.sett_channel_mode, "2").equals("2"), true);
             int realMin = buffMap.get(Integer.parseInt(prefs.getString(Constants.sett_audio_rate, Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM)))));
             if (bufferSize < realMin) {
                 prefs.edit().putString(Constants.sett_buffer_size, Integer.toString(bufferSize = realMin)).commit();
-                return false;
             }
         }
-        return true;
     }
 
     public static void disableLollipopStorageNag() {

@@ -35,7 +35,7 @@ public class DocumentFileUtils {
         return filename.replaceAll(Globals.repeatedSeparatorString, File.separator);
     }
 
-    public static boolean tryToDeleteFile(Context c, String filename) {
+    public static void tryToDeleteFile(Context c, String filename) {
         filename = fixRepeatedSeparator(filename);
         if (new File(filename).exists()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && docFileDevice != null) {
@@ -54,7 +54,7 @@ public class DocumentFileUtils {
                     // upper.append("../");
                     if (df == null) {
                         Log.e("TimidityAE Globals", "Delete file error (file not found)");
-                        return false;
+                        return;
                     }
                 }
                 // Why on earth is DocumentFile's delete method recursive by default?
@@ -63,17 +63,14 @@ public class DocumentFileUtils {
                     df.delete();
                 } else {
                     Log.e("TimidityAE Globals", "Delete file error (file not found)");
-                    return false;
                 }
             } else {
                 new File(filename).delete();
             }
-            return true;
         }
-        return false;
     }
 
-    public static boolean tryToCreateFile(Context context, String filename, String mimetype) {
+    public static void tryToCreateFile(Context context, String filename, String mimetype) {
         filename = fixRepeatedSeparator(filename);
         if (!new File(filename).exists()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && docFileDevice != null) {
@@ -90,24 +87,20 @@ public class DocumentFileUtils {
                     df = df.findFile(split[i++]);
                     if (df == null) {
                         Log.e("TimidityAE Globals", "Create file error.");
-                        return false;
+                        return;
                     }
                 }
                 if (df != null) {
                     df.createFile(mimetype, split[split.length - 1]);
-                } else {
-                    return false;
                 }
             } else {
                 try {
                     new File(filename).createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    return false;
                 }
             }
         }
-        return true; // I guess if it exists already it's technically created
     }
 
 

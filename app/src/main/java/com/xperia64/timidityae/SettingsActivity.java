@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SettingsStorage.reloadSettings(this, this.getAssets());
+        SettingsStorage.reloadSettings(this);
         if (needUpdateSf) {
             SettingsStorage.writeCfg(SettingsActivity.this, SettingsStorage.dataFolder + "/timidity/timidity.cfg", tmpSounds); // TODO																						// ??
         }

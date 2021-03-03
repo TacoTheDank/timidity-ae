@@ -368,18 +368,18 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     protected void onCreate(Bundle savedInstanceState) {
         deadlyDeath = false;
         if (savedInstanceState == null) {
-            SettingsStorage.reloadSettings(this, getAssets());
+            SettingsStorage.reloadSettings(this);
         } else {
             // For some reason when I kill the activity and restart it,
             // justtheme is true, but Globals.theme = 0
             if (!savedInstanceState.getBoolean("justtheme", false) || SettingsStorage.theme == 0) {
-                SettingsStorage.reloadSettings(this, getAssets());
+                SettingsStorage.reloadSettings(this);
             }
         }
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (!extras.getBoolean("justtheme", false) || SettingsStorage.theme == 0) {
-                SettingsStorage.reloadSettings(this, getAssets());
+                SettingsStorage.reloadSettings(this);
             }
         }
         try {
@@ -430,7 +430,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             if (tmp != null)
                 fileFrag = (FileBrowserFragment) tmp;
             if (!isMyServiceRunning(MusicService.class)) {
-                SettingsStorage.reloadSettings(this, getAssets());
+                SettingsStorage.reloadSettings(this);
                 initCallback2();
                 if (viewPager2 != null) {
                     if (viewPager2.getCurrentItem() == 1) {
