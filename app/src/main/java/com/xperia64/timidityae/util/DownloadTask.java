@@ -122,7 +122,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
 
                 // download the file
                 input = connection.getInputStream();
-                output = new FileOutputStream(Globals.getExternalCacheDir(context).getAbsolutePath() + '/' + theFilename);
+                output = new FileOutputStream(
+                        Globals.getExternalCacheDir(context).getAbsolutePath() + '/' + theFilename);
 
                 byte[] data = new byte[4096];
                 long total = 0;
@@ -174,7 +175,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
 
                 // download the file
                 input = connection.getInputStream();
-                output = new FileOutputStream(Globals.getExternalCacheDir(context).getAbsolutePath() + '/' + theFilename);
+                output = new FileOutputStream(
+                        Globals.getExternalCacheDir(context).getAbsolutePath() + '/' + theFilename);
 
                 byte[] data = new byte[4096];
                 long total = 0;

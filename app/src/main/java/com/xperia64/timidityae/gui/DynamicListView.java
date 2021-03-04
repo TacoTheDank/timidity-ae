@@ -40,6 +40,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.xperia64.timidityae.R;
+
 import java.util.ArrayList;
 
 import static com.xperia64.timidityae.gui.DynamicListView.DragState.DRAG_DISABLED;
@@ -132,7 +134,7 @@ public class DynamicListView extends ListView {
 
                         return true;
                     } else if (dragState == DRAG_WARNING) {
-                        Toast.makeText(getContext(), "Clear search text before reordering", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.clear_search_text, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                     return false;

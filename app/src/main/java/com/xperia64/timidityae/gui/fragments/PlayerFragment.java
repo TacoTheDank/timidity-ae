@@ -137,7 +137,8 @@ public class PlayerFragment extends Fragment {
             if (JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER) {
                 if (JNIHandler.mAudioTrack != null) {
                     if ((JNIHandler.exceptional & 1) != 0) {
-                        Toast.makeText(getActivity(), "Error initializing AudioTrack. Try decreasing the buffer size.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(),
+                                R.string.error_init_audiotrack, Toast.LENGTH_LONG).show();
                         canEnablePlay = true;
                         mActivity.stop();
                     }
@@ -166,14 +167,24 @@ public class PlayerFragment extends Fragment {
             }
             if (midiInfoDialog != null && midiInfoDialog.isShowing()) {
                 if (tempo != null)
-                    tempo.setText(String.format(getResources().getString(R.string.mop_tempo), JNIHandler.playbackPercentage, (int) (500000 / (double) JNIHandler.playbackTempo * 120 * (double) JNIHandler.playbackPercentage / 100 + 0.5)));
+                    tempo.setText(String.format(
+                            getString(R.string.mop_tempo),
+                            JNIHandler.playbackPercentage, (int) (500000 /
+                                    (double) JNIHandler.playbackTempo * 120 *
+                                    (double) JNIHandler.playbackPercentage / 100 + 0.5)));
                 if (pitch != null)
-                    pitch.setText(String.format(getResources().getString(R.string.mop_pitch), (JNIHandler.keyOffset > 0 ? "+" : "") + JNIHandler.keyOffset));
+                    pitch.setText(String.format(
+                            getString(R.string.mop_pitch),
+                            (JNIHandler.keyOffset > 0 ? "+" : "") + JNIHandler.keyOffset));
                 if (voices != null)
-                    voices.setText(String.format(getResources().getString(R.string.mop_voice), JNIHandler.voice, JNIHandler.maxvoice));
+                    voices.setText(String.format(
+                            getString(R.string.mop_voice),
+                            JNIHandler.voice, JNIHandler.maxvoice));
             }
             try { // NOPE
-                if (JNIHandler.mMediaPlayer != null && JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.mMediaPlayer.isPlaying()) // Are these evaluated in order? I hope so
+                if (JNIHandler.mMediaPlayer != null && JNIHandler.mediaBackendFormat
+                        == JNIHandler.MediaFormat.FMT_MEDIAPLAYER
+                        && JNIHandler.mMediaPlayer.isPlaying()) // Are these evaluated in order? I hope so
                 {
                     JNIHandler.currTime = JNIHandler.mMediaPlayer.getCurrentPosition();
                 }
@@ -200,7 +211,9 @@ public class PlayerFragment extends Fragment {
                         trackBar.setProgress(JNIHandler.currTime);
                         trackBar.invalidate();
 
-                        timeCounter.setText(String.format(Locale.US, "%1$d:%2$02d/%3$d:%4$02d", currMinutes, currSeconds, totalMinutes, totalSeconds));
+                        timeCounter.setText(String.format(Locale.US,
+                                "%1$d:%2$02d/%3$d:%4$02d", currMinutes, currSeconds,
+                                totalMinutes, totalSeconds));
                         timeCounter.invalidate();
                     }
                 });
@@ -245,10 +258,10 @@ public class PlayerFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    playButton.setImageResource(arg ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+                    playButton.setImageResource(
+                            arg ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
                 }
             });
-
         } else { // stop
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -292,11 +305,12 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onClick(View arg0) {
                 ffrw = true;
-                int to = trackBar.getProgress() - (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 3000 : 3);
+                int to = trackBar.getProgress() - (
+                        JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 3000 : 3);
                 to = (to > trackBar.getMax()) ? trackBar.getMax() : Math.max(to, 0);
                 trackBar.setProgress(to);
             }
-
         });
         rewindButton.setOnLongClickListener(new OnLongClickListener() {
             private final Handler mHandler = new Handler();
@@ -306,7 +320,9 @@ public class PlayerFragment extends Fragment {
                 @Override
                 public void run() {
                     changingTime = true;
-                    int to = trackBar.getProgress() - 3 * mult * (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 1000 : 1);
+                    int to = trackBar.getProgress() - 3 * mult * (
+                            JNIHandler.mediaBackendFormat
+                                    == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 1000 : 1);
                     to = to > trackBar.getMax() ? trackBar.getMax() : Math.max(to, 0);
                     trackBar.setProgress(to);
                     if (rewindButton.isPressed()) {
@@ -332,7 +348,6 @@ public class PlayerFragment extends Fragment {
                 mHandler.post(mAction);
                 return true;
             }
-
         });
 
         playButton.setEnabled(false); // >
@@ -353,7 +368,9 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onClick(View arg0) {
                 ffrw = true;
-                int to = trackBar.getProgress() + (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 3000 : 3);
+                int to = trackBar.getProgress() + (
+                        JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 3000 : 3);
                 to = to > trackBar.getMax() ? trackBar.getMax() : Math.max(to, 0);
                 trackBar.setProgress(to);
             }
@@ -366,7 +383,9 @@ public class PlayerFragment extends Fragment {
                 @Override
                 public void run() {
                     changingTime = true;
-                    int to = trackBar.getProgress() + 3 * mult * (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 1000 : 1);
+                    int to = trackBar.getProgress() + 3 * mult * (
+                            JNIHandler.mediaBackendFormat
+                                    == JNIHandler.MediaFormat.FMT_MEDIAPLAYER ? 1000 : 1);
                     to = to > trackBar.getMax() ? trackBar.getMax() : Math.max(to, 0);
                     trackBar.setProgress(to);
                     if (fastForwardButton.isPressed()) {
@@ -464,7 +483,9 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
                 if (arg2 || ffrw) {
-                    if (arg0.isEnabled() && (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_MEDIAPLAYER || ffrw)) {
+                    if (arg0.isEnabled() && (
+                            JNIHandler.mediaBackendFormat
+                                    == JNIHandler.MediaFormat.FMT_MEDIAPLAYER || ffrw)) {
                         mActivity.seek(arg1);
                     }
                     if (!fastForwardButton.isPressed() && !rewindButton.isPressed())
@@ -484,8 +505,9 @@ public class PlayerFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
-                            timeCounter.setText(String.format(Locale.US, "%1$d:%2$02d/%3$d:%4$02d", currMinutes, currSeconds, totalMinutes, totalSeconds));
+                            timeCounter.setText(String.format(Locale.US,
+                                    "%1$d:%2$02d/%3$d:%4$02d", currMinutes, currSeconds,
+                                    totalMinutes, totalSeconds));
                             timeCounter.invalidate();
                         }
                     });
@@ -499,7 +521,6 @@ public class PlayerFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar arg0) {
-
                 changingTime = false;
                 if (JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER)
                     mActivity.seek(arg0.getProgress());
@@ -510,7 +531,8 @@ public class PlayerFragment extends Fragment {
         trackBar.setIndeterminate(false);
     }
 
-    public void play(final int seekBarTime, final String title, final int shuffleMode, final int loopMode) {
+    public void play(final int seekBarTime, final String title,
+                     final int shuffleMode, final int loopMode) {
         enabledControls = false;
         canEnablePlay = false;
         playButton.setEnabled(false);
@@ -688,14 +710,24 @@ public class PlayerFragment extends Fragment {
         Button loadCfg = midiDialogView.findViewById(R.id.loadCfg);
         Button savedefCfg = midiDialogView.findViewById(R.id.savedefCfg);
         final Button deldefCfg = midiDialogView.findViewById(R.id.deldefCfg);
-        deldefCfg.setEnabled(new File(mActivity.currSongName + ".def.tcf").exists() || new File(mActivity.currSongName + ".def.tzf").exists());
+        deldefCfg.setEnabled(
+                new File(mActivity.currSongName + ".def.tcf").exists()
+                        || new File(mActivity.currSongName + ".def.tzf").exists());
         tempo = midiDialogView.findViewById(R.id.tempoText);
         pitch = midiDialogView.findViewById(R.id.pitchText);
         voices = midiDialogView.findViewById(R.id.voiceText);
 
-        tempo.setText(String.format(getResources().getString(R.string.mop_tempo), JNIHandler.playbackPercentage, (int) (500000 / (double) JNIHandler.playbackTempo * 120 * (double) JNIHandler.playbackPercentage / 100 + 0.5)));
-        pitch.setText(String.format(getResources().getString(R.string.mop_pitch), (JNIHandler.keyOffset > 0 ? "+" : "") + JNIHandler.keyOffset));
-        voices.setText(String.format(getResources().getString(R.string.mop_voice), JNIHandler.voice, JNIHandler.maxvoice));
+        tempo.setText(String.format(
+                getString(R.string.mop_tempo),
+                JNIHandler.playbackPercentage, (int) (500000 /
+                        (double) JNIHandler.playbackTempo * 120 *
+                        (double) JNIHandler.playbackPercentage / 100 + 0.5)));
+        pitch.setText(String.format(
+                getString(R.string.mop_pitch),
+                (JNIHandler.keyOffset > 0 ? "+" : "") + JNIHandler.keyOffset));
+        voices.setText(String.format(
+                getString(R.string.mop_voice),
+                JNIHandler.voice, JNIHandler.maxvoice));
         speedUp.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -783,7 +815,9 @@ public class PlayerFragment extends Fragment {
 
                 String value1;
                 String value2;
-                boolean alreadyExists = new File(mActivity.currSongName + ".def.tcf").exists() || new File(mActivity.currSongName + ".def.tzf").exists();
+                boolean alreadyExists
+                        = new File(mActivity.currSongName + ".def.tcf").exists()
+                        || new File(mActivity.currSongName + ".def.tzf").exists();
                 boolean aWrite = true;
                 String needRename1 = null;
                 String needRename2 = null;
@@ -791,9 +825,11 @@ public class PlayerFragment extends Fragment {
                 String probablyTheDirectory;
                 try {
                     if (SettingsStorage.compressCfg)
-                        new FileOutputStream(mActivity.currSongName + ".def.tzf", true).close();
+                        new FileOutputStream(
+                                mActivity.currSongName + ".def.tzf", true).close();
                     else
-                        new FileOutputStream(mActivity.currSongName + ".def.tcf", true).close();
+                        new FileOutputStream(
+                                mActivity.currSongName + ".def.tcf", true).close();
                 } catch (FileNotFoundException e) {
                     aWrite = false;
                 } catch (IOException e) {
@@ -808,7 +844,9 @@ public class PlayerFragment extends Fragment {
                 if (canWrite && new File(mActivity.currSongName).canWrite()) {
                     value1 = mActivity.currSongName + (SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf");
                     value2 = mActivity.currSongName + (SettingsStorage.compressCfg ? ".def.tcf" : ".def.tzf");
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && DocumentFileUtils.docFileDevice != null) {
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                        && DocumentFileUtils.docFileDevice != null
+                ) {
                     // TODO
                     // Write the file to getExternalFilesDir, then move it with the Uri
                     // We need to tell JNIHandler that movement is needed.
@@ -817,19 +855,34 @@ public class PlayerFragment extends Fragment {
                     probablyTheDirectory = tmp[0];
                     probablyTheRoot = tmp[1];
                     if (probablyTheDirectory.length() > 1) {
-                        needRename1 = mActivity.currSongName.substring(mActivity.currSongName.indexOf(probablyTheRoot) + probablyTheRoot.length()) + (SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf");
-                        needRename2 = mActivity.currSongName.substring(mActivity.currSongName.indexOf(probablyTheRoot) + probablyTheRoot.length()) + (SettingsStorage.compressCfg ? ".def.tcf" : ".def.tzf");
-                        value1 = probablyTheDirectory + mActivity.currSongName.substring(mActivity.currSongName.lastIndexOf('/')) + (SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf");
-                        value2 = probablyTheDirectory + mActivity.currSongName.substring(mActivity.currSongName.lastIndexOf('/')) + (SettingsStorage.compressCfg ? ".def.tcf" : ".def.tzf");
+                        needRename1 = mActivity.currSongName.substring(
+                                mActivity.currSongName.indexOf(probablyTheRoot)
+                                        + probablyTheRoot.length()) + (SettingsStorage.compressCfg
+                                ? ".def.tzf" : ".def.tcf");
+                        needRename2 = mActivity.currSongName.substring(
+                                mActivity.currSongName.indexOf(probablyTheRoot)
+                                        + probablyTheRoot.length()) + (SettingsStorage.compressCfg
+                                ? ".def.tcf" : ".def.tzf");
+                        value1 = probablyTheDirectory +
+                                mActivity.currSongName.substring(
+                                        mActivity.currSongName.lastIndexOf('/'))
+                                + (SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf");
+                        value2 = probablyTheDirectory +
+                                mActivity.currSongName.substring(
+                                        mActivity.currSongName.lastIndexOf('/'))
+                                + (SettingsStorage.compressCfg ? ".def.tcf" : ".def.tzf");
                     } else {
-                        Toast.makeText(getActivity(), "Could not write config file. Did you give Timidity write access to the root of your external sd card?", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),
+                                R.string.config_write_failure_sdcard_access, Toast.LENGTH_SHORT).show();
                         return;
                     }
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Toast.makeText(getActivity(), "Could not write config file. Did you give Timidity write access to the root of your external sd card?", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),
+                                R.string.config_write_failure_sdcard_access, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "Could not write config file. Permission denied.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),
+                                R.string.config_write_failure, Toast.LENGTH_SHORT).show();
                     }
                     return;
                 }
@@ -843,27 +896,34 @@ public class PlayerFragment extends Fragment {
                     dialog.setTitle("Warning");
                     dialog.setMessage("Overwrite default config file?");
                     dialog.setCancelable(false);
-                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int buttonId) {
-                            if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                DocumentFileUtils.tryToDeleteFile(getActivity(), probRoot + needToRename1);
-                                DocumentFileUtils.tryToDeleteFile(getActivity(), finalval1);
-                                DocumentFileUtils.tryToDeleteFile(getActivity(), probRoot + needToRename2);
-                                DocumentFileUtils.tryToDeleteFile(getActivity(), finalval2);
-                            } else {
-                                new File(mActivity.currSongName + ".def.tcf").delete();
-                                new File(mActivity.currSongName + ".def.tzf").delete();
-                            }
-                            mActivity.setLocalFinished(false);
-                            mActivity.saveCfgPart2(finalval1, needToRename1);
-                            deldefCfg.setEnabled(true);
-                        }
-                    });
-                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(android.R.string.no), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int buttonId) {
-
-                        }
-                    });
+                    dialog.setButton(
+                            DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int buttonId) {
+                                    if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        DocumentFileUtils.tryToDeleteFile(
+                                                getActivity(), probRoot + needToRename1);
+                                        DocumentFileUtils.tryToDeleteFile(
+                                                getActivity(), finalval1);
+                                        DocumentFileUtils.tryToDeleteFile(
+                                                getActivity(), probRoot + needToRename2);
+                                        DocumentFileUtils.tryToDeleteFile(
+                                                getActivity(), finalval2);
+                                    } else {
+                                        new File(mActivity.currSongName + ".def.tcf").delete();
+                                        new File(mActivity.currSongName + ".def.tzf").delete();
+                                    }
+                                    mActivity.setLocalFinished(false);
+                                    mActivity.saveCfgPart2(finalval1, needToRename1);
+                                    deldefCfg.setEnabled(true);
+                                }
+                            });
+                    dialog.setButton(
+                            DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int buttonId) {
+                                }
+                            });
                     dialog.show();
 
                 } else {
@@ -872,21 +932,21 @@ public class PlayerFragment extends Fragment {
                     deldefCfg.setEnabled(true);
                 }
             }
-
         });
 
         deldefCfg.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
-
-                if (new File(mActivity.currSongName + ".def.tcf").exists() || new File(mActivity.currSongName + ".def.tzf").exists()) {
+                if (new File(mActivity.currSongName + ".def.tcf").exists()
+                        || new File(mActivity.currSongName + ".def.tzf").exists()) {
                     boolean aWrite = true;
                     try {
                         if (SettingsStorage.compressCfg)
-                            new FileOutputStream(mActivity.currSongName + ".def.tzf", true).close();
+                            new FileOutputStream(
+                                    mActivity.currSongName + ".def.tzf", true).close();
                         else
-                            new FileOutputStream(mActivity.currSongName + ".def.tcf", true).close();
+                            new FileOutputStream(
+                                    mActivity.currSongName + ".def.tcf", true).close();
                     } catch (FileNotFoundException e) {
                         aWrite = false;
                     } catch (IOException e) {
@@ -897,24 +957,29 @@ public class PlayerFragment extends Fragment {
                     dialog.setTitle("Warning");
                     dialog.setMessage("Really delete default config file?");
                     dialog.setCancelable(false);
-                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int buttonId) {
+                    dialog.setButton(
+                            DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int buttonId) {
 
-                            if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                DocumentFileUtils.tryToDeleteFile(getActivity(), mActivity.currSongName + ".def.tzf");
-                                DocumentFileUtils.tryToDeleteFile(getActivity(), mActivity.currSongName + ".def.tcf");
-                            } else {
-                                new File(mActivity.currSongName + ".def.tcf").delete();
-                                new File(mActivity.currSongName + ".def.tzf").delete();
-                            }
-                            deldefCfg.setEnabled(false);
-                        }
-                    });
-                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(android.R.string.no), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int buttonId) {
-
-                        }
-                    });
+                                    if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        DocumentFileUtils.tryToDeleteFile(
+                                                getActivity(), mActivity.currSongName + ".def.tzf");
+                                        DocumentFileUtils.tryToDeleteFile(
+                                                getActivity(), mActivity.currSongName + ".def.tcf");
+                                    } else {
+                                        new File(mActivity.currSongName + ".def.tcf").delete();
+                                        new File(mActivity.currSongName + ".def.tzf").delete();
+                                    }
+                                    deldefCfg.setEnabled(false);
+                                }
+                            });
+                    dialog.setButton(
+                            DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int buttonId) {
+                                }
+                            });
                     dialog.show();
 
                 }
@@ -925,12 +990,13 @@ public class PlayerFragment extends Fragment {
         final Spinner x = midiDialogView.findViewById(R.id.resampSpinner);
         List<String> arrayAdapter = new ArrayList<>();
         Collections.addAll(arrayAdapter, Globals.sampls);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arrayAdapter);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, arrayAdapter);
+
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         x.setAdapter(dataAdapter);
         firstSelection = true;
         x.setOnItemSelectedListener(new OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int pos, long id) {
                 if (firstSelection)
@@ -943,24 +1009,19 @@ public class PlayerFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-
             }
-
         });
         x.setSelection(JNIHandler.currsamp);
 
         midiInfoDialogBuilder.setView(midiDialogView);
         midiInfoDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
-        midiInfoDialogBuilder.setTitle(getActivity().getResources().getString(R.string.mop));
+        midiInfoDialogBuilder.setTitle(getActivity().getString(R.string.mop));
         midiInfoDialog = midiInfoDialogBuilder.create();
         midiInfoDialog.show();
-
     }
 
     public void setArt() {
@@ -972,7 +1033,7 @@ public class PlayerFragment extends Fragment {
     public void showSoxDialog() {
         /*AlertDialog.Builder soxInfoDialogBuilder = new AlertDialog.Builder(getActivity());
         View soxDialogView = getActivity().getLayoutInflater().inflate(R.layout.sox_options_basic, null);
-        final EditText soxEff = (EditText) soxDialogView.findViewById(R.id.soxDlgText);
+        final EditText soxEff = soxDialogView.findViewById(R.id.soxDlgText);
         soxEff.setText(SettingsStorage.soxEffStr);
         soxInfoDialogBuilder.setView(soxDialogView);
         soxInfoDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -51,8 +51,8 @@ public class WavSaver implements TimidityActivity.SpecialAction {
 
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-            alert.setTitle(context.getResources().getString(R.string.dynex_alert1));
-            alert.setMessage(context.getResources().getString(R.string.dynex_alert1_msg));
+            alert.setTitle(context.getString(R.string.dynex_alert1));
+            alert.setMessage(context.getString(R.string.dynex_alert1_msg));
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             input.setFilters(new InputFilter[]{Globals.fileNameInputFilter});
@@ -82,13 +82,16 @@ public class WavSaver implements TimidityActivity.SpecialAction {
 
                     if (normalWrite && new File(parent).canWrite()) {
                         value = parent + value;
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && DocumentFileUtils.docFileDevice != null) {
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                            && DocumentFileUtils.docFileDevice != null
+                    ) {
                         String[] tmp = DocumentFileUtils.getExternalFilePaths(context, parent);
                         probablyTheDirectory = tmp[0];
                         probablyTheRoot = tmp[1];
 
                         if (probablyTheDirectory.length() > 1) {
-                            needRename = parent.substring(parent.indexOf(probablyTheRoot) + probablyTheRoot.length()) + value;
+                            needRename = parent.substring(parent.indexOf(probablyTheRoot)
+                                    + probablyTheRoot.length()) + value;
                             value = probablyTheDirectory + '/' + value;
                         } else {
                             value = Environment.getExternalStorageDirectory().getAbsolutePath() + '/' + value;
@@ -100,28 +103,33 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                     final boolean canWrite = normalWrite;
                     final String needToRename = needRename;
                     final String probRoot = probablyTheRoot;
-                    if (new File(finalval).exists() || new File(probRoot + needRename).exists() && needToRename != null) {
+                    if (new File(finalval).exists()
+                            || new File(probRoot + needRename).exists() && needToRename != null
+                    ) {
                         AlertDialog dialog2 = new AlertDialog.Builder(context).create();
-                        dialog2.setTitle(context.getResources().getString(R.string.warning));
-                        dialog2.setMessage(context.getResources().getString(R.string.dynex_alert2_msg));
+                        dialog2.setTitle(context.getString(R.string.warning));
+                        dialog2.setMessage(context.getString(R.string.dynex_alert2_msg));
                         dialog2.setCancelable(false);
-                        dialog2.setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int buttonId) {
-                                if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    if (needToRename != null) {
-                                        DocumentFileUtils.tryToDeleteFile(context, probRoot + needToRename);
+                        dialog2.setButton(DialogInterface.BUTTON_POSITIVE,
+                                context.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int buttonId) {
+                                        if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            if (needToRename != null) {
+                                                DocumentFileUtils.tryToDeleteFile(
+                                                        context, probRoot + needToRename);
+                                            }
+                                            DocumentFileUtils.tryToDeleteFile(context, finalval);
+                                        } else {
+                                            new File(finalval).delete();
+                                        }
+                                        saveWavPart2(finalval, needToRename);
                                     }
-                                    DocumentFileUtils.tryToDeleteFile(context, finalval);
-                                } else {
-                                    new File(finalval).delete();
-                                }
-                                saveWavPart2(finalval, needToRename);
-                            }
-                        });
-                        dialog2.setButton(DialogInterface.BUTTON_NEGATIVE, context.getResources().getString(android.R.string.no), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int buttonId) {
-                            }
-                        });
+                                });
+                        dialog2.setButton(DialogInterface.BUTTON_NEGATIVE,
+                                context.getString(android.R.string.no), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int buttonId) {
+                                    }
+                                });
                         dialog2.show();
                     } else {
                         saveWavPart2(finalval, needToRename);
@@ -130,7 +138,7 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                 }
             });
 
-            alert.setNegativeButton(context.getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Canceled.
                 }
@@ -144,7 +152,8 @@ public class WavSaver implements TimidityActivity.SpecialAction {
     private void saveWavPart2(final String finalval, final String needToRename) {
         Intent new_intent = new Intent();
         new_intent.setAction(Constants.msrv_rec);
-        new_intent.putExtra(Constants.msrv_cmd, playingExport ? Constants.msrv_cmd_write_curr : Constants.msrv_cmd_write_new);
+        new_intent.putExtra(Constants.msrv_cmd,
+                playingExport ? Constants.msrv_cmd_write_curr : Constants.msrv_cmd_write_new);
         if (!playingExport) {
             new_intent.putExtra(Constants.msrv_infile, currSongName);
         }
@@ -204,8 +213,9 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                         }
                     });
                     String trueName = finalval;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && DocumentFileUtils.docFileDevice != null && needToRename != null) {
-
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                            && DocumentFileUtils.docFileDevice != null && needToRename != null
+                    ) {
                         if (DocumentFileUtils.renameDocumentFile(context, finalval, needToRename)) {
                             trueName = needToRename;
                         } else {
@@ -215,8 +225,6 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                     final String tn = trueName;
                     context.runOnUiThread(new Runnable() {
                         public void run() {
-
-
                             prog.dismiss();
                             Toast.makeText(context, "Wrote " + tn, Toast.LENGTH_SHORT).show();
                             Intent outgoingIntent = new Intent();

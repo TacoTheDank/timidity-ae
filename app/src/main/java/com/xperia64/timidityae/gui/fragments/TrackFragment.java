@@ -64,7 +64,13 @@ public class TrackFragment extends Fragment {
 
         trackListAdapter = new ArrayAdapter<>(getActivity(), R.layout.row);
         for (int i = 0; i < JNIHandler.MAX_CHANNELS; i++) {
-            trackListAdapter.add(String.format(getActivity().getResources().getString(R.string.trk_form), getActivity().getResources().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2), i + 1, JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1, localVol.get(i)));
+            trackListAdapter.add(String.format(
+                    getActivity().getString(R.string.trk_form),
+                    getActivity().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2),
+                    i + 1,
+                    JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1,
+                    localVol.get(i))
+            );
         }
         trackList.setAdapter(trackListAdapter);
         trackList.setOnItemClickListener(new OnItemClickListener() {
@@ -81,11 +87,14 @@ public class TrackFragment extends Fragment {
                 List<String> arrayAdapter = new ArrayList<>();
                 final int offset = !JNIHandler.drums.get(arg2) ? 0 : 34;
                 if (!JNIHandler.drums.get(arg2)) {
-                    Collections.addAll(arrayAdapter, getActivity().getResources().getStringArray(R.array.midi_instruments));
+                    Collections.addAll(arrayAdapter, getActivity()
+                            .getResources().getStringArray(R.array.midi_instruments));
                 } else {
-                    Collections.addAll(arrayAdapter, getActivity().getResources().getStringArray(R.array.midi_drums));
+                    Collections.addAll(arrayAdapter, getActivity()
+                            .getResources().getStringArray(R.array.midi_drums));
                 }
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arrayAdapter);
+                ArrayAdapter<String> dataAdapter
+                        = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, arrayAdapter);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                 dataAdapter.setNotifyOnChange(false);
@@ -188,8 +197,16 @@ public class TrackFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         JNIHandler.custInst.set(arg2, !inst.isChecked());
                         JNIHandler.custVol.set(arg2, !vol.isChecked());
-                        JNIHandler.setChannelVolumeTimidity(arg2 | (JNIHandler.custVol.get(arg2) ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask), volSeek.getProgress());
-                        JNIHandler.setChannelTimidity(arg2 | (JNIHandler.custInst.get(arg2) ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask), instSpin.getSelectedItemPosition());
+                        JNIHandler.setChannelVolumeTimidity(
+                                arg2 | (JNIHandler.custVol.get(arg2)
+                                        ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask),
+                                volSeek.getProgress()
+                        );
+                        JNIHandler.setChannelTimidity(
+                                arg2 | (JNIHandler.custInst.get(arg2)
+                                        ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask),
+                                instSpin.getSelectedItemPosition()
+                        );
                         if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING)
                             JNIHandler.seekTo(JNIHandler.currTime);
                         // bigCounter=12;
@@ -202,7 +219,7 @@ public class TrackFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 });
-                b.setTitle(String.format(getActivity().getResources().getString(R.string.trk_form2), arg2 + 1));
+                b.setTitle(String.format(getActivity().getString(R.string.trk_form2), arg2 + 1));
                 ddd = b.create();
                 ddd.show();
             }
@@ -249,8 +266,8 @@ public class TrackFragment extends Fragment {
                 trackListAdapter.setNotifyOnChange(false);
                 trackListAdapter.clear();
                 for (int i = 0; i < JNIHandler.MAX_CHANNELS; i++) {
-                    trackListAdapter.add(String.format(getActivity().getResources().getString(R.string.trk_form),
-                            getActivity().getResources().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2),
+                    trackListAdapter.add(String.format(getActivity().getString(R.string.trk_form),
+                            getActivity().getString(JNIHandler.drums.get(i) ? R.string.trk_drum : R.string.trk_inst2),
                             i + 1, JNIHandler.drums.get(i) ? 0 : localInst.get(i) + 1,
                             localVol.get(i)));
                 }

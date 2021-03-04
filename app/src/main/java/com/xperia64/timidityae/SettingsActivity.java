@@ -37,7 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressLint("CommitPrefEdits")
-public class SettingsActivity extends AppCompatActivity implements FileBrowserDialogListener, SoundfontDialogListener {
+public class SettingsActivity extends AppCompatActivity
+        implements FileBrowserDialogListener, SoundfontDialogListener {
 
     public static SettingsActivity mInstance = null;
     public static String ROOT_PREFS = "RootPreferences";
@@ -56,7 +57,9 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mInstance = this;
-        this.setTheme(SettingsStorage.theme == 1 ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : androidx.appcompat.R.style.Theme_AppCompat);
+        this.setTheme(SettingsStorage.theme == 1
+                ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar
+                : androidx.appcompat.R.style.Theme_AppCompat);
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -92,7 +95,8 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
         }
         SettingsStorage.reloadSettings(this);
         if (needUpdateSf) {
-            SettingsStorage.writeCfg(SettingsActivity.this, SettingsStorage.dataFolder + "/timidity/timidity.cfg", tmpSounds); // TODO																						// ??
+            SettingsStorage.writeCfg(SettingsActivity.this,
+                    SettingsStorage.dataFolder + "/timidity/timidity.cfg", tmpSounds); // TODO
         }
 
         if (needRestart) {
@@ -129,7 +133,7 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
                 return;
             }
         }
-        Toast.makeText(this, getResources().getString(R.string.invalidfold), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.invalidfold), Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -140,7 +144,9 @@ public class SettingsActivity extends AppCompatActivity implements FileBrowserDi
         if (requestCode == 42) {
             if (resultCode == RESULT_OK) {
                 Uri treeUri = data.getData();
-                getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                getContentResolver().takePersistableUriPermission(treeUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 DocumentFileUtils.docFileDevice = treeUri;
             } else {
                 DocumentFileUtils.docFileDevice = null;

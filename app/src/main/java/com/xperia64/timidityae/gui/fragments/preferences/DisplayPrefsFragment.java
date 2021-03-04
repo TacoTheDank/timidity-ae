@@ -69,7 +69,10 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
                     List<UriPermission> permissions = s.getContentResolver().getPersistedUriPermissions();
                     if (!permissions.isEmpty()) {
                         for (UriPermission p : permissions) {
-                            s.getContentResolver().releasePersistableUriPermission(p.getUri(), Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            s.getContentResolver()
+                                    .releasePersistableUriPermission(p.getUri(),
+                                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                         }
                     }
                     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
@@ -103,7 +106,11 @@ public class DisplayPrefsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 s.tmpItemEdit = manHomeFolder;
                 s.tmpItemScreen = getPreferenceScreen();
-                new FileBrowserDialog().create(3, null, s, s, s.getLayoutInflater(), true, s.prefs.getString("defaultPath", Environment.getExternalStorageDirectory().getAbsolutePath()), getResources().getString(R.string.fb_add));
+                new FileBrowserDialog().create(3, null, s, s,
+                        s.getLayoutInflater(), true,
+                        s.prefs.getString("defaultPath",
+                                Environment.getExternalStorageDirectory().getAbsolutePath()
+                        ), getResources().getString(R.string.fb_add));
                 return true;
             }
         });

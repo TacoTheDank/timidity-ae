@@ -94,7 +94,11 @@ public class MusicService extends Service {
         public void onCallStateChanged(int state, String incomingNumber) {
             if (state == TelephonyManager.CALL_STATE_RINGING) {
                 // Incoming call: Pause music
-                if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING && !phonepause && !(JNIHandler.currentWavWriter != null && !JNIHandler.currentWavWriter.finishedWriting)) {
+                if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING
+                        && !phonepause && !(
+                        JNIHandler.currentWavWriter != null
+                                && !JNIHandler.currentWavWriter.finishedWriting)
+                ) {
                     phonepause = true;
                     pause();
                 }
@@ -147,7 +151,9 @@ public class MusicService extends Service {
                     }
                 }
             } else if (Intent.ACTION_HEADSET_PLUG.equals(intent.getAction())) {
-                if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING && intent.getIntExtra("state", -1) == 0) {
+                if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING
+                        && intent.getIntExtra("state", -1) == 0
+                ) {
                     pause();
                 }
             } else {
@@ -157,7 +163,8 @@ public class MusicService extends Service {
                 // Sigh. Here we go:
                 Intent outgoingIntent = new Intent();
                 switch (cmd) {
-                    case Constants.msrv_cmd_load_plist_play: // We have a new playlist. Load it and the immediate song to load.
+                    // We have a new playlist. Load it and the immediate song to load.
+                    case Constants.msrv_cmd_load_plist_play:
                         breakLoops = true;
                         ArrayList<String> tmpList = Globals.plist;
                         if (tmpList == null) {
@@ -167,7 +174,8 @@ public class MusicService extends Service {
                         if (tmpNum <= -1) {
                             break;
                         }
-                        boolean shouldCopyPlist = intent.getBooleanExtra(Constants.msrv_cpplist, true);
+                        boolean shouldCopyPlist = intent.getBooleanExtra(
+                                Constants.msrv_cpplist, true);
                         if (shouldCopyPlist) {
                             currSongNumber = realSongNumber = tmpNum;
                             playList = tmpList;
@@ -235,7 +243,10 @@ public class MusicService extends Service {
                         shuffleMode = intent.getIntExtra(Constants.msrv_shufmode, 0);
                         if (shuffleMode == 1) {
                             fixedShuffle = false;
-                            if (SettingsStorage.reShuffle || reverseShuffledIndices == null || shuffledIndices == null) {
+                            if (SettingsStorage.reShuffle
+                                    || reverseShuffledIndices == null
+                                    || shuffledIndices == null
+                            ) {
                                 genShuffledPlist();
                             }
                             if (reverseShuffledIndices == null) {
@@ -281,7 +292,8 @@ public class MusicService extends Service {
                         outgoingIntent.putExtra(Constants.ta_loopmode, loopMode);
                         outgoingIntent.putExtra(Constants.ta_songttl, currTitle);
                         if (shuffleMode == 1) {
-                            outgoingIntent.putExtra(Constants.ta_filename, playList.get(shuffledIndices.get(currSongNumber)));
+                            outgoingIntent.putExtra(Constants.ta_filename,
+                                    playList.get(shuffledIndices.get(currSongNumber)));
                         } else {
                             outgoingIntent.putExtra(Constants.ta_filename, playList.get(currSongNumber));
                         }
@@ -334,7 +346,9 @@ public class MusicService extends Service {
                             @Override
                             public void run() {
                                 // Wait for TiMidity to start or until canceled or aborted.
-                                while (!breakLoops && JNIHandler.state != JNIHandler.PlaybackState.STATE_PLAYING) {
+                                while (!breakLoops && JNIHandler.state
+                                        != JNIHandler.PlaybackState.STATE_PLAYING
+                                ) {
                                     if (JNIHandler.state == JNIHandler.PlaybackState.STATE_IDLE) {
                                         // LOADING -> IDLE = Error
                                         breakLoops = true;
@@ -344,9 +358,11 @@ public class MusicService extends Service {
                                     } catch (InterruptedException ignored) {
                                     }
                                 }
-                                if (new File(input + ".def.tcf").exists() || new File(input + ".def.tzf").exists()) {
+                                if (new File(input + ".def.tcf").exists()
+                                        || new File(input + ".def.tzf").exists()) {
                                     String suffix;
-                                    if (new File(input + ".def.tcf").exists() && new File(input + ".def.tzf").exists()) {
+                                    if (new File(input + ".def.tcf").exists()
+                                            && new File(input + ".def.tzf").exists()) {
                                         suffix = SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf";
                                     } else if (new File(input + ".def.tcf").exists()) {
                                         suffix = ".def.tcf";
@@ -357,15 +373,18 @@ public class MusicService extends Service {
                                     JNIHandler.currTime = 0;
 
                                     // Wait for data to be written
-                                    // TODO: When STATE_LOADING is more robust, wait for it to transition instead of this:
-                                    while (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING && !breakLoops && !JNIHandler.dataWritten) {
+                                    // TODO: When STATE_LOADING is more robust, wait for it
+                                    //  to transition instead of this:
+                                    while (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING
+                                            && !breakLoops && !JNIHandler.dataWritten) {
                                         try {
                                             Thread.sleep(25);
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
                                     }
-                                    Intent loadCfgIntent = new Intent(); // silly, but should be done async. I think.
+                                    // silly, but should be done async. I think.
+                                    Intent loadCfgIntent = new Intent();
                                     loadCfgIntent.setAction(Constants.msrv_rec);
                                     loadCfgIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_load_cfg);
                                     loadCfgIntent.putExtra(Constants.msrv_infile, input + suffix);
@@ -380,7 +399,8 @@ public class MusicService extends Service {
                                 }
                                 Intent outgoingIntent = new Intent();
                                 outgoingIntent.setAction(Constants.ta_rec);
-                                outgoingIntent.putExtra(Constants.ta_cmd, Constants.ta_cmd_special_notification_finished);
+                                outgoingIntent.putExtra(Constants.ta_cmd,
+                                        Constants.ta_cmd_special_notification_finished);
                                 sendBroadcast(outgoingIntent);
                                 breakLoops = false;
                             }
@@ -421,7 +441,8 @@ public class MusicService extends Service {
                                 }
                                 Intent outgoingIntent = new Intent();
                                 outgoingIntent.setAction(Constants.ta_rec);
-                                outgoingIntent.putExtra(Constants.ta_cmd, Constants.ta_cmd_special_notification_finished);
+                                outgoingIntent.putExtra(Constants.ta_cmd,
+                                        Constants.ta_cmd_special_notification_finished);
                                 sendBroadcast(outgoingIntent);
                                 outgoingIntent.setAction(Constants.ta_rec);
                                 outgoingIntent.putExtra(Constants.ta_cmd, Constants.ta_cmd_pause_stop);
@@ -455,9 +476,11 @@ public class MusicService extends Service {
                         if (SettingsStorage.compressCfg) {
                             BufferedWriter writer = null;
                             try {
-                                GZIPOutputStream zip = new GZIPOutputStream(new FileOutputStream(new File(output3)));
+                                GZIPOutputStream zip = new GZIPOutputStream(
+                                        new FileOutputStream(new File(output3)));
 
-                                writer = new BufferedWriter(new OutputStreamWriter(zip, "US-ASCII"));
+                                writer = new BufferedWriter(
+                                        new OutputStreamWriter(zip, "US-ASCII"));
 
                                 for (String s : serializedSettings) {
                                     writer.append(s);
@@ -511,7 +534,8 @@ public class MusicService extends Service {
                             if (input2.endsWith(".tzf")) {
                                 InputStream fileStream = new FileInputStream(input2);
                                 InputStream gzipStream = new GZIPInputStream(fileStream);
-                                InputStreamReader decoder = new InputStreamReader(gzipStream, "US-ASCII");
+                                InputStreamReader decoder = new InputStreamReader(
+                                        gzipStream, "US-ASCII");
                                 br = new BufferedReader(decoder);
                             } else {
 
@@ -519,7 +543,8 @@ public class MusicService extends Service {
                                 DataInputStream in = new DataInputStream(fstream);
                                 br = new BufferedReader(new InputStreamReader(in));
                             }
-                            // I could check if all of these are actually ArrayLists, but eclipse still won't be happy
+                            // I could check if all of these are actually ArrayLists,
+                            //  but eclipse still won't be happy
                             mscustInst = (ArrayList<Boolean>) ObjectSerializer.deserialize(br.readLine());
                             mscustVol = (ArrayList<Boolean>) ObjectSerializer.deserialize(br.readLine());
                             msprograms = (ArrayList<Integer>) ObjectSerializer.deserialize(br.readLine());
@@ -529,24 +554,30 @@ public class MusicService extends Service {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        if (mscustInst.size() != mscustVol.size() || mscustVol.size() != msprograms.size() || msprograms.size() != msvolumes.size()) {
+                        if (mscustInst.size() != mscustVol.size()
+                                || mscustVol.size() != msprograms.size()
+                                || msprograms.size() != msvolumes.size()
+                        ) {
                             // wat
                             break;
                         }
                         for (int i = 0; i < mscustInst.size(); i++) {
                             if (mscustInst.get(i)) {
-                                JNIHandler.setChannelTimidity(i | Constants.jni_tim_holdmask, msprograms.get(i));
+                                JNIHandler.setChannelTimidity(i
+                                        | Constants.jni_tim_holdmask, msprograms.get(i));
                                 JNIHandler.programs.set(i, msprograms.get(i));
                             } else {
-
-                                JNIHandler.setChannelTimidity(i | Constants.jni_tim_unholdmask, msprograms.get(i));
+                                JNIHandler.setChannelTimidity(i
+                                        | Constants.jni_tim_unholdmask, msprograms.get(i));
                             }
                             JNIHandler.custInst.set(i, mscustInst.get(i));
                             if (mscustVol.get(i)) {
-                                JNIHandler.setChannelVolumeTimidity(i | Constants.jni_tim_holdmask, msvolumes.get(i));
+                                JNIHandler.setChannelVolumeTimidity(i
+                                        | Constants.jni_tim_holdmask, msvolumes.get(i));
                                 JNIHandler.volumes.set(i, msvolumes.get(i));
                             } else {
-                                JNIHandler.setChannelVolumeTimidity(i | Constants.jni_tim_unholdmask, msvolumes.get(i));
+                                JNIHandler.setChannelVolumeTimidity(i
+                                        | Constants.jni_tim_unholdmask, msvolumes.get(i));
                             }
                             JNIHandler.custVol.set(i, mscustVol.get(i));
                         }
@@ -601,13 +632,20 @@ public class MusicService extends Service {
                         JNIHandler.drums = new ArrayList<>();
                         JNIHandler.custInst = new ArrayList<>();
                         JNIHandler.custVol = new ArrayList<>();
-                        logRet = JNIHandler.loadLib(Globals.getLibDir(MusicService.this) + "libtimidityplusplus.so");
+                        logRet = JNIHandler.loadLib(
+                                Globals.getLibDir(MusicService.this) + "libtimidityplusplus.so");
                         Log.d("TIMIDITY", "Reloading: " + logRet);
-                        int x = JNIHandler.init(SettingsStorage.dataFolder + "timidity/", "timidity.cfg", SettingsStorage.channelMode, SettingsStorage.defaultResamp,
-                                SettingsStorage.bufferSize, SettingsStorage.audioRate, SettingsStorage.preserveSilence, true, SettingsStorage.freeInsts, SettingsStorage.verbosity, SettingsStorage.volume);
+                        int x = JNIHandler.init(SettingsStorage.dataFolder
+                                        + "timidity/", "timidity.cfg",
+                                SettingsStorage.channelMode, SettingsStorage.defaultResamp,
+                                SettingsStorage.bufferSize, SettingsStorage.audioRate,
+                                SettingsStorage.preserveSilence, true,
+                                SettingsStorage.freeInsts, SettingsStorage.verbosity,
+                                SettingsStorage.volume);
                         if (x != 0 && x != -99) {
                             SettingsStorage.onlyNative = SettingsStorage.nativeMidi = true;
-                            Toast.makeText(MusicService.this, String.format(getResources().getString(R.string.tcfg_error), x), Toast.LENGTH_LONG).show();
+                            Toast.makeText(MusicService.this, String.format(
+                                    getString(R.string.tcfg_error), x), Toast.LENGTH_LONG).show();
                             Intent outgoingIntent16 = new Intent();
                             outgoingIntent16.setAction(Constants.ta_rec);
                             outgoingIntent16.putExtra(Constants.ta_cmd, Constants.ta_cmd_refresh_filebrowser);
@@ -713,12 +751,16 @@ public class MusicService extends Service {
                     }
                 });
                 PlaybackState state = new PlaybackState.Builder()
-                        .setActions(PlaybackState.ACTION_PLAY_PAUSE | PlaybackState.ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_SKIP_TO_PREVIOUS | PlaybackState.ACTION_STOP)
+                        .setActions(PlaybackState.ACTION_PLAY_PAUSE
+                                | PlaybackState.ACTION_SKIP_TO_NEXT
+                                | PlaybackState.ACTION_SKIP_TO_PREVIOUS
+                                | PlaybackState.ACTION_STOP)
                         .setState(PlaybackState.STATE_PLAYING, 0, 0, 0)
                         .build();
                 audioSession.setPlaybackState(state);
 
-                audioSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+                audioSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS
+                        | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
                 audioSession.setActive(true);
             }
@@ -732,7 +774,8 @@ public class MusicService extends Service {
         wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Timidity AE");
         wl.setReferenceCounted(false);
         if (shouldDoWidget)
-            widgetIds = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), TimidityAEWidgetProvider.class));
+            widgetIds = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
+                    new ComponentName(getApplication(), TimidityAEWidgetProvider.class));
 
         TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         if (mgr != null && Globals.phoneState) {
@@ -761,7 +804,8 @@ public class MusicService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.srv_fnf), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.srv_fnf), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -770,7 +814,8 @@ public class MusicService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "Error initializing AudioTrack. Try decreasing the buffer size.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                R.string.error_init_audiotrack, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -779,7 +824,8 @@ public class MusicService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.srv_loading), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.srv_loading), Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -787,7 +833,9 @@ public class MusicService extends Service {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), String.format(getResources().getString(R.string.srv_unk), code), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),
+                                String.format(getString(R.string.srv_unk), code),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -853,7 +901,9 @@ public class MusicService extends Service {
                     new Thread(new Runnable() {
                         public void run() {
                             // Wait for timidity to actually start playing
-                            while (!breakLoops && JNIHandler.state == JNIHandler.PlaybackState.STATE_LOADING && shouldAdvance) {
+                            while (!breakLoops && JNIHandler.state
+                                    == JNIHandler.PlaybackState.STATE_LOADING && shouldAdvance
+                            ) {
 								/*if (!JNIHandler.isBlocking)
 									breakLoops = true;*/
                                 try {
@@ -871,9 +921,11 @@ public class MusicService extends Service {
                                 guiIntent.putExtra(Constants.ta_highlight, currSongNumber);
                                 sendBroadcast(guiIntent);
                             }
-                            if (new File(fileName + ".def.tcf").exists() || new File(fileName + ".def.tzf").exists()) {
+                            if (new File(fileName + ".def.tcf").exists()
+                                    || new File(fileName + ".def.tzf").exists()) {
                                 String suffix;
-                                if (new File(fileName + ".def.tcf").exists() && new File(fileName + ".def.tzf").exists()) {
+                                if (new File(fileName + ".def.tcf").exists()
+                                        && new File(fileName + ".def.tzf").exists()) {
                                     suffix = SettingsStorage.compressCfg ? ".def.tzf" : ".def.tcf";
                                 } else if (new File(fileName + ".def.tcf").exists()) {
                                     suffix = ".def.tcf";
@@ -882,14 +934,17 @@ public class MusicService extends Service {
                                 }
                                 JNIHandler.shouldPlayNow = false;
                                 JNIHandler.currTime = 0;
-                                while (JNIHandler.isActive() && !breakLoops && shouldAdvance && !JNIHandler.dataWritten) {
+                                while (JNIHandler.isActive() && !breakLoops && shouldAdvance
+                                        && !JNIHandler.dataWritten
+                                ) {
                                     try {
                                         Thread.sleep(25);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
                                 }
-                                final Intent cfgLoadIntent = new Intent(); // silly, but should be done async. I think.
+                                // silly, but should be done async. I think.
+                                final Intent cfgLoadIntent = new Intent();
                                 cfgLoadIntent.setAction(Constants.msrv_rec);
                                 cfgLoadIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_load_cfg);
                                 cfgLoadIntent.putExtra(Constants.msrv_infile, fileName + suffix);
@@ -902,7 +957,9 @@ public class MusicService extends Service {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(MusicService.this, "Error loading file: " + JNIHandler.errorReason, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MusicService.this,
+                                                "Error loading file: " + JNIHandler.errorReason,
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 if (JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_SOX) {
@@ -922,7 +979,9 @@ public class MusicService extends Service {
                             }
                             if (shouldAdvance && !breakLoops) {
                                 shouldAdvance = false;
-                                if (playList.size() > 1 && (songIndex + 1 < playList.size() && loopMode == 0 || loopMode == 1)) {
+                                if (playList.size() > 1 && (songIndex + 1 < playList.size()
+                                        && loopMode == 0 || loopMode == 1)
+                                ) {
                                     final Intent nextIntent = new Intent();
                                     nextIntent.setAction(Constants.msrv_rec);
                                     nextIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_next);
@@ -960,7 +1019,6 @@ public class MusicService extends Service {
                 newIntent.putExtra(Constants.ta_pausea, paused);
                 sendBroadcast(newIntent);
                 updateNotification(currTitle, paused);
-
             }
         }
     }
@@ -1029,10 +1087,14 @@ public class MusicService extends Service {
                     stopIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                     // stopIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
                     stopIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
-                    stopIntent.putExtra("com.xperia64.timidityae.timidityaewidgetprovider.paused", true);
-                    stopIntent.putExtra("com.xperia64.timidityae.timidityaewidgetprovider.title", "");
-                    stopIntent.putExtra("com.xperia64.timidityae.timidityaewidgetprovider.onlyart", false);
-                    stopIntent.putExtra("com.xperia64.timidityae.timidityaewidgetprovider.death", true);
+                    stopIntent.putExtra(
+                            "com.xperia64.timidityae.timidityaewidgetprovider.paused", true);
+                    stopIntent.putExtra(
+                            "com.xperia64.timidityae.timidityaewidgetprovider.title", "");
+                    stopIntent.putExtra(
+                            "com.xperia64.timidityae.timidityaewidgetprovider.onlyart", false);
+                    stopIntent.putExtra(
+                            "com.xperia64.timidityae.timidityaewidgetprovider.death", true);
                     sendBroadcast(stopIntent);
                 } else {
                     SettingsStorage.nukedWidgets = true;
@@ -1048,51 +1110,61 @@ public class MusicService extends Service {
 
         remoteViews = new RemoteViews(getPackageName(), R.layout.music_notification);
         remoteViews.setTextViewText(R.id.titley, title);
-        remoteViews.setImageViewResource(R.id.notPause, paused ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+        remoteViews.setImageViewResource(R.id.notPause, paused
+                ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
         // Previous
         final Intent prevIntent = new Intent();
         // newIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         prevIntent.setAction(Constants.msrv_rec);
         prevIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_prev);
-        PendingIntent pendingNotificationIntent = PendingIntent.getBroadcast(this, 1, prevIntent, 0);
+        PendingIntent pendingNotificationIntent = PendingIntent.getBroadcast(
+                this, 1, prevIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.notPrev, pendingNotificationIntent);
         // Play/Pause
         final Intent playPauseIntent = new Intent();
         // newIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         playPauseIntent.setAction(Constants.msrv_rec);
         playPauseIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_pause);
-        pendingNotificationIntent = PendingIntent.getBroadcast(this, 2, playPauseIntent, 0);
+        pendingNotificationIntent = PendingIntent.getBroadcast(
+                this, 2, playPauseIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.notPause, pendingNotificationIntent);
         // Next
         final Intent nextIntent = new Intent();
         // newIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         nextIntent.setAction(Constants.msrv_rec);
         nextIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_next);
-        pendingNotificationIntent = PendingIntent.getBroadcast(this, 3, nextIntent, 0);
+        pendingNotificationIntent = PendingIntent.getBroadcast(
+                this, 3, nextIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.notNext, pendingNotificationIntent);
         // Stop
         final Intent stopIntent = new Intent();
         // newIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         stopIntent.setAction(Constants.msrv_rec);
         stopIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_stop);
-        pendingNotificationIntent = PendingIntent.getBroadcast(this, 4, stopIntent, 0);
+        pendingNotificationIntent = PendingIntent.getBroadcast(
+                this, 4, stopIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.notStop, pendingNotificationIntent);
         final Intent emptyIntent = new Intent(this, TimidityActivity.class);
         // emptyIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager
+                = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "timidity_playing_channel";
         NotificationCompat.Builder mBuilder;
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 5, emptyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 5, emptyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Timidity AE", NotificationManager.IMPORTANCE_LOW);
+            NotificationChannel notificationChannel
+                    = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    "Timidity AE", NotificationManager.IMPORTANCE_LOW);
 
             // Configure the notification channel.
             notificationChannel.setDescription("Timidity AE Playback Controls");
             notificationChannel.enableVibration(false);
             notificationChannel.enableLights(false);
             mNotificationManager.createNotificationChannel(notificationChannel);
-            mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID).setSmallIcon(R.drawable.ic_lol);
+            mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_lol);
 
         } else {
             mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
@@ -1103,7 +1175,11 @@ public class MusicService extends Service {
             }
         }
 
-        mBuilder = mBuilder.setContentTitle(getResources().getString(R.string.app_name)).setContentText(currTitle).setContentIntent(pendingIntent).setContent(remoteViews);
+        mBuilder = mBuilder
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(currTitle)
+                .setContentIntent(pendingIntent)
+                .setContent(remoteViews);
 
         mainNotification = mBuilder.build();
         mainNotification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_ONGOING_EVENT;
@@ -1177,7 +1253,8 @@ public class MusicService extends Service {
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
             // since it seems the onUpdate() is only fired on that:
-            widgetIds = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), TimidityAEWidgetProvider.class));
+            widgetIds = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
+                    new ComponentName(getApplication(), TimidityAEWidgetProvider.class));
 
             // intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             intent.putExtra("com.xperia64.timidityae.timidityaewidgetprovider.onlyart", true);

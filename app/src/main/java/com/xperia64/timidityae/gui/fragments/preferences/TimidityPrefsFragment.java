@@ -8,6 +8,7 @@
  ******************************************************************************/
 package com.xperia64.timidityae.gui.fragments.preferences;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.media.AudioTrack;
@@ -89,7 +90,8 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             rates.setEntries(hz);
             rates.setEntryValues(hzItems);
             rates.setDefaultValue(Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM)));
-            rates.setValue(s.prefs.getString("tplusRate", Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
+            rates.setValue(s.prefs.getString("tplusRate",
+                    Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
         }
 
         manTcfg.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -109,7 +111,11 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
         sfPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new SoundfontDialog().create(s.tmpSounds, s, s, s.getLayoutInflater(), s.prefs.getString("defaultPath", Environment.getExternalStorageDirectory().getPath()));
+                new SoundfontDialog().create(s.tmpSounds, s, s,
+                        s.getLayoutInflater(), s.prefs.getString(
+                                "defaultPath",
+                                Environment.getExternalStorageDirectory().getPath()
+                        ));
                 return true;
             }
         });
@@ -149,7 +155,8 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                     String sixteen = "16"; // s.bitMode.getValue();
                     boolean sb = stereo == null || stereo.equals("2");
                     boolean sxb = sixteen.equals("16");
-                    SparseIntArray mmm = SettingsStorage.validBuffers(SettingsStorage.validRates(sb, sxb), sb, sxb);
+                    SparseIntArray mmm = SettingsStorage.validBuffers(
+                            SettingsStorage.validRates(sb, sxb), sb, sxb);
                     if (mmm != null) {
                         int minBuff = mmm.get(Integer.parseInt(rates.getValue()));
 
@@ -157,9 +164,13 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                         if (buff < minBuff) {
                             s.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
                             bufferSize.setText(Integer.toString(minBuff));
-                            Toast.makeText(s, getResources().getString(R.string.invalidbuff), Toast.LENGTH_SHORT).show();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen().getRootAdapter()).notifyDataSetInvalidated();
+                            Toast.makeText(s,
+                                    getResources().getString(R.string.invalidbuff),
+                                    Toast.LENGTH_SHORT).show();
+                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            // .getRootAdapter()).notifyDataSetChanged();
+                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            // .getRootAdapter()).notifyDataSetInvalidated();
                         }
                     }
                 }
@@ -176,7 +187,8 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                     String sixteen = "16";// s.bitMode.getValue();
                     boolean sb = stereo == null || stereo.equals("2");
                     boolean sxb = sixteen.equals("16");
-                    SparseIntArray mmm = SettingsStorage.validBuffers(SettingsStorage.validRates(sb, sxb), sb, sxb);
+                    SparseIntArray mmm = SettingsStorage.validBuffers(
+                            SettingsStorage.validRates(sb, sxb), sb, sxb);
                     if (mmm != null) {
                         int minBuff = mmm.get(Integer.parseInt((String) newValue));
 
@@ -184,9 +196,13 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                         if (buff < minBuff) {
                             s.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
                             bufferSize.setText(Integer.toString(minBuff));
-                            Toast.makeText(s, getResources().getString(R.string.invalidbuff), Toast.LENGTH_SHORT).show();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen().getRootAdapter()).notifyDataSetInvalidated();
+                            Toast.makeText(s,
+                                    getResources().getString(R.string.invalidbuff),
+                                    Toast.LENGTH_SHORT).show();
+                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            // .getRootAdapter()).notifyDataSetChanged();
+                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            // .getRootAdapter()).notifyDataSetInvalidated();
                         }
                     }
                 }
@@ -205,7 +221,9 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                         if (!txt.isEmpty()) {
                             int volume = Integer.parseInt(txt);
                             if (volume < 0 || volume > 800) {
-                                Toast.makeText(s, "Invalid volume. Must be between 0 and 800", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(s,
+                                        "Invalid volume. Must be between 0 and 800",
+                                        Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                             return true;
@@ -230,7 +248,8 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                             String sixteen = "16"; // s.bitMode.getValue();
                             boolean sb = stereo == null || stereo.equals("2");
                             boolean sxb = sixteen.equals("16");
-                            SparseIntArray mmm = SettingsStorage.validBuffers(SettingsStorage.validRates(sb, sxb), sb, sxb);
+                            SparseIntArray mmm = SettingsStorage.validBuffers(
+                                    SettingsStorage.validRates(sb, sxb), sb, sxb);
                             if (mmm != null) {
                                 int minBuff = mmm.get(Integer.parseInt(rates.getValue()));
 
@@ -238,9 +257,13 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                                 if (buff < minBuff) {
                                     s.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
                                     ((EditTextPreference) preference).setText(Integer.toString(minBuff));
-                                    Toast.makeText(s, getResources().getString(R.string.invalidbuff), Toast.LENGTH_SHORT).show();
-                                    //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen().getRootAdapter()).notifyDataSetChanged();
-                                    //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen().getRootAdapter()).notifyDataSetInvalidated();
+                                    Toast.makeText(s,
+                                            getResources().getString(R.string.invalidbuff),
+                                            Toast.LENGTH_SHORT).show();
+                                    //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                                    // .getRootAdapter()).notifyDataSetChanged();
+                                    //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                                    // .getRootAdapter()).notifyDataSetInvalidated();
                                     return false;
                                 }
                             }
@@ -269,45 +292,54 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                 dialog.setTitle(getResources().getString(R.string.sett_resf_q));
                 dialog.setMessage(getResources().getString(R.string.sett_resf_q_sum));
                 dialog.setCancelable(true);
-                dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int buttonId) {
-                        AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
-                            ProgressDialog pd;
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                        getResources().getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            @SuppressLint("StaticFieldLeak")
+                            public void onClick(DialogInterface dialog, int buttonId) {
+                                AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
+                                    ProgressDialog pd;
 
-                            @Override
-                            protected void onPreExecute() {
-                                pd = new ProgressDialog(s);
-                                pd.setTitle(getResources().getString(R.string.extract));
-                                pd.setMessage(getResources().getString(R.string.extract_sum));
-                                pd.setCancelable(false);
-                                pd.setIndeterminate(true);
-                                pd.show();
-                            }
-
-                            @Override
-                            protected Integer doInBackground(Void... arg0) {
-                                return Globals.extract8Rock(s);
-                            }
-
-                            @Override
-                            protected void onPostExecute(Integer result) {
-                                if (pd != null) {
-                                    pd.dismiss();
-                                    if (result != 777) {
-                                        Toast.makeText(s, getResources().getString(R.string.sett_resf_err), Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(s, getResources().getString(R.string.extract_def), Toast.LENGTH_LONG).show();
+                                    @Override
+                                    protected void onPreExecute() {
+                                        pd = new ProgressDialog(s);
+                                        pd.setTitle(getResources().getString(R.string.extract));
+                                        pd.setMessage(getResources().getString(R.string.extract_sum));
+                                        pd.setCancelable(false);
+                                        pd.setIndeterminate(true);
+                                        pd.show();
                                     }
-                                }
+
+                                    @Override
+                                    protected Integer doInBackground(Void... arg0) {
+                                        return Globals.extract8Rock(s);
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Integer result) {
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                            if (result != 777) {
+                                                Toast.makeText(s,
+                                                        getResources().getString(R.string.sett_resf_err),
+                                                        Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(s,
+                                                        getResources().getString(R.string.extract_def),
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    }
+                                };
+                                task.execute((Void[]) null);
                             }
-                        };
-                        task.execute((Void[]) null);
-                    }
-                });
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int buttonId) {
-                    }
-                });
+                        });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                        getResources().getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int buttonId) {
+                            }
+                        });
                 dialog.show();
                 return true;
             }
@@ -318,12 +350,17 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                 s.needRestart = true;
                 s.tmpItemEdit = manDataFolder;
                 s.tmpItemScreen = getPreferenceScreen();
-                new FileBrowserDialog().create(4, null, s, s, s.getLayoutInflater(), true, s.prefs.getString("dataDir", Environment.getExternalStorageDirectory().getAbsolutePath()), getResources().getString(R.string.fb_add));
+                new FileBrowserDialog().create(4, null, s, s,
+                        s.getLayoutInflater(), true,
+                        s.prefs.getString("dataDir",
+                                Environment.getExternalStorageDirectory().getAbsolutePath()
+                        ), getResources().getString(R.string.fb_add));
                 return true;
             }
         });
 
-        manDataFolder.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_TEXT));
+        manDataFolder.setOnBindEditTextListener(editText ->
+                editText.setInputType(InputType.TYPE_CLASS_TEXT));
         manDataFolder.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {

@@ -71,7 +71,8 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.widget_container, myPI);
 
         //define the component for self
-        ComponentName comp = new ComponentName(context.getPackageName(), TimidityAEWidgetProvider.class.getName());
+        ComponentName comp = new ComponentName(
+                context.getPackageName(), TimidityAEWidgetProvider.class.getName());
         //tell the manager to update all instances of the toggle widget with the click listener
         mgr.updateAppWidget(comp, views);
     }
@@ -79,10 +80,14 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getExtras() != null) {
-            paused = intent.getBooleanExtra("com.xperia64.timidityae.timidityaewidgetprovider.paused", true);
-            currTitle = intent.getStringExtra("com.xperia64.timidityae.timidityaewidgetprovider.title");
-            art = intent.getBooleanExtra("com.xperia64.timidityae.timidityaewidgetprovider.onlyart", false);
-            setdeath = intent.getBooleanExtra("com.xperia64.timidityae.timidityaewidgetprovider.death", false);
+            paused = intent.getBooleanExtra(
+                    "com.xperia64.timidityae.timidityaewidgetprovider.paused", true);
+            currTitle = intent.getStringExtra(
+                    "com.xperia64.timidityae.timidityaewidgetprovider.title");
+            art = intent.getBooleanExtra(
+                    "com.xperia64.timidityae.timidityaewidgetprovider.onlyart", false);
+            setdeath = intent.getBooleanExtra(
+                    "com.xperia64.timidityae.timidityaewidgetprovider.death", false);
             if (currTitle == null)
                 currTitle = "";
         }
@@ -108,7 +113,8 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
             // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             views.setTextViewText(R.id.titley_widget, currTitle);
-            views.setImageViewResource(R.id.notPause_widget, paused ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+            views.setImageViewResource(
+                    R.id.notPause_widget, paused ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
             if (art)
                 if (Globals.currArt != null) {
                     views.setImageViewBitmap(R.id.art_widget, scaleDownBitmap(Globals.currArt));
@@ -121,14 +127,16 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
 
             Intent configIntent = new Intent(context, TimidityActivity.class);
 
-            PendingIntent configPendingIntent = PendingIntent.getActivity(context, 99, configIntent, 0);
+            PendingIntent configPendingIntent = PendingIntent.getActivity(
+                    context, 99, configIntent, 0);
             views.setOnClickPendingIntent(R.id.widget_container, configPendingIntent);
 
             Intent new_intent = new Intent();
             //new_intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             new_intent.setAction(Constants.msrv_rec);
             new_intent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_prev);
-            PendingIntent pendingNotificationIntent = PendingIntent.getBroadcast(context, 6, new_intent, 0);
+            PendingIntent pendingNotificationIntent = PendingIntent.getBroadcast(
+                    context, 6, new_intent, 0);
             views.setOnClickPendingIntent(R.id.notPrev_widget, pendingNotificationIntent);
 
             // Play/Pause

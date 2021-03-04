@@ -60,7 +60,8 @@ public class JNIHandler {
     public static String currentLyric = "";
     public static int exceptional = 0;
     public static int playbackPercentage;
-    public static int playbackTempo; // This number is not the tempo in BPM, but some number that can be used to calculate the real tempo
+    // This below number is not the tempo in BPM, but some number that can be used to calculate the real tempo
+    public static int playbackTempo;
     public static int tempoCount = 0; // How many times the tempo up/down buttons have been pressed
 
     public static int voice;
@@ -82,7 +83,9 @@ public class JNIHandler {
 
     public static native int unloadLib();
 
-    private static native int prepareTimidity(String config, String config2, int jmono, int jcustResamp, int jPresSil, int jreloading, int jfreeInsts, int jverbosity, int jvolume);
+    private static native int prepareTimidity(String config, String config2, int jmono,
+                                              int jcustResamp, int jPresSil, int jreloading,
+                                              int jfreeInsts, int jverbosity, int jvolume);
 
     private static native int loadSongTimidity(String filename);
 
@@ -110,7 +113,11 @@ public class JNIHandler {
 
     public static boolean isActive() {
         // Playing, Pausing, Paused, Resuming, or Seeking.
-        return state == STATE_PLAYING || state == STATE_PAUSING || state == STATE_PAUSED || state == STATE_RESUMING || state == STATE_SEEKING;
+        return state == STATE_PLAYING
+                || state == STATE_PAUSING
+                || state == STATE_PAUSED
+                || state == STATE_RESUMING
+                || state == STATE_SEEKING;
     }
 
     public static void pause() // or unpause.
@@ -347,12 +354,19 @@ public class JNIHandler {
         }
     }
 
-    public static int init(String path, String file, int mono, int resamp, int b, int r, boolean preserveSilence, boolean reloading, boolean freeInsts, int verbosity, int v) {
+    public static int init(String path, String file, int mono, int resamp, int b, int r,
+                           boolean preserveSilence, boolean reloading, boolean freeInsts,
+                           int verbosity, int v) {
         if (state == STATE_UNINIT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mAudioAttributes = new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA).build();
+                mAudioAttributes = new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build();
             }
-            System.out.println(String.format(Locale.US, "Opening Timidity: Path: %s cfgFile: %s resample: %s mono: %s buffer: %d rate: %d", path, file, Globals.sampls[resamp], mono == 1 ? "true" : "false", b, r));
+            System.out.println(String.format(Locale.US,
+                    "Opening Timidity: Path: %s cfgFile: %s resample: %s mono: %s buffer: %d rate: %d",
+                    path, file, Globals.sampls[resamp], mono == 1 ? "true" : "false", b, r));
             System.out.println("Max channels: " + MAX_CHANNELS);
             for (int i = 0; i < MAX_CHANNELS; i++) {
                 volumes.add(75); // Assuming not XG
@@ -367,8 +381,9 @@ public class JNIHandler {
             if (mMediaPlayer == null)
                 mMediaPlayer = new MediaPlayer();
 
-            int code = prepareTimidity(path, path + file, channelMode == 1 ? 1 : 0, resamp, preserveSilence ? 1 : 0, reloading ? 1 : 0, freeInsts ? 1 : 0, verbosity, v)
-                    + soxInit(reloading ? 1 : 0, rate);
+            int code = prepareTimidity(path, path + file, channelMode == 1 ? 1 : 0,
+                    resamp, preserveSilence ? 1 : 0, reloading ? 1 : 0, freeInsts ? 1 : 0,
+                    verbosity, v) + soxInit(reloading ? 1 : 0, rate);
             state = STATE_IDLE; // TODO: Maybe keep as UNINIT if code != 0?
             return code;
         } else {
@@ -443,8 +458,14 @@ public class JNIHandler {
                         playThread = new Thread(new Runnable() {
                             public void run() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    mAudioTrack = new AudioTrack(mAudioAttributes, new AudioFormat.Builder().setChannelMask(AudioFormat.CHANNEL_OUT_STEREO).setEncoding(AudioFormat.ENCODING_PCM_16BIT).setSampleRate(rate).build(),
-                                            buffer, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
+                                    mAudioTrack = new AudioTrack(mAudioAttributes,
+                                            new AudioFormat.Builder()
+                                                    .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
+                                                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                                                    .setSampleRate(rate)
+                                                    .build(),
+                                            buffer, AudioTrack.MODE_STREAM,
+                                            AudioManager.AUDIO_SESSION_ID_GENERATE);
                                 } else {
                                     mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, rate,
                                             AudioFormat.CHANNEL_OUT_STEREO,
@@ -456,7 +477,12 @@ public class JNIHandler {
                                 state = STATE_PLAYING;
                                 String[][] soxEffects = {};
                                 if (!SettingsStorage.soxEffStr.isEmpty()) {
-                                    String[] firstLayer = SettingsStorage.soxEffStr.trim().replaceAll("[;]+", ";").replaceAll("^;+", "").replaceAll(";+$", "").split(";");
+                                    String[] firstLayer = SettingsStorage.soxEffStr
+                                            .trim()
+                                            .replaceAll("[;]+", ";")
+                                            .replaceAll("^;+", "")
+                                            .replaceAll(";+$", "")
+                                            .split(";");
                                     soxEffects = new String[firstLayer.length][];
                                     for (int i = 0; i < firstLayer.length; i++) {
                                         soxEffects[i] = firstLayer[i].trim().split(" ");
@@ -465,7 +491,8 @@ public class JNIHandler {
                                 int soxRes = soxPlay(songTitle, soxEffects, SettingsStorage.unsafeSoxSwitch ? 1 : 0);
                                 if (soxRes < 1) {
                                     // We have an error.
-                                    errorReason = String.format(Locale.US, "Bad sox effect %1$s (%2$d)", soxEffects[-soxRes][0], -soxRes);
+                                    errorReason = String.format(Locale.US,
+                                            "Bad sox effect %1$s (%2$d)", soxEffects[-soxRes][0], -soxRes);
                                     state = STATE_ERROR;
                                     mAudioTrack.release();
                                 }
@@ -481,11 +508,22 @@ public class JNIHandler {
                         playThread = new Thread(new Runnable() {
                             public void run() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    mAudioTrack = new AudioTrack(mAudioAttributes, new AudioFormat.Builder().setChannelMask(channelMode == 2 ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO).setEncoding(AudioFormat.ENCODING_PCM_16BIT).setSampleRate(rate).build(),
-                                            buffer, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE);
+                                    mAudioTrack = new AudioTrack(mAudioAttributes,
+                                            new AudioFormat.Builder()
+                                                    .setChannelMask(
+                                                            channelMode == 2
+                                                                    ? AudioFormat.CHANNEL_OUT_STEREO
+                                                                    : AudioFormat.CHANNEL_OUT_MONO)
+                                                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                                                    .setSampleRate(rate)
+                                                    .build(),
+                                            buffer, AudioTrack.MODE_STREAM,
+                                            AudioManager.AUDIO_SESSION_ID_GENERATE);
                                 } else {
                                     mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, rate,
-                                            channelMode == 2 ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO,
+                                            channelMode == 2
+                                                    ? AudioFormat.CHANNEL_OUT_STEREO
+                                                    : AudioFormat.CHANNEL_OUT_MONO,
                                             AudioFormat.ENCODING_PCM_16BIT,
                                             buffer, AudioTrack.MODE_STREAM);
                                 }
@@ -497,7 +535,8 @@ public class JNIHandler {
                                         exceptional |= 1;
                                     }
                                 }
-                                state = STATE_PLAYING; // FIXME: should use the Timidity callback; Or maybe see if data is written
+                                // FIXME: should use the Timidity callback; Or maybe see if data is written
+                                state = STATE_PLAYING;
                                 loadSongTimidity(songTitle);
                                 if (state != STATE_IDLE)
                                     state = STATE_STOPPING;

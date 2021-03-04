@@ -101,12 +101,16 @@ public class SettingsStorage {
         // The light theme is broken below ICS it seems.
         theme = Integer.parseInt(prefs.getString(Constants.sett_theme, "1"));
         showHiddenFiles = prefs.getBoolean(Constants.sett_show_hidden_files, false);
-        homeFolder = prefs.getString(Constants.sett_home_folder, Environment.getExternalStorageDirectory().getAbsolutePath());
-        dataFolder = prefs.getString(Constants.sett_data_folder, Environment.getExternalStorageDirectory() + "/TimidityAE/");
+        homeFolder = prefs.getString(Constants.sett_home_folder,
+                Environment.getExternalStorageDirectory().getAbsolutePath());
+        dataFolder = prefs.getString(Constants.sett_data_folder,
+                Environment.getExternalStorageDirectory() + "/TimidityAE/");
         manualConfig = prefs.getBoolean(Constants.sett_man_config, false);
-        JNIHandler.currsamp = defaultResamp = Integer.parseInt(prefs.getString(Constants.sett_default_resamp, "0"));
+        JNIHandler.currsamp = defaultResamp = Integer.parseInt(
+                prefs.getString(Constants.sett_default_resamp, "0"));
         channelMode = Integer.parseInt(prefs.getString(Constants.sett_channel_mode, "2"));
-        audioRate = Integer.parseInt(prefs.getString(Constants.sett_audio_rate, Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
+        audioRate = Integer.parseInt(prefs.getString(Constants.sett_audio_rate,
+                Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
         volume = Integer.parseInt(prefs.getString(Constants.sett_vol, "70"));
         bufferSize = Integer.parseInt(prefs.getString(Constants.sett_buffer_size, "192000"));
         showVideos = prefs.getBoolean(Constants.sett_show_videos, true);
@@ -145,21 +149,24 @@ public class SettingsStorage {
 
     public static int[] updateRates() {
         if (prefs != null) {
-            int[] values = validRates(prefs.getString(Constants.sett_channel_mode, "2").equals("2"), true);
+            int[] values = validRates(prefs.getString(
+                    Constants.sett_channel_mode, "2").equals("2"), true);
             //CharSequence[] hz = new CharSequence[values.length];
             CharSequence[] hzItems = new CharSequence[values.length];
             boolean validRate = false;
             for (int i = 0; i < values.length; i++) {
                 //hz[i] = Integer.toString(values[i]) + "Hz";
                 hzItems[i] = Integer.toString(values[i]);
-                if (prefs.getString("tplusRate", Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))).contentEquals(hzItems[i])) {
+                if (prefs.getString("tplusRate", Integer.toString(
+                        AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))).contentEquals(hzItems[i])) {
                     validRate = true;
                     break;
                 }
             }
 
             if (!validRate)
-                prefs.edit().putString("tplusRate", Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))).commit();
+                prefs.edit().putString("tplusRate", Integer.toString(
+                        AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))).commit();
 
             return values;
         }
@@ -168,10 +175,13 @@ public class SettingsStorage {
 
     public static void updateBuffers(int[] rata) {
         if (rata != null) {
-            SparseIntArray buffMap = validBuffers(rata, prefs.getString(Constants.sett_channel_mode, "2").equals("2"), true);
-            int realMin = buffMap.get(Integer.parseInt(prefs.getString(Constants.sett_audio_rate, Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM)))));
+            SparseIntArray buffMap = validBuffers(rata, prefs.getString(
+                    Constants.sett_channel_mode, "2").equals("2"), true);
+            int realMin = buffMap.get(Integer.parseInt(prefs.getString(Constants.sett_audio_rate,
+                    Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM)))));
             if (bufferSize < realMin) {
-                prefs.edit().putString(Constants.sett_buffer_size, Integer.toString(bufferSize = realMin)).commit();
+                prefs.edit().putString(Constants.sett_buffer_size,
+                        Integer.toString(bufferSize = realMin)).commit();
             }
         }
     }
@@ -182,7 +192,8 @@ public class SettingsStorage {
 
     public static boolean initialize(final Activity a) {
         if (firstRun) {
-            final File rootStorage = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/TimidityAE/");
+            final File rootStorage = new File(
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/TimidityAE/");
 
             // Create TimidityAE's default data folder
             if (!rootStorage.exists()) {
@@ -202,14 +213,16 @@ public class SettingsStorage {
                 sfDir.mkdir();
             }
             updateBuffers(updateRates());
-            audioRate = Integer.parseInt(prefs.getString("tplusRate", Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
+            audioRate = Integer.parseInt(prefs.getString("tplusRate", Integer.toString(
+                    AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
             // This is usually a safe number, but should probably do a test or something
             bufferSize = Integer.parseInt(prefs.getString("tplusBuff", "192000"));
             migrateFrom1X(rootStorage);
             final Editor eee = prefs.edit();
             firstRun = false;
             eee.putBoolean("tplusFirstRun", false);
-            eee.putString("dataDir", Environment.getExternalStorageDirectory().getAbsolutePath() + "/TimidityAE/");
+            eee.putString("dataDir",
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/TimidityAE/");
             if (new File(dataFolder + "/timidity/timidity.cfg").exists()) {
                 if (manualConfig = !cfgIsAuto(dataFolder + "/timidity/timidity.cfg")) {
                     eee.putBoolean("manConfig", true);
@@ -236,7 +249,8 @@ public class SettingsStorage {
                         while ((line = br.readLine()) != null) {
                             if (line.contains("soundfont \"") && line.lastIndexOf('"') >= 0) {
                                 try {
-                                    String st = line.substring(line.indexOf("soundfont \"") + 11, line.lastIndexOf('"'));
+                                    String st = line.substring(
+                                            line.indexOf("soundfont \"") + 11, line.lastIndexOf('"'));
                                     soundfonts.add(st);
                                 } catch (ArrayIndexOutOfBoundsException e1) {
                                     e1.printStackTrace();
@@ -281,8 +295,8 @@ public class SettingsStorage {
                     @Override
                     protected void onPreExecute() {
                         pd = new ProgressDialog(a);
-                        pd.setTitle(a.getResources().getString(R.string.extract));
-                        pd.setMessage(a.getResources().getString(R.string.extract_sum));
+                        pd.setTitle(a.getString(R.string.extract));
+                        pd.setMessage(a.getString(R.string.extract_sum));
                         pd.setCancelable(false);
                         pd.setIndeterminate(true);
                         pd.show();
@@ -298,7 +312,7 @@ public class SettingsStorage {
                         if (pd != null) {
                             pd.dismiss();
                             if (result != 777) {
-                                Toast.makeText(a, a.getResources().getString(R.string.sett_resf_err), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(a, a.getString(R.string.sett_resf_err), Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }
@@ -326,7 +340,9 @@ public class SettingsStorage {
 
     // This can probably be removed soon.
     private static void migrateFrom1X(File newData) {
-        File oldPlists = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.xperia64.timidityae/playlists/");
+        File oldPlists = new File(
+                Environment.getExternalStorageDirectory().getAbsolutePath()
+                        + "/Android/data/com.xperia64.timidityae/playlists/");
         if (oldPlists.exists()) {
             if (oldPlists.isDirectory()) {
                 for (File f : oldPlists.listFiles()) {
@@ -336,11 +352,15 @@ public class SettingsStorage {
                 }
             }
         }
-        File oldSoundfonts = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.xperia64.timidityae/soundfonts/");
+        File oldSoundfonts = new File(
+                Environment.getExternalStorageDirectory().getAbsolutePath()
+                        + "/Android/data/com.xperia64.timidityae/soundfonts/");
         if (oldSoundfonts.exists()) {
             if (oldSoundfonts.isDirectory()) {
                 for (File f : oldSoundfonts.listFiles()) {
-                    if (f.getName().toLowerCase(Locale.US).endsWith(".sf2") || f.getName().toLowerCase(Locale.US).endsWith(".sfark")) {
+                    if (f.getName().toLowerCase(Locale.US).endsWith(".sf2")
+                            || f.getName().toLowerCase(Locale.US).endsWith(".sfark")
+                    ) {
                         f.renameTo(new File(newData.getAbsolutePath() + "/soundfonts/" + f.getName()));
                     }
                 }
@@ -385,7 +405,8 @@ public class SettingsStorage {
                             DocumentFileUtils.tryToDeleteFile(c, path);
                         } else {
                             Toast.makeText(c, "Renaming manually edited cfg... (7)", Toast.LENGTH_LONG).show();
-                            DocumentFileUtils.renameDocumentFile(c, path, needRename + ".manualTimidityCfg." + System.currentTimeMillis());
+                            DocumentFileUtils.renameDocumentFile(c, path,
+                                    needRename + ".manualTimidityCfg." + System.currentTimeMillis());
                         }
                     }
 
@@ -415,7 +436,7 @@ public class SettingsStorage {
                     }
                     DocumentFileUtils.renameDocumentFile(c, value, needRename);
                 } else {
-                    Toast.makeText(c, "Could not write configuration file. Does Timidity AE have write access to the data folder? (1)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, R.string.config_write_failure_data, Toast.LENGTH_LONG).show();
                 }
 
             } else {
@@ -424,7 +445,7 @@ public class SettingsStorage {
                 if (theConfig.exists()) // It should exist if we got here.
                 {
                     if (!theConfig.canWrite()) {
-                        Toast.makeText(c, "Could not write configuration file. Does Timidity AE have write access to the data folder? (2)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(c, R.string.config_write_failure_data, Toast.LENGTH_LONG).show();
                         return;
                     }
                     if (cfgIsAuto(path) || theConfig.length() <= 0) // Negative file length? Who knows.
@@ -432,12 +453,13 @@ public class SettingsStorage {
                         theConfig.delete(); // Auto config, safe to delete
                     } else {
                         Toast.makeText(c, "Renaming manually edited cfg... (6)", Toast.LENGTH_LONG).show();
-                        theConfig.renameTo(new File(path + ".manualTimidityCfg." + System.currentTimeMillis())); // manual config, rename for later
+                        theConfig.renameTo(new File(path + ".manualTimidityCfg."
+                                + System.currentTimeMillis())); // manual config, rename for later
                     }
                 } else {
                     File parent = new File(path.substring(0, path.lastIndexOf(File.separator)));
                     if (!parent.mkdirs() && !parent.isDirectory()) {
-                        Toast.makeText(c, "Error writing config. Make sure data directory is writable (7)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(c, R.string.config_write_failure_dir_writable, Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
@@ -449,7 +471,7 @@ public class SettingsStorage {
                     e.printStackTrace();
                 }
                 if (fw == null) {
-                    Toast.makeText(c, "Error writing config. Make sure data directory is writable (8)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, R.string.config_write_failure_dir_writable, Toast.LENGTH_LONG).show();
                     return;
                 }
                 try {
@@ -494,7 +516,9 @@ public class SettingsStorage {
         ArrayList<Integer> valid = new ArrayList<>();
         for (int rate : new int[]{8000, 11025, 16000, 22050, 44100, 48000, 88200, 96000}) {
 
-            int bufferSize = AudioTrack.getMinBufferSize(rate, stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO, sixteen ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT);
+            int bufferSize = AudioTrack.getMinBufferSize(rate,
+                    stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO,
+                    sixteen ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT);
             if (bufferSize > 0) {
                 // buffer size is valid, Sample rate supported
                 valid.add(rate);
@@ -509,7 +533,9 @@ public class SettingsStorage {
     public static SparseIntArray validBuffers(int[] rates, boolean stereo, boolean sixteen) {
         SparseIntArray buffers = new SparseIntArray();
         for (int rate : rates) {
-            buffers.put(rate, AudioTrack.getMinBufferSize(rate, stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO, sixteen ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT));
+            buffers.put(rate, AudioTrack.getMinBufferSize(rate,
+                    stereo ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO,
+                    sixteen ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT));
         }
         return buffers;
     }

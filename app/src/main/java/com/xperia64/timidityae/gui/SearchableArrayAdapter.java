@@ -28,7 +28,8 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
     private List<String> list;
     private List<String> displayedList; // Values to be displayed
 
-    public SearchableArrayAdapter(Context context, int resource, List<String> objects, boolean shouldHighlight) {
+    public SearchableArrayAdapter(Context context, int resource,
+                                  List<String> objects, boolean shouldHighlight) {
         super(context, resource, objects);
         this.context = context;
         this.shouldHighlight = shouldHighlight;
@@ -57,8 +58,7 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.row, null);
+            view = LayoutInflater.from(context).inflate(R.layout.row, null);
         }
 
         TextView listItemText = view.findViewById(R.id.rowtext);
@@ -95,7 +95,7 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
 
             @Override
             protected synchronized FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
+                FilterResults results = new FilterResults(); // Holds the results of a filtering operation in values
                 List<String> FilteredArrList = new ArrayList<>();
                 synchronized (realPositions) {
                     if (list == null) {
@@ -104,7 +104,8 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
 
                     /********
                      *
-                     *  If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
+                     *  If constraint(CharSequence that is received) is null
+                     *  returns the mOriginalValues(Original) values
                      *  else does the Filtering and returns FilteredArrList(Filtered)
                      *
                      ********/
@@ -122,7 +123,6 @@ public class SearchableArrayAdapter extends ArrayAdapter<String> implements Sear
                                 FilteredArrList.add(data);
                                 realPositions.add(i);
                             }
-
                         }
                         // set the Filtered result to return
                         results.count = FilteredArrList.size();

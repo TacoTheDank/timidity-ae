@@ -46,7 +46,8 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
     private List<String> list;
     private List<String> displayedList; // Values to be displayed
 
-    public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects, PlistMenuCallback aaaa, boolean shouldHighlight) {
+    public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects,
+                              PlistMenuCallback aaaa, boolean shouldHighlight) {
         super(context, textViewResourceId, objects);
         list = objects;
         displayedList = objects;
@@ -88,8 +89,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
     public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.row_menu, null);
+            view = LayoutInflater.from(context).inflate(R.layout.row_menu, null);
         }
 
         //Handle TextView and display string from your list
@@ -145,7 +145,7 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
+                FilterResults results = new FilterResults(); // Holds the results of a filtering operation in values
                 List<String> FilteredArrList = new ArrayList<>();
                 synchronized (realPositions) {
 
@@ -155,7 +155,8 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
 
                     /********
                      *
-                     *  If constraint(CharSequence that is received) is null returns the mOriginalValues(Original) values
+                     *  If constraint(CharSequence that is received) is null
+                     *  returns the mOriginalValues(Original) values
                      *  else does the Filtering and returns FilteredArrList(Filtered)
                      *
                      ********/
@@ -173,7 +174,6 @@ public class StableArrayAdapter extends ArrayAdapter<String> implements Searchab
                                 FilteredArrList.add(data);
                                 realPositions.add(i);
                             }
-
                         }
                         // set the Filtered result to return
                         results.count = FilteredArrList.size();

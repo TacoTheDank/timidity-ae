@@ -211,6 +211,26 @@
     <string name="sett_vol_sum">Master Timidity Amplification</string>
     <string name="sett_vol">Amplification</string>
 
+    <string name="error_init_audiotrack">Error initializing AudioTrack. Try decreasing the buffer size.</string>
+    <string name="config_write_failure_sdcard_access">
+        Could not write config file.
+        Did you give Timidity write access to the root of your external sd card?
+    </string>
+    <string name="config_write_failure_data">
+        Could not write config file.
+        Does Timidity have write access to the data folder?
+    </string>
+    <string name="config_write_failure">Could not write config file. Permission denied.</string>
+    <string name="clear_search_text">Clear search text before reordering.</string>
+    <string name="config_write_failure_dir_writable">Error writing config. Make sure data directory is writable.</string>
+    <string name="error_timidity_not_loaded">Error: Timidity is not loaded. Please make sure the config is valid.</string>
+    <string name="permission_grant_storage_write_access">
+        Would you like to give Timidity AE write access to your external sd card?
+        This is recommended if you\'re converting files or would like to place Timidity AE\'s data directory there.
+        Problems may occur if a directory other than the root of your SD card is selected.
+    </string>
+
+
     <!-- Arrays -->
     <string-array name="theme_items">
         <item>Light</item>

@@ -86,7 +86,9 @@ public class RootPrefsFragment extends PreferenceFragmentCompat {
         });
 
         try {
-            s.tmpSounds = (ArrayList<String>) ObjectSerializer.deserialize(s.prefs.getString("tplusSoundfonts", ObjectSerializer.serialize(new ArrayList<String>())));
+            s.tmpSounds = (ArrayList<String>) ObjectSerializer.deserialize(
+                    s.prefs.getString("tplusSoundfonts",
+                            ObjectSerializer.serialize(new ArrayList<String>())));
             System.out.println("We have tmpSounds of size: " + s.tmpSounds.size());
             for (int i = 0; i < s.tmpSounds.size(); i++) {
                 if (s.tmpSounds.get(i) == null)

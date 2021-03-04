@@ -145,7 +145,8 @@ public class DocumentFileUtils {
         }
         // DocumentFile's rename renames in the context of the current working directory.
         // The relative root directory must be specified in terms of many "../"
-        return df != null && upper.length() > 3 && df.renameTo(upper.substring(0, upper.length() - 3) + subTo);
+        return df != null && upper.length() > 3
+                && df.renameTo(upper.substring(0, upper.length() - 3) + subTo);
     }
 
     private static boolean renameDocumentFile23(Context context, String from, String subTo) {
@@ -186,8 +187,10 @@ public class DocumentFileUtils {
         }
 
         try {
-            DataInputStream is = new DataInputStream(new BufferedInputStream(context.getContentResolver().openInputStream(in.getUri())));
-            DataOutputStream os = new DataOutputStream(new BufferedOutputStream(context.getContentResolver().openOutputStream(out.getUri())));
+            DataInputStream is = new DataInputStream(
+                    new BufferedInputStream(context.getContentResolver().openInputStream(in.getUri())));
+            DataOutputStream os = new DataOutputStream(
+                    new BufferedOutputStream(context.getContentResolver().openOutputStream(out.getUri())));
             while ((i = is.read()) > -1) {
                 os.write(i);
             }
@@ -216,7 +219,8 @@ public class DocumentFileUtils {
      *
      * @param context the android context
      * @param parent  the file/folder we want to find the storage device of
-     * @return String array in the form {Package-writable 'files' folder, Best guess at the path to the root of the storage device}
+     * @return String array in the form {Package-writable 'files' folder, Best guess at the
+     * path to the root of the storage device}
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static String[] getExternalFilePaths(Context context, String parent) {

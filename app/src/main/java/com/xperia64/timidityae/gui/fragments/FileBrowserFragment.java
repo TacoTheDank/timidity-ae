@@ -132,7 +132,10 @@ public class FileBrowserFragment extends ListFragment {
         if (dirPath.matches(Globals.repeatedSeparatorString) && !new File(dirPath).canRead()) {
             return;
         }
-        if (!new File(dirPath).canRead() && (dirPath.toLowerCase(Locale.US).equals("/storage/emulated") || dirPath.toLowerCase(Locale.US).equals("/storage/emulated/"))) {
+        if (!new File(dirPath).canRead()
+                && (dirPath.toLowerCase(Locale.US).equals("/storage/emulated")
+                || dirPath.toLowerCase(Locale.US).equals("/storage/emulated/"))
+        ) {
             getDir(new File(dirPath).getParent());
             return;
         }
@@ -145,7 +148,12 @@ public class FileBrowserFragment extends ListFragment {
                 File[] files = f.listFiles();
                 if (files != null && files.length > 0) {
                     Arrays.sort(files, new FileComparator());
-                    if (!currPath.matches(Globals.repeatedSeparatorString) && !((currPath.equals(File.separator + "storage" + File.separator) || currPath.equals(File.separator + "storage")) && !new File(File.separator).canRead())) {
+                    if (!currPath.matches(Globals.repeatedSeparatorString)
+                            && !(
+                            (currPath.equals(File.separator + "storage" + File.separator)
+                                    || currPath.equals(File.separator + "storage")
+                            ) && !new File(File.separator).canRead())
+                    ) {
                         fname.add(Globals.parentString);
                         // Thank you Marshmallow.
                         // Disallowing access to /storage/emulated has now
@@ -184,7 +192,10 @@ public class FileBrowserFragment extends ListFragment {
                         }
                     }
                 } else {
-                    if (!currPath.matches(Globals.repeatedSeparatorString) && !(currPath.equals(File.separator + "storage" + File.separator) && !new File(File.separator).canRead())) {
+                    if (!currPath.matches(Globals.repeatedSeparatorString)
+                            && !(currPath.equals(File.separator + "storage" + File.separator)
+                            && !new File(File.separator).canRead())
+                    ) {
                         fname.add(Globals.parentString);
                         // Thank you Marshmallow.
                         // Disallowing access to /storage/emulated has now prevent billions of hacking attempts daily.
@@ -214,30 +225,37 @@ public class FileBrowserFragment extends ListFragment {
 
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
+        final String emulated0Str = "/storage/emulated/0";
+        final String emulatedLegacyStr = "/storage/emulated/legacy";
+        final String selfPrimaryStr = "/storage/self/primary";
+        final File emulated0 = new File(emulated0Str);
+        final File emulatedLegacy = new File(emulatedLegacyStr);
+        final File selfPrimary = new File(selfPrimaryStr);
         File file = new File(path.get(position));
         if (file.isDirectory()) {
             if (file.canRead()) {
                 getDir(path.get(position));
-            } else if (file.getAbsolutePath().equals("/storage/emulated") &&
-                    (new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead() ||
-                            new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead() ||
-                            new File("/storage/self/primary").exists() && new File("/storage/self/primary").canRead())) {
-                if (new File("/storage/emulated/0").exists() && new File("/storage/emulated/0").canRead()) {
-                    getDir("/storage/emulated/0");
-                } else if (new File("/storage/emulated/legacy").exists() && new File("/storage/emulated/legacy").canRead()) {
-                    getDir("/storage/emulated/legacy");
-                } else {
-                    getDir("/storage/self/primary");
+            } else if (file.getAbsolutePath().equals("/storage/emulated")) {
+                if (emulated0.exists() && emulated0.canRead()) {
+                    getDir(emulated0Str);
+                } else if (emulatedLegacy.exists() && emulatedLegacy.canRead()) {
+                    getDir(emulatedLegacyStr);
+                } else if (selfPrimary.exists() && selfPrimary.canRead()) {
+                    getDir(selfPrimaryStr);
                 }
             } else {
                 AlertDialog.Builder unreadableDialog = new AlertDialog.Builder(mActivity);
-                unreadableDialog = unreadableDialog.setIcon(R.drawable.ic_launcher);
-                unreadableDialog = unreadableDialog.setTitle(String.format("[%1$s] %2$s", file.getName(), mActivity.getResources().getString(R.string.fb_cread)));
-                unreadableDialog = unreadableDialog.setPositiveButton(mActivity.getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+                unreadableDialog.setIcon(R.drawable.ic_launcher);
+                unreadableDialog.setTitle(String.format("[%1$s] %2$s", file.getName(),
+                        mActivity.getString(R.string.fb_cread))
+                );
+                unreadableDialog.setPositiveButton(
+                        mActivity.getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
                 unreadableDialog.show();
             }
         } else {
@@ -252,7 +270,8 @@ public class FileBrowserFragment extends ListFragment {
                         }
                     }
                 }
-                ((TimidityActivity) mActivity).selectedSong(files, position - firstFile, true, false, true);
+                ((TimidityActivity) mActivity).selectedSong(files,
+                        position - firstFile, true, false, true);
             }
         }
         fixLongClick();

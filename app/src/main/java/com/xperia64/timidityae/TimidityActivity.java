@@ -74,7 +74,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TimidityActivity extends AppCompatActivity implements FileBrowserFragment.ActionFileBackListener, PlaylistFragment.ActionPlaylistBackListener, FileBrowserDialog.FileBrowserDialogListener {
+public class TimidityActivity extends AppCompatActivity
+        implements FileBrowserFragment.ActionFileBackListener,
+        PlaylistFragment.ActionPlaylistBackListener, FileBrowserDialog.FileBrowserDialogListener {
     private static final int POS_FILES = 0;
     private static final int POS_PLAYER = 1;
     private static final int POS_PLAYLIST = 2;
@@ -111,17 +113,23 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     currSongName = intent.getStringExtra(Constants.ta_filename);
                     if (viewPager2.getCurrentItem() == 1) {
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
-                        menuButtonR.setTitle(getResources().getString(R.string.view));
-                        menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
-                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setTitle(getString(R.string.view));
+                        menuButtonR.setTitleCondensed(getString(R.string.viewcon));
+                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                         menuButtonL.setIcon(R.drawable.ic_menu_info_details);
-                        menuButtonL.setTitle(getResources().getString(R.string.playback));
-                        menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
-                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setTitle(getString(R.string.playback));
+                        menuButtonL.setTitleCondensed(getString(R.string.playbackcon));
+                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat
+                                != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat
+                                != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                     }
-                    playFrag.play(intent.getIntExtra(Constants.ta_startt, 0), intent.getStringExtra(Constants.ta_songttl));
+                    playFrag.play(
+                            intent.getIntExtra(Constants.ta_startt, 0),
+                            intent.getStringExtra(Constants.ta_songttl));
                     if (plistFrag != null) {
                         Globals.highlightMe = intent.getIntExtra(Constants.ta_highlight, -1);
                         try {
@@ -151,17 +159,25 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     currSongName = intent.getStringExtra(Constants.ta_filename);
                     if (viewPager2.getCurrentItem() == 1 && menuButtonR != null && menuButtonL != null) {
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
-                        menuButtonR.setTitle(getResources().getString(R.string.view));
-                        menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
-                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setTitle(getString(R.string.view));
+                        menuButtonR.setTitleCondensed(getString(R.string.viewcon));
+                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                         menuButtonL.setIcon(R.drawable.ic_menu_info_details);
-                        menuButtonL.setTitle(getResources().getString(R.string.playback));
-                        menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
-                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setTitle(getString(R.string.playback));
+                        menuButtonL.setTitleCondensed(getString(R.string.playbackcon));
+                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat
+                                != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat
+                                != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                     }
-                    playFrag.play(intent.getIntExtra(Constants.ta_startt, 0), intent.getStringExtra(Constants.ta_songttl), intent.getIntExtra(Constants.ta_shufmode, 0), intent.getIntExtra(Constants.ta_loopmode, 1));
+                    playFrag.play(
+                            intent.getIntExtra(Constants.ta_startt, 0),
+                            intent.getStringExtra(Constants.ta_songttl),
+                            intent.getIntExtra(Constants.ta_shufmode, 0),
+                            intent.getIntExtra(Constants.ta_loopmode, 1));
                     break;
                 case Constants.ta_cmd_copy_plist:
                     if (plistFrag != null) {
@@ -182,13 +198,13 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         Globals.hardStop = false;
                         if (viewPager2.getCurrentItem() == 1) {
                             menuButtonR.setIcon(R.drawable.ic_menu_agenda);
-                            menuButtonR.setTitle(getResources().getString(R.string.view));
-                            menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
+                            menuButtonR.setTitle(getString(R.string.view));
+                            menuButtonR.setTitleCondensed(getString(R.string.viewcon));
                             menuButtonR.setVisible(false);
                             menuButtonR.setEnabled(false);
                             menuButtonL.setIcon(R.drawable.ic_menu_info_details);
-                            menuButtonL.setTitle(getResources().getString(R.string.playback));
-                            menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
+                            menuButtonL.setTitle(getString(R.string.playback));
+                            menuButtonL.setTitleCondensed(getString(R.string.playbackcon));
                             menuButtonL.setVisible(false);
                             menuButtonL.setEnabled(false);
                         }
@@ -213,7 +229,9 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     if (intent.getBooleanExtra(Constants.ta_en_play, false)) {
                         playFrag.canEnablePlay = true;
                     }
-                    playFrag.pauseStop(intent.getBooleanExtra(Constants.ta_pause, false), intent.getBooleanExtra(Constants.ta_pausea, false));
+                    playFrag.pauseStop(
+                            intent.getBooleanExtra(Constants.ta_pause, false),
+                            intent.getBooleanExtra(Constants.ta_pausea, false));
                     break;
                 case Constants.ta_cmd_update_art: // notify art
                     // currSongName =
@@ -262,18 +280,34 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     }
 
     public void requestPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-            /*
-             * ||ContextCompat.checkSelfPermission(this,
-             * Manifest.permission.READ_PHONE_STATE) !=
-             * PackageManager.PERMISSION_GRANTED
-             */) {
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+                /*|| ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED*/
+        ) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.READ_PHONE_STATE)
+            ) {
 
-                new AlertDialog.Builder(this).setTitle("Permissions")
-                        .setMessage("Timidity AE needs to be able to:\n" + "Read your storage to play music files\n\n" + "Write to your storage to save configuration files\n\n" + "Read phone state to auto-pause music during a phone call\n" + "Timidity will not make phone calls or do anything besides checking if your device is receiving a call")
+                new AlertDialog.Builder(this)
+                        .setTitle("Permissions")
+                        .setMessage("Timidity AE needs to be able to:\n"
+                                + "Read your storage to play music files\n\n"
+                                + "Write to your storage to save configuration files\n\n"
+                                + "Read phone state to auto-pause music during a phone call\n"
+                                + "Timidity will not make phone calls or do anything besides" +
+                                "checking if your device is receiving a call")
                         .setPositiveButton("OK", new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -283,13 +317,16 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         .setNegativeButton("Cancel", new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new AlertDialog.Builder(TimidityActivity.this).setTitle("Error").setMessage("Timidity AE cannot proceed without these permissions").setPositiveButton("OK", new OnClickListener() {
+                                new AlertDialog.Builder(TimidityActivity.this)
+                                        .setTitle("Error")
+                                        .setMessage("Timidity AE cannot proceed without these permissions")
+                                        .setPositiveButton("OK", new OnClickListener() {
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        TimidityActivity.this.finish();
-                                    }
-                                }).setCancelable(false).show();
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                TimidityActivity.this.finish();
+                                            }
+                                        }).setCancelable(false).show();
                             }
                         }).setCancelable(false).show();
 
@@ -299,7 +336,10 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 actuallyRequestPermissions();
             }
         } else {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.READ_PHONE_STATE)
+                    != PackageManager.PERMISSION_GRANTED
+            ) {
                 Globals.phoneState = false;
             }
             yetAnotherInit();
@@ -307,7 +347,11 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     }
 
     public void actuallyRequestPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PERMISSION_REQUEST);
     }
 
     public void yetAnotherInit() {
@@ -320,7 +364,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST) {// If request is cancelled, the result arrays are empty.
             boolean good = true;
@@ -338,24 +383,29 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     good = false;
                 }
-
             }
             if (!good) {
 
                 // permission denied, boo! Disable the app.
-                new AlertDialog.Builder(TimidityActivity.this).setTitle("Error").setMessage("Timidity AE cannot proceed without these permissions.").setPositiveButton("OK", new OnClickListener() {
+                new AlertDialog.Builder(TimidityActivity.this)
+                        .setTitle("Error")
+                        .setMessage("Timidity AE cannot proceed without these permissions.")
+                        .setPositiveButton("OK", new OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        TimidityActivity.this.finish();
-                    }
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                TimidityActivity.this.finish();
+                            }
 
-                }).setCancelable(false).show();
+                        }).setCancelable(false).show();
             } else {
                 if (!Environment.getExternalStorageDirectory().canRead()) {
                     // Buggy emulator? Try restarting the app
                     AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                    alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 237462, new Intent(this, TimidityActivity.class), PendingIntent.FLAG_ONE_SHOT));
+                    alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
+                            PendingIntent.getActivity(this, 237462,
+                                    new Intent(this, TimidityActivity.class),
+                                    PendingIntent.FLAG_ONE_SHOT));
                     System.exit(0);
                 }
                 yetAnotherInit();
@@ -372,13 +422,15 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         } else {
             // For some reason when I kill the activity and restart it,
             // justtheme is true, but Globals.theme = 0
-            if (!savedInstanceState.getBoolean("justtheme", false) || SettingsStorage.theme == 0) {
+            if (!savedInstanceState.getBoolean(
+                    "justtheme", false) || SettingsStorage.theme == 0) {
                 SettingsStorage.reloadSettings(this);
             }
         }
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (!extras.getBoolean("justtheme", false) || SettingsStorage.theme == 0) {
+            if (!extras.getBoolean(
+                    "justtheme", false) || SettingsStorage.theme == 0) {
                 SettingsStorage.reloadSettings(this);
             }
         }
@@ -404,7 +456,9 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
         oldTheme = SettingsStorage.theme;
         oldPlist = SettingsStorage.enableDragNDrop;
-        this.setTheme(SettingsStorage.theme == 1 ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar : androidx.appcompat.R.style.Theme_AppCompat);
+        this.setTheme(SettingsStorage.theme == 1
+                ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar
+                : androidx.appcompat.R.style.Theme_AppCompat);
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             Log.i("Timidity", "Initializing");
@@ -492,15 +546,19 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     trueExt++;
             }
             if (permissions.isEmpty() && SettingsStorage.shouldExtStorageNag && trueExt > 1) {
-                new AlertDialog.Builder(this).setTitle("SD Card Access").setCancelable(false).setMessage("Would you like to give Timidity AE write access to your external sd card? This is recommended if you're converting files or would like to place Timidity AE's data directory there. Problems may occur if a directory other than the root of your SD card is selected.").setPositiveButton("Yes", new OnClickListener() {
+                new AlertDialog.Builder(this)
+                        .setTitle("SD Card Access")
+                        .setCancelable(false)
+                        .setMessage(R.string.permission_grant_storage_write_access)
+                        .setPositiveButton("Yes", new OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                        startActivityForResult(intent, 42);
-                    }
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                                startActivityForResult(intent, 42);
+                            }
 
-                }).setNegativeButton("No, do not ask again", new OnClickListener() {
+                        }).setNegativeButton("No, do not ask again", new OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -529,11 +587,15 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     }
 
     public void initCallback2() {
-        int x = JNIHandler.init(SettingsStorage.dataFolder + "timidity/", "timidity.cfg", SettingsStorage.channelMode, SettingsStorage.defaultResamp,
-                SettingsStorage.bufferSize, SettingsStorage.audioRate, SettingsStorage.preserveSilence, false, SettingsStorage.freeInsts, SettingsStorage.verbosity, SettingsStorage.volume);
+        int x = JNIHandler.init(SettingsStorage.dataFolder + "timidity/",
+                "timidity.cfg", SettingsStorage.channelMode, SettingsStorage.defaultResamp,
+                SettingsStorage.bufferSize, SettingsStorage.audioRate,
+                SettingsStorage.preserveSilence, false, SettingsStorage.freeInsts,
+                SettingsStorage.verbosity, SettingsStorage.volume);
         if (x != 0 && x != -99) {
             SettingsStorage.onlyNative = SettingsStorage.nativeMidi = true;
-            Toast.makeText(this, String.format(getResources().getString(R.string.tcfg_error), x), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, String.format(getString(R.string.tcfg_error), x),
+                    Toast.LENGTH_LONG).show();
             if (fileFrag != null) {
                 fileFrag.refresh();
             }
@@ -567,7 +629,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                                 }
                             }
                             if (position == -1)
-                                Toast.makeText(this, getResources().getString(R.string.intErr1), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, getString(R.string.intErr1),
+                                        Toast.LENGTH_SHORT).show();
                             else {
                                 stop();
                                 if (fileFrag != null) {
@@ -586,7 +649,7 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                             }
                         }
                     } else {
-                        Toast.makeText(this, getResources().getString(R.string.srv_fnf), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.srv_fnf), Toast.LENGTH_SHORT).show();
                     }
                 } else if (in.getData().getScheme().equals("http") || in.getData().getScheme().equals("https")) {
                     if (!data.endsWith("/")) {
@@ -597,23 +660,33 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         downloadTask.execute(in.getData().toString(), in.getData().getLastPathSegment());
                         in.setData(null);
                     } else {
-                        Toast.makeText(this, "This is a directory, not a file", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,
+                                "This is a directory, not a file", Toast.LENGTH_SHORT).show();
                     }
 
                     // TODO: Better heuristics on content:// type
-                } else if (in.getData().getScheme().equals("content") && (data.contains("downloads") || data.contains("audio"))) {
+                } else if (in.getData().getScheme().equals("content")
+                        && (data.contains("downloads")
+                        || data.contains("audio"))
+                ) {
                     String filename = null;
-                    try (Cursor cursor = this.getContentResolver().query(in.getData(), new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE}, null, null, null)) {
+                    try (Cursor cursor = this.getContentResolver().query(in.getData(),
+                            new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE},
+                            null, null, null)
+                    ) {
                         if (cursor != null && cursor.moveToFirst()) {
                             filename = cursor.getString(0);
                         }
                     }
                     try {
                         InputStream input = getContentResolver().openInputStream(in.getData());
-                        if (new File(Globals.getExternalCacheDir(this).getAbsolutePath() + '/' + filename).exists()) {
-                            new File(Globals.getExternalCacheDir(this).getAbsolutePath() + '/' + filename).delete();
+                        if (new File(Globals.getExternalCacheDir(this)
+                                .getAbsolutePath() + '/' + filename).exists()) {
+                            new File(Globals.getExternalCacheDir(this)
+                                    .getAbsolutePath() + '/' + filename).delete();
                         }
-                        OutputStream output = new FileOutputStream(Globals.getExternalCacheDir(this).getAbsolutePath() + '/' + filename);
+                        OutputStream output = new FileOutputStream(
+                                Globals.getExternalCacheDir(this).getAbsolutePath() + '/' + filename);
 
                         byte[] buffer = new byte[4096];
                         int count;
@@ -638,14 +711,17 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                                 if (ff != null && ff.isFile()) {
                                     if (Globals.hasSupportedExtension(ff)) {
                                         files.add(ff.getPath());
-                                        if (ff.getPath().equals(Globals.getExternalCacheDir(this).getAbsolutePath() + '/' + filename))
+                                        if (ff.getPath().equals(
+                                                Globals.getExternalCacheDir(this)
+                                                        .getAbsolutePath() + '/' + filename))
                                             position = goodCounter;
                                         goodCounter++;
                                     }
                                 }
                             }
                             if (position == -1)
-                                Toast.makeText(this, getResources().getString(R.string.intErr1), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, getString(R.string.intErr1),
+                                        Toast.LENGTH_SHORT).show();
                             else {
                                 stop();
                                 if (fileFrag != null) {
@@ -665,7 +741,9 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
 
                 } else {
 
-                    Toast.makeText(this, getResources().getString(R.string.intErr2) + " (" + in.getData().getScheme() + " " + data + ")", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.intErr2)
+                                    + " (" + in.getData().getScheme() + " " + data + ")",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -740,13 +818,13 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                         menuButtonR.setIcon(R.drawable.ic_menu_refresh);
                         menuButtonR.setVisible(true);
                         menuButtonR.setEnabled(true);
-                        menuButtonR.setTitle(getResources().getString(R.string.refreshfld));
-                        menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
+                        menuButtonR.setTitle(getString(R.string.refreshfld));
+                        menuButtonR.setTitleCondensed(getString(R.string.refreshcon));
                     }
                     if (menuButtonL != null) {
                         menuButtonL.setIcon(R.drawable.ic_menu_home);
-                        menuButtonL.setTitle(getResources().getString(R.string.homefld));
-                        menuButtonL.setTitleCondensed(getResources().getString(R.string.homecon));
+                        menuButtonL.setTitle(getString(R.string.homefld));
+                        menuButtonL.setTitleCondensed(getString(R.string.homecon));
                         menuButtonL.setVisible(true);
                         menuButtonL.setEnabled(true);
                     }
@@ -760,17 +838,21 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 if (getSupportActionBar() != null) {
                     if (menuButtonR != null) {
                         menuButtonR.setIcon(R.drawable.ic_menu_agenda);
-                        menuButtonR.setTitle(getResources().getString(R.string.view));
-                        menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
-                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setTitle(getString(R.string.view));
+                        menuButtonR.setTitleCondensed(getString(R.string.viewcon));
+                        menuButtonR.setVisible(JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                        menuButtonR.setEnabled(JNIHandler.mediaBackendFormat
+                                == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                     }
                     if (menuButtonL != null) {
                         menuButtonL.setIcon(R.drawable.ic_menu_info_details);
-                        menuButtonL.setTitle(getResources().getString(R.string.playback));
-                        menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
-                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setTitle(getString(R.string.playback));
+                        menuButtonL.setTitleCondensed(getString(R.string.playbackcon));
+                        menuButtonL.setVisible(JNIHandler.mediaBackendFormat
+                                != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                        menuButtonL.setEnabled(JNIHandler.mediaBackendFormat
+                                != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                     }
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     getSupportActionBar().setHomeButtonEnabled(false);
@@ -781,22 +863,26 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                 if (getSupportActionBar() != null) {
                     if (menuButtonR != null) {
                         menuButtonR.setIcon(R.drawable.ic_menu_refresh);
-                        menuButtonR.setTitle(getResources().getString(R.string.refreshpls));
-                        menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
+                        menuButtonR.setTitle(getString(R.string.refreshpls));
+                        menuButtonR.setTitleCondensed(getString(R.string.refreshcon));
                         menuButtonR.setVisible(true);
                         menuButtonR.setEnabled(true);
                     }
                     if (menuButtonL != null) {
                         menuButtonL.setIcon(R.drawable.ic_menu_add);
-                        menuButtonL.setTitle(getResources().getString(R.string.add));
-                        menuButtonL.setTitleCondensed(getResources().getString(R.string.addcon));
+                        menuButtonL.setTitle(getString(R.string.add));
+                        menuButtonL.setTitleCondensed(getString(R.string.addcon));
                         if (plistFrag != null) {
                             // Enable if:
                             // Not currently in a playlist OR
                             // the playlist is not in the current playlist.
                             // TODO: This could probably be simplified further
-                            menuButtonL.setVisible(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
-                            menuButtonL.setEnabled(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
+                            menuButtonL.setVisible(
+                                    !(plistFrag.plistName != null && plistFrag.isPlaylist)
+                                            || !plistFrag.plistName.equals("CURRENT"));
+                            menuButtonL.setEnabled(
+                                    !(plistFrag.plistName != null && plistFrag.isPlaylist)
+                                            || !plistFrag.plistName.equals("CURRENT"));
                         }
                     }
                     if (plistFrag != null)
@@ -823,7 +909,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     }
                     break;
                 case POS_PLAYER:
-                    if (playFrag != null && JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY) {
+                    if (playFrag != null && JNIHandler.mediaBackendFormat
+                            == JNIHandler.MediaFormat.FMT_TIMIDITY) {
                         playFrag.incrementInterface();
                     }
                     break;
@@ -877,37 +964,46 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             mainact.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(mainact, 1);
         } else if (item.getItemId() == R.id.ahelp) {
-            new AlertDialog.Builder(this).setTitle(R.string.helpt).setMessage(R.string.help_root).setNegativeButton("Cancel", new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            }).setPositiveButton("MIDI/General", new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    new AlertDialog.Builder(TimidityActivity.this).setTitle(R.string.helpt).setMessage(R.string.thelper).setNegativeButton("OK", new OnClickListener() {
-
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.helpt)
+                    .setMessage(R.string.help_root)
+                    .setNegativeButton("Cancel", new OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                         }
+                    }).setPositiveButton("MIDI/General", new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new AlertDialog.Builder(TimidityActivity.this)
+                            .setTitle(R.string.helpt)
+                            .setMessage(R.string.thelper)
+                            .setNegativeButton("OK", new OnClickListener() {
 
-                    }).show();
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+
+                            }).show();
                 }
             }).setNeutralButton("SoX", new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    final SpannableString s = new SpannableString(getResources().getString(R.string.shelper));
+                    final SpannableString s = new SpannableString(getString(R.string.shelper));
                     Linkify.addLinks(s, Linkify.ALL);
 
-                    AlertDialog d = new AlertDialog.Builder(TimidityActivity.this).setTitle(R.string.helps).setMessage(s).setNegativeButton("OK", new OnClickListener() {
+                    AlertDialog d = new AlertDialog.Builder(TimidityActivity.this)
+                            .setTitle(R.string.helps)
+                            .setMessage(s)
+                            .setNegativeButton("OK", new OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
 
-                        }
-
-                    }).show();
-                    ((TextView) d.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+                            }).show();
+                    ((TextView) d.findViewById(android.R.id.message))
+                            .setMovementMethod(LinkMovementMethod.getInstance());
                 }
             }).show();
 
@@ -952,9 +1048,10 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         }
     }
 
-    public void selectedSong(ArrayList<String> files, int songNumber, boolean begin, boolean fromPlaylist, boolean copyPlist) {
+    public void selectedSong(ArrayList<String> files, int songNumber, boolean begin,
+                             boolean fromPlaylist, boolean copyPlist) {
         if (!Globals.hasSupportedExtension(files.get(songNumber))) {
-            Toast.makeText(this, "Error: Timidity is not loaded. Please make sure the config is valid.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_timidity_not_loaded, Toast.LENGTH_LONG).show();
             return;
         }
         this.fromPlaylist = fromPlaylist;
@@ -1109,7 +1206,9 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
         } else if (requestCode == 42) {
             if (resultCode == RESULT_OK) {
                 Uri treeUri = data.getData();
-                getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                getContentResolver().takePersistableUriPermission(treeUri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 DocumentFileUtils.docFileDevice = treeUri;
             }
             initCallback2();
@@ -1122,7 +1221,11 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
     }
 
     public void loadCfg() {
-        new FileBrowserDialog().create(0, Globals.configFiles, this, this, getLayoutInflater(), true, currSongName.substring(0, currSongName.lastIndexOf('/')), "Loaded");
+        new FileBrowserDialog().create(0, Globals.configFiles,
+                this, this, getLayoutInflater(),
+                true, currSongName.substring(
+                        0, currSongName.lastIndexOf('/')),
+                "Loaded");
     }
 
     public void loadCfg(String path) {
@@ -1195,13 +1298,13 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                             menuButtonR.setIcon(R.drawable.ic_menu_refresh);
                             menuButtonR.setVisible(true);
                             menuButtonR.setEnabled(true);
-                            menuButtonR.setTitle(getResources().getString(R.string.refreshfld));
-                            menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
+                            menuButtonR.setTitle(getString(R.string.refreshfld));
+                            menuButtonR.setTitleCondensed(getString(R.string.refreshcon));
                         }
                         if (menuButtonL != null) {
                             menuButtonL.setIcon(R.drawable.ic_menu_home);
-                            menuButtonL.setTitle(getResources().getString(R.string.homefld));
-                            menuButtonL.setTitleCondensed(getResources().getString(R.string.homecon));
+                            menuButtonL.setTitle(getString(R.string.homefld));
+                            menuButtonL.setTitleCondensed(getString(R.string.homecon));
                             menuButtonL.setVisible(true);
                             menuButtonL.setEnabled(true);
                         }
@@ -1217,17 +1320,21 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     if (getSupportActionBar() != null) {
                         if (menuButtonR != null) {
                             menuButtonR.setIcon(R.drawable.ic_menu_agenda);
-                            menuButtonR.setTitle(getResources().getString(R.string.view));
-                            menuButtonR.setTitleCondensed(getResources().getString(R.string.viewcon));
-                            menuButtonR.setVisible(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
-                            menuButtonR.setEnabled(JNIHandler.mediaBackendFormat == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                            menuButtonR.setTitle(getString(R.string.view));
+                            menuButtonR.setTitleCondensed(getString(R.string.viewcon));
+                            menuButtonR.setVisible(JNIHandler.mediaBackendFormat
+                                    == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
+                            menuButtonR.setEnabled(JNIHandler.mediaBackendFormat
+                                    == JNIHandler.MediaFormat.FMT_TIMIDITY && JNIHandler.isActive());
                         }
                         if (menuButtonL != null) {
                             menuButtonL.setIcon(R.drawable.ic_menu_info_details);
-                            menuButtonL.setTitle(getResources().getString(R.string.playback));
-                            menuButtonL.setTitleCondensed(getResources().getString(R.string.playbackcon));
-                            menuButtonL.setVisible(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
-                            menuButtonL.setEnabled(JNIHandler.mediaBackendFormat != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                            menuButtonL.setTitle(getString(R.string.playback));
+                            menuButtonL.setTitleCondensed(getString(R.string.playbackcon));
+                            menuButtonL.setVisible(JNIHandler.mediaBackendFormat
+                                    != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
+                            menuButtonL.setEnabled(JNIHandler.mediaBackendFormat
+                                    != JNIHandler.MediaFormat.FMT_MEDIAPLAYER && JNIHandler.isActive());
                         }
                         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         getSupportActionBar().setHomeButtonEnabled(false);
@@ -1238,22 +1345,26 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
                     if (getSupportActionBar() != null) {
                         if (menuButtonR != null) {
                             menuButtonR.setIcon(R.drawable.ic_menu_refresh);
-                            menuButtonR.setTitle(getResources().getString(R.string.refreshpls));
-                            menuButtonR.setTitleCondensed(getResources().getString(R.string.refreshcon));
+                            menuButtonR.setTitle(getString(R.string.refreshpls));
+                            menuButtonR.setTitleCondensed(getString(R.string.refreshcon));
                             menuButtonR.setVisible(true);
                             menuButtonR.setEnabled(true);
                         }
                         if (menuButtonL != null) {
                             menuButtonL.setIcon(R.drawable.ic_menu_add);
-                            menuButtonL.setTitle(getResources().getString(R.string.add));
-                            menuButtonL.setTitleCondensed(getResources().getString(R.string.addcon));
+                            menuButtonL.setTitle(getString(R.string.add));
+                            menuButtonL.setTitleCondensed(getString(R.string.addcon));
                             if (plistFrag != null) {
                                 // Enable if:
                                 // Not currently in a playlist OR
                                 // the playlist is not in the current playlist.
                                 // TODO: This could probably be simplified further
-                                menuButtonL.setVisible(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
-                                menuButtonL.setEnabled(!(plistFrag.plistName != null && plistFrag.isPlaylist) || !plistFrag.plistName.equals("CURRENT"));
+                                menuButtonL.setVisible(
+                                        !(plistFrag.plistName != null && plistFrag.isPlaylist)
+                                                || !plistFrag.plistName.equals("CURRENT"));
+                                menuButtonL.setEnabled(
+                                        !(plistFrag.plistName != null && plistFrag.isPlaylist)
+                                                || !plistFrag.plistName.equals("CURRENT"));
                             }
                         }
                         if (plistFrag != null)
@@ -1284,7 +1395,8 @@ public class TimidityActivity extends AppCompatActivity implements FileBrowserFr
             switch (position) {
                 default:
                 case POS_FILES:
-                    fileFrag = FileBrowserFragment.create(fileFragDir == null ? SettingsStorage.homeFolder : fileFragDir);
+                    fileFrag = FileBrowserFragment.create(
+                            fileFragDir == null ? SettingsStorage.homeFolder : fileFragDir);
                     fileFragDir = null;
                     return fileFrag;
                 case POS_PLAYER:

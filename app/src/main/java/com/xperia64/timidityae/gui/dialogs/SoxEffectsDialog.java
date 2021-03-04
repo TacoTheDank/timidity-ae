@@ -36,8 +36,14 @@ import java.util.Locale;
 
 public class SoxEffectsDialog {
 
-    private final double[] speedVals = {0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-    private final double[] tempoVals = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private final double[] speedVals = {
+            0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2, 3,
+            4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+    };
+    private final double[] tempoVals = {
+            0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
+            0.9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    };
     private final int[] pitchVals = {-500, -400, -300, -200, -100, 0, 100, 200, 300, 400, 500};
     private Activity context;
     private CheckBox speedChk;
@@ -406,7 +412,7 @@ public class SoxEffectsDialog {
         }
         manCmd.addTextChangedListener(delayWatcher);
 
-        b.setPositiveButton(c.getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+        b.setPositiveButton(c.getString(R.string.done), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

@@ -99,7 +99,9 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
         }
         if (canReallyWrite && new File(parent).canWrite()) {
             configFileName = parent + configFileName;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && DocumentFileUtils.docFileDevice != null) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && DocumentFileUtils.docFileDevice != null
+        ) {
             // TODO
             // Write the file to getExternalFilesDir, then move it
             // with the Uri
@@ -109,7 +111,8 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
             probablyTheDirectory = tmp[0];
             probablyTheRoot = tmp[1];
             if (probablyTheDirectory.length() > 1) {
-                needRename = parent.substring(parent.indexOf(probablyTheRoot) + probablyTheRoot.length()) + configFileName;
+                needRename = parent.substring(
+                        parent.indexOf(probablyTheRoot) + probablyTheRoot.length()) + configFileName;
                 configFileName = probablyTheDirectory + '/' + configFileName;
             } else {
                 configFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + '/' + configFileName;
@@ -122,28 +125,32 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
         final boolean canWrite = canReallyWrite;
         final String needToRename = needRename;
         final String probRoot = probablyTheRoot;
-        if (new File(finalval).exists() || new File(probRoot + needRename).exists() && needToRename != null) {
+        if (new File(finalval).exists() ||
+                new File(probRoot + needRename).exists() && needToRename != null
+        ) {
             AlertDialog deletionDialog = new AlertDialog.Builder(context).create();
             deletionDialog.setTitle("Warning");
             deletionDialog.setMessage("Overwrite config file?");
             deletionDialog.setCancelable(false);
-            deletionDialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int buttonId) {
-                    if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        if (needToRename != null) {
-                            DocumentFileUtils.tryToDeleteFile(context, probRoot + needToRename);
+            deletionDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                    context.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int buttonId) {
+                            if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                if (needToRename != null) {
+                                    DocumentFileUtils.tryToDeleteFile(context, probRoot + needToRename);
+                                }
+                                DocumentFileUtils.tryToDeleteFile(context, finalval);
+                            } else {
+                                new File(finalval).delete();
+                            }
+                            writeConfig(finalval, needToRename);
                         }
-                        DocumentFileUtils.tryToDeleteFile(context, finalval);
-                    } else {
-                        new File(finalval).delete();
-                    }
-                    writeConfig(finalval, needToRename);
-                }
-            });
-            deletionDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getResources().getString(android.R.string.no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int buttonId) {
-                }
-            });
+                    });
+            deletionDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                    context.getString(android.R.string.no), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int buttonId) {
+                        }
+                    });
             deletionDialog.show();
         } else {
             writeConfig(finalval, needToRename);
@@ -182,7 +189,9 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
                 context.runOnUiThread(new Runnable() {
                     public void run() {
                         String trueName = finalval;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && DocumentFileUtils.docFileDevice != null && needToRename != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                                && DocumentFileUtils.docFileDevice != null && needToRename != null
+                        ) {
                             if (DocumentFileUtils.renameDocumentFile(context, finalval, needToRename)) {
                                 trueName = needToRename;
                             } else {
@@ -197,7 +206,6 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
                         context.sendBroadcast(outgoingIntent);
                     }
                 });
-
             }
         }).start();
     }
