@@ -17,6 +17,8 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import com.xperia64.timidityae.TimidityActivity;
 
 import java.io.FileOutputStream;
@@ -46,9 +48,10 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         super.onPreExecute();
         // take CPU lock to prevent CPU from going off if the user
         // presses the power button during download
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                getClass().getName());
+        PowerManager pm = ContextCompat.getSystemService(context, PowerManager.class);
+        if (pm != null) {
+            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+        }
         mWakeLock.acquire();
 
         prog = new ProgressDialog(context);

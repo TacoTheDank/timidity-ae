@@ -401,11 +401,13 @@ public class TimidityActivity extends AppCompatActivity
             } else {
                 if (!Environment.getExternalStorageDirectory().canRead()) {
                     // Buggy emulator? Try restarting the app
-                    AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                    alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
-                            PendingIntent.getActivity(this, 237462,
-                                    new Intent(this, TimidityActivity.class),
-                                    PendingIntent.FLAG_ONE_SHOT));
+                    AlarmManager alm = ContextCompat.getSystemService(this, AlarmManager.class);
+                    if (alm != null) {
+                        alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
+                                PendingIntent.getActivity(this, 237462,
+                                        new Intent(this, TimidityActivity.class),
+                                        PendingIntent.FLAG_ONE_SHOT));
+                    }
                     System.exit(0);
                 }
                 yetAnotherInit();
@@ -783,10 +785,12 @@ public class TimidityActivity extends AppCompatActivity
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
+        ActivityManager manager = ContextCompat.getSystemService(this, ActivityManager.class);
+        if (manager != null) {
+            for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
             }
         }
         return false;

@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.xperia64.timidityae.gui.TimidityAEWidgetProvider;
 import com.xperia64.timidityae.util.Constants;
@@ -86,7 +87,6 @@ public class MusicService extends Service {
     int[] widgetIds;
     String currTitle;
     Notification mainNotification;
-    PowerManager pm;
     RemoteViews remoteViews;
     Random random = new Random(System.currentTimeMillis());
     PhoneStateListener phoneStateListener = new PhoneStateListener() {
@@ -770,14 +770,16 @@ public class MusicService extends Service {
         outgoingIntent.setAction(Constants.ta_rec);
         outgoingIntent.putExtra(Constants.ta_cmd, Constants.ta_cmd_service_started);
         sendBroadcast(outgoingIntent);
-        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Timidity AE");
+        PowerManager pm = ContextCompat.getSystemService(this, PowerManager.class);
+        if (pm != null) {
+            wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Timidity AE");
+        }
         wl.setReferenceCounted(false);
         if (shouldDoWidget)
             widgetIds = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
                     new ComponentName(getApplication(), TimidityAEWidgetProvider.class));
 
-        TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        TelephonyManager mgr = ContextCompat.getSystemService(this, TelephonyManager.class);
         if (mgr != null && Globals.phoneState) {
             mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         }
@@ -1072,7 +1074,7 @@ public class MusicService extends Service {
             Globals.shouldRestore = false;
             JNIHandler.stop();
             if (fullStop) {
-                TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                TelephonyManager mgr = ContextCompat.getSystemService(this, TelephonyManager.class);
                 if (mgr != null && Globals.phoneState) {
                     mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
                 }
@@ -1148,7 +1150,7 @@ public class MusicService extends Service {
         // emptyIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
 
         NotificationManager mNotificationManager
-                = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                = ContextCompat.getSystemService(this, NotificationManager.class);
         String NOTIFICATION_CHANNEL_ID = "timidity_playing_channel";
         NotificationCompat.Builder mBuilder;
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -1162,7 +1164,9 @@ public class MusicService extends Service {
             notificationChannel.setDescription("Timidity AE Playback Controls");
             notificationChannel.enableVibration(false);
             notificationChannel.enableLights(false);
-            mNotificationManager.createNotificationChannel(notificationChannel);
+            if (mNotificationManager != null) {
+                mNotificationManager.createNotificationChannel(notificationChannel);
+            }
             mBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_lol);
 
@@ -1194,7 +1198,7 @@ public class MusicService extends Service {
                 wl.acquire();
             }
 
-            TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+            TelephonyManager mgr = ContextCompat.getSystemService(this, TelephonyManager.class);
             if (mgr != null && Globals.phoneState) {
                 mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             }
@@ -1203,7 +1207,9 @@ public class MusicService extends Service {
                 wl.acquire();
             }
 
-            mNotificationManager.notify(Globals.NOTIFICATION_ID, mainNotification);
+            if (mNotificationManager != null) {
+                mNotificationManager.notify(Globals.NOTIFICATION_ID, mainNotification);
+            }
         }
         if (shouldDoWidget) {
             Intent intent = new Intent(this, TimidityAEWidgetProvider.class);

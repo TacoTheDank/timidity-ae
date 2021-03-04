@@ -20,6 +20,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 
+import androidx.core.content.ContextCompat;
+
 import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.TimidityActivity;
 import com.xperia64.timidityae.util.Constants;
@@ -98,7 +100,7 @@ public class TimidityAEWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         //System.out.println("Update was called");
         if (maxBitmap == -1) {
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            WindowManager wm = ContextCompat.getSystemService(context, WindowManager.class);
             Display display = wm.getDefaultDisplay();
             Point size = getDisplaySize(display);
             maxBitmap = size.x * size.y * 1.5;

@@ -24,6 +24,7 @@ import android.os.Environment;
 import android.util.SparseIntArray;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.xperia64.timidityae.JNIHandler;
@@ -142,8 +143,10 @@ public class SettingsStorage {
 
         unsafeSoxSwitch = prefs.getBoolean(Constants.sett_sox_unsafe, false);
 
-        UiModeManager uiModeManager = (UiModeManager) c.getSystemService(Context.UI_MODE_SERVICE);
-        isTV = uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
+        UiModeManager uiModeManager = ContextCompat.getSystemService(c, UiModeManager.class);
+        if (uiModeManager != null) {
+            isTV = uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
+        }
     }
     // -----------------------------------
 

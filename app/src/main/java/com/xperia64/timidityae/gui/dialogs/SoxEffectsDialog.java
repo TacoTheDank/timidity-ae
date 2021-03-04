@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.dialogs;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.text.Editable;
@@ -26,6 +25,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import com.xperia64.timidityae.R;
@@ -98,8 +98,10 @@ public class SoxEffectsDialog {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     mLayout.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                    InputMethodManager imm = ContextCompat.getSystemService(context, InputMethodManager.class);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                    }
                 }
                 return false;
             }
