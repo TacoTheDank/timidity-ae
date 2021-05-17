@@ -8,7 +8,6 @@
  ******************************************************************************/
 package com.xperia64.timidityae;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -36,7 +35,6 @@ import com.xperia64.timidityae.util.SettingsStorage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@SuppressLint("CommitPrefEdits")
 public class SettingsActivity extends AppCompatActivity
         implements FileBrowserDialogListener, SoundfontDialogListener {
 
