@@ -37,8 +37,8 @@ import com.xperia64.timidityae.util.SettingsStorage;
  * Created by xperia64 on 1/2/17.
  */
 
-public class TimidityPrefsFragment extends PreferenceFragmentCompat {
-    SettingsActivity s;
+public class SettingsTimidityFragment extends PreferenceFragmentCompat {
+    SettingsActivity activity;
 
     // TiMidity++ Settings
     private SwitchPreferenceCompat manTcfg; // Use manual timidity.cfg?
@@ -59,9 +59,9 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        s = (SettingsActivity) getActivity();
-        // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.settings_tim);
+        addPreferencesFromResource(R.xml.preferences_timidity);
+
+        activity = (SettingsActivity) getActivity();
 
         manTcfg = findPreference("manualConfig");
         sfPref = findPreference("sfConfig");
@@ -90,7 +90,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             rates.setEntries(hz);
             rates.setEntryValues(hzItems);
             rates.setDefaultValue(Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM)));
-            rates.setValue(s.prefs.getString("tplusRate",
+            rates.setValue(activity.prefs.getString("tplusRate",
                     Integer.toString(AudioTrack.getNativeOutputSampleRate(AudioTrack.MODE_STREAM))));
         }
 
@@ -99,10 +99,10 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference arg0, Object arg1) {
                 boolean manual = (Boolean) arg1;
                 sfPref.setEnabled(!manual);
-                s.needRestart = true;
-                s.needUpdateSf = !manual;
+                activity.needRestart = true;
+                activity.needUpdateSf = !manual;
                 if (!manual) {
-                    s.needUpdateSf = true;
+                    activity.needUpdateSf = true;
                 }
                 return true;
             }
@@ -111,8 +111,8 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
         sfPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                new SoundfontDialog().create(s.tmpSounds, s, s,
-                        s.getLayoutInflater(), s.prefs.getString(
+                new SoundfontDialog().create(activity.tmpSounds, activity, activity,
+                        activity.getLayoutInflater(), activity.prefs.getString(
                                 "defaultPath",
                                 Environment.getExternalStorageDirectory().getPath()
                         ));
@@ -120,37 +120,28 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        psilence.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference arg0, Object arg1) {
-                s.needRestart = true;
-                return true;
-            }
+        psilence.setOnPreferenceChangeListener((arg0, arg1) -> {
+            activity.needRestart = true;
+            return true;
         });
 
-        unload.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference arg0, Object arg1) {
-                s.needRestart = true;
-                return true;
-            }
+        unload.setOnPreferenceChangeListener((arg0, arg1) -> {
+            activity.needRestart = true;
+            return true;
         });
 
-        resampMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!resampMode.getValue().equals(newValue)) {
-                    s.needRestart = true;
-                }
-                return true;
+        resampMode.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (!resampMode.getValue().equals(newValue)) {
+                activity.needRestart = true;
             }
+            return true;
         });
 
         stereoMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (!stereoMode.getValue().equals(newValue)) {
-                    s.needRestart = true;
+                    activity.needRestart = true;
                     String stereo = (String) newValue;
                     String sixteen = "16"; // s.bitMode.getValue();
                     boolean sb = stereo == null || stereo.equals("2");
@@ -162,14 +153,14 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
                         int buff = Integer.parseInt(bufferSize.getText());
                         if (buff < minBuff) {
-                            s.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
+                            activity.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
                             bufferSize.setText(Integer.toString(minBuff));
-                            Toast.makeText(s,
+                            Toast.makeText(activity,
                                     getResources().getString(R.string.invalidbuff),
                                     Toast.LENGTH_SHORT).show();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            //((BaseAdapter) SettingsTimidityFragment.this.getPreferenceScreen()
                             // .getRootAdapter()).notifyDataSetChanged();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            //((BaseAdapter) SettingsTimidityFragment.this.getPreferenceScreen()
                             // .getRootAdapter()).notifyDataSetInvalidated();
                         }
                     }
@@ -182,7 +173,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (!rates.getValue().equals(newValue)) {
-                    s.needRestart = true;
+                    activity.needRestart = true;
                     String stereo = stereoMode.getValue();
                     String sixteen = "16";// s.bitMode.getValue();
                     boolean sb = stereo == null || stereo.equals("2");
@@ -194,14 +185,14 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
                         int buff = Integer.parseInt(bufferSize.getText());
                         if (buff < minBuff) {
-                            s.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
+                            activity.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
                             bufferSize.setText(Integer.toString(minBuff));
-                            Toast.makeText(s,
+                            Toast.makeText(activity,
                                     getResources().getString(R.string.invalidbuff),
                                     Toast.LENGTH_SHORT).show();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            //((BaseAdapter) SettingsTimidityFragment.this.getPreferenceScreen()
                             // .getRootAdapter()).notifyDataSetChanged();
-                            //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                            //((BaseAdapter) SettingsTimidityFragment.this.getPreferenceScreen()
                             // .getRootAdapter()).notifyDataSetInvalidated();
                         }
                     }
@@ -215,13 +206,13 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (!volume.getText().equals(newValue)) {
-                    s.needRestart = true;
+                    activity.needRestart = true;
                     String txt = (String) newValue;
                     if (txt != null) {
                         if (!txt.isEmpty()) {
                             int volume = Integer.parseInt(txt);
                             if (volume < 0 || volume > 800) {
-                                Toast.makeText(s,
+                                Toast.makeText(activity,
                                         "Invalid volume. Must be between 0 and 800",
                                         Toast.LENGTH_SHORT).show();
                                 return false;
@@ -240,7 +231,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceChange(Preference preference, final Object newValue) {
                 if (!bufferSize.getText().equals(newValue)) {
-                    s.needRestart = true;
+                    activity.needRestart = true;
                     String txt = (String) newValue;
                     if (txt != null) {
                         if (!txt.isEmpty()) {
@@ -255,14 +246,14 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
                                 int buff = Integer.parseInt(txt);
                                 if (buff < minBuff) {
-                                    s.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
+                                    activity.prefs.edit().putString("tplusBuff", Integer.toString(minBuff)).commit();
                                     ((EditTextPreference) preference).setText(Integer.toString(minBuff));
-                                    Toast.makeText(s,
+                                    Toast.makeText(activity,
                                             getResources().getString(R.string.invalidbuff),
                                             Toast.LENGTH_SHORT).show();
-                                    //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                                    //((BaseAdapter) SettingsTimidityFragment.this.getPreferenceScreen()
                                     // .getRootAdapter()).notifyDataSetChanged();
-                                    //((BaseAdapter) TimidityPrefsFragment.this.getPreferenceScreen()
+                                    //((BaseAdapter) SettingsTimidityFragment.this.getPreferenceScreen()
                                     // .getRootAdapter()).notifyDataSetInvalidated();
                                     return false;
                                 }
@@ -277,18 +268,15 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
         });
 
-        verbosity.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference arg0, Object arg1) {
-                s.needRestart = true;
-                return true;
-            }
+        verbosity.setOnPreferenceChangeListener((arg0, arg1) -> {
+            activity.needRestart = true;
+            return true;
         });
 
         reinstallSoundfont.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
+                AlertDialog dialog = new AlertDialog.Builder(activity).create();
                 dialog.setTitle(getResources().getString(R.string.sett_resf_q));
                 dialog.setMessage(getResources().getString(R.string.sett_resf_q_sum));
                 dialog.setCancelable(true);
@@ -302,7 +290,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
                                     @Override
                                     protected void onPreExecute() {
-                                        pd = new ProgressDialog(s);
+                                        pd = new ProgressDialog(activity);
                                         pd.setTitle(getResources().getString(R.string.extract));
                                         pd.setMessage(getResources().getString(R.string.extract_sum));
                                         pd.setCancelable(false);
@@ -312,7 +300,7 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
                                     @Override
                                     protected Integer doInBackground(Void... arg0) {
-                                        return Globals.extract8Rock(s);
+                                        return Globals.extract8Rock(activity);
                                     }
 
                                     @Override
@@ -320,11 +308,11 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
                                         if (pd != null) {
                                             pd.dismiss();
                                             if (result != 777) {
-                                                Toast.makeText(s,
+                                                Toast.makeText(activity,
                                                         getResources().getString(R.string.sett_resf_err),
                                                         Toast.LENGTH_SHORT).show();
                                             } else {
-                                                Toast.makeText(s,
+                                                Toast.makeText(activity,
                                                         getResources().getString(R.string.extract_def),
                                                         Toast.LENGTH_LONG).show();
                                             }
@@ -347,28 +335,23 @@ public class TimidityPrefsFragment extends PreferenceFragmentCompat {
 
         dataFoldPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                s.needRestart = true;
-                s.tmpItemEdit = manDataFolder;
-                s.tmpItemScreen = getPreferenceScreen();
-                new FileBrowserDialog().create(4, null, s, s,
-                        s.getLayoutInflater(), true,
-                        s.prefs.getString("dataDir",
+                activity.needRestart = true;
+                activity.tmpItemEdit = manDataFolder;
+                new FileBrowserDialog().create(4, null, activity, activity,
+                        activity.getLayoutInflater(), true,
+                        activity.prefs.getString("dataDir",
                                 Environment.getExternalStorageDirectory().getAbsolutePath()
                         ), getResources().getString(R.string.fb_add));
                 return true;
             }
         });
 
-        manDataFolder.setOnBindEditTextListener(editText ->
-                editText.setInputType(InputType.TYPE_CLASS_TEXT));
-        manDataFolder.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                if (!manDataFolder.getText().equals(newValue)) {
-                    s.needRestart = true;
-                }
-                return true;
+        manDataFolder.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_TEXT));
+        manDataFolder.setOnPreferenceChangeListener((preference, newValue) -> {
+            if (!manDataFolder.getText().equals(newValue)) {
+                activity.needRestart = true;
             }
+            return true;
         });
     }
 }

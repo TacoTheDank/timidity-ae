@@ -38,7 +38,7 @@
             android:title="@string/sett_fancy_plist"
             app:iconSpaceReserved="false" />
 
-        <PreferenceScreen
+        <Preference
             android:key="defFold"
             android:summary="@string/sett_brows4fb_sum"
             android:title="@string/sett_brows4fb"
@@ -51,5 +51,20 @@
             android:summary="@string/sett_fbpath"
             android:title="@string/sett_fbpath"
             app:iconSpaceReserved="false" />
+
+        <Preference
+            android:key="lolWrite"
+            android:summary="@string/sett_lolrw_sum"
+            android:title="@string/sett_lolrw"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="shouldLolNag"
+            android:summary="@string/sett_lolnag_sum"
+            android:title="@string/sett_lolnag"
+            app:iconSpaceReserved="false"
+            app:isPreferenceVisible="false" />
     </PreferenceCategory>
 </PreferenceScreen>

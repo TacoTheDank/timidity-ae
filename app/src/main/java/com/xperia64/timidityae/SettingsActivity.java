@@ -18,15 +18,16 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.EditTextPreference;
+import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
-import androidx.preference.PreferenceScreen;
 
 import com.xperia64.timidityae.gui.dialogs.FileBrowserDialog.FileBrowserDialogListener;
 import com.xperia64.timidityae.gui.dialogs.SoundfontDialog.SoundfontDialogListener;
-import com.xperia64.timidityae.gui.fragments.preferences.RootPrefsFragment;
+import com.xperia64.timidityae.gui.fragments.preferences.SettingsDisplayFragment;
+import com.xperia64.timidityae.gui.fragments.preferences.SettingsFragment;
+import com.xperia64.timidityae.gui.fragments.preferences.SettingsTimidityFragment;
 import com.xperia64.timidityae.util.Constants;
 import com.xperia64.timidityae.util.DocumentFileUtils;
 import com.xperia64.timidityae.util.ObjectSerializer;
@@ -38,35 +39,42 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity
         implements FileBrowserDialogListener, SoundfontDialogListener {
 
-    public static SettingsActivity mInstance = null;
-    public static String ROOT_PREFS = "RootPreferences";
-    public static String DISP_PREFS = "DispPreferences";
-    public static String TIM_PREFS = "TimPreferences";
-    public static String SOX_PREFS = "SoXPreferences";
+    private final static int prefDisplay = R.xml.preferences_display;
+    private final static int prefTimidity = R.xml.preferences_timidity;
     public ArrayList<String> tmpSounds;
     public boolean needRestart = false;
     public boolean needUpdateSf = false;
     public SharedPreferences prefs;
-    public FragmentManager mFragmentManager;
     public EditTextPreference tmpItemEdit;
-    public PreferenceScreen tmpItemScreen;
     public boolean loadDispSettings = false;
+
+    private static int getTitleOfPage(int preferences) {
+        switch (preferences) {
+            case prefDisplay:
+                return R.string.sett_ds;
+            case prefTimidity:
+                return R.string.sett_plus;
+            default:
+                return R.string.action_settings;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mInstance = this;
-        this.setTheme(SettingsStorage.theme == 1
-                ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar
-                : androidx.appcompat.R.style.Theme_AppCompat);
+        setTheme(SettingsStorage.theme == 1 ? R.style.AppLightTheme : R.style.AppDarkTheme);
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_settings);
+        final Toolbar toolbar = findViewById(R.id.settings_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Display the fragment as the main content.
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        mFragmentManager = getSupportFragmentManager();
-        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.replace(android.R.id.content, new RootPrefsFragment());
-        mFragmentTransaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.settings_container, new SettingsFragment())
+                .commit();
+
         loadDispSettings = getIntent().getBooleanExtra("returnToDisp", false);
     }
 
@@ -76,14 +84,14 @@ public class SettingsActivity extends AppCompatActivity
             onBackPressed();
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
         // Store the soundfonts
-        if (mFragmentManager.getBackStackEntryCount() > 0) {
-            mFragmentManager.popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
             return;
         }
         try {
@@ -93,17 +101,18 @@ public class SettingsActivity extends AppCompatActivity
         }
         SettingsStorage.reloadSettings(this);
         if (needUpdateSf) {
-            SettingsStorage.writeCfg(SettingsActivity.this,
+            SettingsStorage.writeCfg(this,
                     SettingsStorage.dataFolder + "/timidity/timidity.cfg", tmpSounds); // TODO
         }
 
         if (needRestart) {
-            Intent new_intent = new Intent();
-            new_intent.setAction(Constants.msrv_rec);
-            new_intent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_reload_libs);
-            sendBroadcast(new_intent);
+            final Intent restartIntent = new Intent();
+            restartIntent.setAction(Constants.msrv_rec);
+            restartIntent.putExtra(Constants.msrv_cmd, Constants.msrv_cmd_reload_libs);
+            sendBroadcast(restartIntent);
         }
-        Intent returnIntent = new Intent();
+
+        final Intent returnIntent = new Intent();
         setResult(3, returnIntent);
         this.finish();
     }
@@ -158,6 +167,29 @@ public class SettingsActivity extends AppCompatActivity
 
     @Override
     public void ignore() {
+    }
+
+    public void openSettingsScreen(final int screen) {
+        final PreferenceFragmentCompat fragment = getSettingsScreen(screen);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.settings_container, fragment)
+                .addToBackStack(getString(getTitleOfPage(screen)))
+                .commit();
+    }
+
+    private PreferenceFragmentCompat getSettingsScreen(final int screen) {
+        PreferenceFragmentCompat prefFragment = null;
+
+        switch (screen) {
+            case prefDisplay:
+                prefFragment = new SettingsDisplayFragment();
+                break;
+            case prefTimidity:
+                prefFragment = new SettingsTimidityFragment();
+                break;
+        }
+        return prefFragment;
     }
 
     @Override

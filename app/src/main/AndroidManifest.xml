@@ -20,7 +20,7 @@
         android:banner="@drawable/banner"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/AppLightTheme">
         <activity
             android:name="com.xperia64.timidityae.TimidityActivity"
             android:configChanges="uiMode|keyboard|keyboardHidden|orientation|screenSize"
@@ -824,7 +824,7 @@
         <activity
             android:name="com.xperia64.timidityae.SettingsActivity"
             android:configChanges="uiMode|keyboard|keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/action_settings"
             android:theme="@style/AppTheme.SettingsTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>

@@ -5,16 +5,12 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/main_toolbar"
+        android:id="@+id/settings_toolbar"
         layout="@layout/toolbar" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/main_tablayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/main_viewpager2"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/settings_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

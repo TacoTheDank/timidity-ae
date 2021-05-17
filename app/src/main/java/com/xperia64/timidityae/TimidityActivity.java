@@ -42,6 +42,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -458,9 +459,7 @@ public class TimidityActivity extends AppCompatActivity
 
         oldTheme = SettingsStorage.theme;
         oldPlist = SettingsStorage.enableDragNDrop;
-        this.setTheme(SettingsStorage.theme == 1
-                ? androidx.appcompat.R.style.Theme_AppCompat_Light_DarkActionBar
-                : androidx.appcompat.R.style.Theme_AppCompat);
+        setTheme(SettingsStorage.theme == 1 ? R.style.AppLightTheme : R.style.AppDarkTheme);
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             Log.i("Timidity", "Initializing");
@@ -510,6 +509,9 @@ public class TimidityActivity extends AppCompatActivity
         // registerReceiver(receiver, filter);
 
         setContentView(R.layout.main);
+
+        final Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
 
         if (activityReceiver != null) {
             // Create an intent filter to listen to the broadcast sent with the
