@@ -10,7 +10,6 @@ package com.xperia64.timidityae.gui.fragments.preferences;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -276,59 +275,51 @@ public class SettingsTimidityFragment extends PreferenceFragmentCompat {
         reinstallSoundfont.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                AlertDialog dialog = new AlertDialog.Builder(activity).create();
-                dialog.setTitle(getResources().getString(R.string.sett_resf_q));
-                dialog.setMessage(getResources().getString(R.string.sett_resf_q_sum));
-                dialog.setCancelable(true);
-                dialog.setButton(DialogInterface.BUTTON_POSITIVE,
-                        getResources().getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(activity)
+                        .setTitle(getResources().getString(R.string.sett_resf_q))
+                        .setMessage(getResources().getString(R.string.sett_resf_q_sum))
+                        .setCancelable(true)
+                        .setPositiveButton(android.R.string.ok, (dialog, buttonId) -> {
                             @SuppressLint("StaticFieldLeak")
-                            public void onClick(DialogInterface dialog, int buttonId) {
-                                AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
-                                    ProgressDialog pd;
+                            AsyncTask<Void, Void, Integer> task = new AsyncTask<Void, Void, Integer>() {
+                                ProgressDialog pd;
 
-                                    @Override
-                                    protected void onPreExecute() {
-                                        pd = new ProgressDialog(activity);
-                                        pd.setTitle(getResources().getString(R.string.extract));
-                                        pd.setMessage(getResources().getString(R.string.extract_sum));
-                                        pd.setCancelable(false);
-                                        pd.setIndeterminate(true);
-                                        pd.show();
-                                    }
+                                @Override
+                                protected void onPreExecute() {
+                                    pd = new ProgressDialog(activity);
+                                    pd.setTitle(getResources().getString(R.string.extract));
+                                    pd.setMessage(getResources().getString(R.string.extract_sum));
+                                    pd.setCancelable(false);
+                                    pd.setIndeterminate(true);
+                                    pd.show();
+                                }
 
-                                    @Override
-                                    protected Integer doInBackground(Void... arg0) {
-                                        return Globals.extract8Rock(activity);
-                                    }
+                                @Override
+                                protected Integer doInBackground(Void... arg01) {
+                                    return Globals.extract8Rock(activity);
+                                }
 
-                                    @Override
-                                    protected void onPostExecute(Integer result) {
-                                        if (pd != null) {
-                                            pd.dismiss();
-                                            if (result != 777) {
-                                                Toast.makeText(activity,
-                                                        getResources().getString(R.string.sett_resf_err),
-                                                        Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(activity,
-                                                        getResources().getString(R.string.extract_def),
-                                                        Toast.LENGTH_LONG).show();
-                                            }
+                                @Override
+                                protected void onPostExecute(Integer result) {
+                                    if (pd != null) {
+                                        pd.dismiss();
+                                        if (result != 777) {
+                                            Toast.makeText(activity,
+                                                    getResources().getString(R.string.sett_resf_err),
+                                                    Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(activity,
+                                                    getResources().getString(R.string.extract_def),
+                                                    Toast.LENGTH_LONG).show();
                                         }
                                     }
-                                };
-                                task.execute((Void[]) null);
-                            }
-                        });
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-                        getResources().getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int buttonId) {
-                            }
-                        });
-                dialog.show();
+                                }
+                            };
+                            task.execute((Void[]) null);
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create()
+                        .show();
                 return true;
             }
         });

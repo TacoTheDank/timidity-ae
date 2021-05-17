@@ -17,8 +17,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.UriPermission;
@@ -219,9 +217,9 @@ public class TimidityActivity extends AppCompatActivity
                                     }
                                 }
                                 if (special != null && special.getAlertDialog() != null) {
-                                    AlertDialog alerty = special.getAlertDialog();
-                                    if (alerty.isShowing()) {
-                                        alerty.dismiss();
+                                    final AlertDialog alertDialog = special.getAlertDialog();
+                                    if (alertDialog.isShowing()) {
+                                        alertDialog.dismiss();
                                     }
                                 }
                             }
@@ -309,28 +307,18 @@ public class TimidityActivity extends AppCompatActivity
                                 + "Read phone state to auto-pause music during a phone call\n"
                                 + "Timidity will not make phone calls or do anything besides" +
                                 "checking if your device is receiving a call")
-                        .setPositiveButton("OK", new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                actuallyRequestPermissions();
-                            }
-                        })
-                        .setNegativeButton("Cancel", new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                        .setPositiveButton(android.R.string.ok, (dialog, which) ->
+                                actuallyRequestPermissions())
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) ->
                                 new AlertDialog.Builder(TimidityActivity.this)
                                         .setTitle("Error")
                                         .setMessage("Timidity AE cannot proceed without these permissions")
-                                        .setPositiveButton("OK", new OnClickListener() {
-
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                TimidityActivity.this.finish();
-                                            }
-                                        }).setCancelable(false).show();
-                            }
-                        }).setCancelable(false).show();
-
+                                        .setPositiveButton(android.R.string.ok, (dialog1, which1) ->
+                                                TimidityActivity.this.finish())
+                                        .setCancelable(false)
+                                        .show())
+                        .setCancelable(false)
+                        .show();
             } else {
 
                 // No explanation needed, we can request the permission.
@@ -391,14 +379,10 @@ public class TimidityActivity extends AppCompatActivity
                 new AlertDialog.Builder(TimidityActivity.this)
                         .setTitle("Error")
                         .setMessage("Timidity AE cannot proceed without these permissions.")
-                        .setPositiveButton("OK", new OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                TimidityActivity.this.finish();
-                            }
-
-                        }).setCancelable(false).show();
+                        .setPositiveButton(android.R.string.ok, (dialog, which) ->
+                                TimidityActivity.this.finish())
+                        .setCancelable(false)
+                        .show();
             } else {
                 if (!Environment.getExternalStorageDirectory().canRead()) {
                     // Buggy emulator? Try restarting the app
@@ -554,29 +538,17 @@ public class TimidityActivity extends AppCompatActivity
                         .setTitle("SD Card Access")
                         .setCancelable(false)
                         .setMessage(R.string.permission_grant_storage_write_access)
-                        .setPositiveButton("Yes", new OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                                startActivityForResult(intent, 42);
-                            }
-
-                        }).setNegativeButton("No, do not ask again", new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SettingsStorage.disableLollipopStorageNag();
-                        initCallback2();
-                    }
-
-                }).setNeutralButton("No", new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        initCallback2();
-                    }
-                }).show();
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                            startActivityForResult(intent, 42);
+                        })
+                        .setNegativeButton("No, do not ask again", (dialog, which) -> {
+                            SettingsStorage.disableLollipopStorageNag();
+                            initCallback2();
+                        })
+                        .setNeutralButton(android.R.string.cancel, (dialog, which) ->
+                                initCallback2())
+                        .show();
             } else {
                 for (UriPermission permission : permissions) {
                     if (permission.isReadPermission() && permission.isWritePermission()) {
@@ -973,45 +945,26 @@ public class TimidityActivity extends AppCompatActivity
             new AlertDialog.Builder(this)
                     .setTitle(R.string.helpt)
                     .setMessage(R.string.help_root)
-                    .setNegativeButton("Cancel", new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    }).setPositiveButton("MIDI/General", new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    new AlertDialog.Builder(TimidityActivity.this)
-                            .setTitle(R.string.helpt)
-                            .setMessage(R.string.thelper)
-                            .setNegativeButton("OK", new OnClickListener() {
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton("MIDI/General", (dialog, which) ->
+                            new AlertDialog.Builder(TimidityActivity.this)
+                                    .setTitle(R.string.helpt)
+                                    .setMessage(R.string.thelper)
+                                    .setNegativeButton(android.R.string.ok, null)
+                                    .show())
+                    .setNeutralButton("SoX", (dialog, which) -> {
+                        final SpannableString s = new SpannableString(getString(R.string.shelper));
+                        Linkify.addLinks(s, Linkify.ALL);
 
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-
-                            }).show();
-                }
-            }).setNeutralButton("SoX", new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    final SpannableString s = new SpannableString(getString(R.string.shelper));
-                    Linkify.addLinks(s, Linkify.ALL);
-
-                    AlertDialog d = new AlertDialog.Builder(TimidityActivity.this)
-                            .setTitle(R.string.helps)
-                            .setMessage(s)
-                            .setNegativeButton("OK", new OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-
-                            }).show();
-                    ((TextView) d.findViewById(android.R.id.message))
-                            .setMovementMethod(LinkMovementMethod.getInstance());
-                }
-            }).show();
+                        AlertDialog alertDialog = new AlertDialog.Builder(TimidityActivity.this)
+                                .setTitle(R.string.helps)
+                                .setMessage(s)
+                                .setNegativeButton(android.R.string.ok, null)
+                                .show();
+                        ((TextView) alertDialog.findViewById(android.R.id.message))
+                                .setMovementMethod(LinkMovementMethod.getInstance());
+                    })
+                    .show();
 
         }
         return super.onOptionsItemSelected(item);

@@ -10,7 +10,6 @@ package com.xperia64.timidityae.gui.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -697,7 +696,6 @@ public class PlayerFragment extends Fragment {
      */
     @SuppressLint("InflateParams")
     public void showMidiDialog() {
-        AlertDialog.Builder midiInfoDialogBuilder = new AlertDialog.Builder(getActivity());
         View midiDialogView = getActivity().getLayoutInflater().inflate(R.layout.midi_options, null);
         Button speedUp = midiDialogView.findViewById(R.id.speedUp);
         Button slowDown = midiDialogView.findViewById(R.id.slowDown);
@@ -892,40 +890,31 @@ public class PlayerFragment extends Fragment {
                 final String needToRename2 = needRename2;
                 final String probRoot = probablyTheRoot;
                 if (alreadyExists) {
-                    AlertDialog dialog = new AlertDialog.Builder(mActivity).create();
-                    dialog.setTitle("Warning");
-                    dialog.setMessage("Overwrite default config file?");
-                    dialog.setCancelable(false);
-                    dialog.setButton(
-                            DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int buttonId) {
-                                    if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        DocumentFileUtils.tryToDeleteFile(
-                                                getActivity(), probRoot + needToRename1);
-                                        DocumentFileUtils.tryToDeleteFile(
-                                                getActivity(), finalval1);
-                                        DocumentFileUtils.tryToDeleteFile(
-                                                getActivity(), probRoot + needToRename2);
-                                        DocumentFileUtils.tryToDeleteFile(
-                                                getActivity(), finalval2);
-                                    } else {
-                                        new File(mActivity.currSongName + ".def.tcf").delete();
-                                        new File(mActivity.currSongName + ".def.tzf").delete();
-                                    }
-                                    mActivity.setLocalFinished(false);
-                                    mActivity.saveCfgPart2(finalval1, needToRename1);
-                                    deldefCfg.setEnabled(true);
+                    new AlertDialog.Builder(mActivity)
+                            .setTitle(R.string.warning)
+                            .setMessage("Overwrite default config file?")
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.ok, (dialog, buttonId) -> {
+                                if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    DocumentFileUtils.tryToDeleteFile(
+                                            getActivity(), probRoot + needToRename1);
+                                    DocumentFileUtils.tryToDeleteFile(
+                                            getActivity(), finalval1);
+                                    DocumentFileUtils.tryToDeleteFile(
+                                            getActivity(), probRoot + needToRename2);
+                                    DocumentFileUtils.tryToDeleteFile(
+                                            getActivity(), finalval2);
+                                } else {
+                                    new File(mActivity.currSongName + ".def.tcf").delete();
+                                    new File(mActivity.currSongName + ".def.tzf").delete();
                                 }
-                            });
-                    dialog.setButton(
-                            DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int buttonId) {
-                                }
-                            });
-                    dialog.show();
-
+                                mActivity.setLocalFinished(false);
+                                mActivity.saveCfgPart2(finalval1, needToRename1);
+                                deldefCfg.setEnabled(true);
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .create()
+                            .show();
                 } else {
                     mActivity.setLocalFinished(false);
                     mActivity.saveCfgPart2(finalval1, needToRename1);
@@ -953,35 +942,26 @@ public class PlayerFragment extends Fragment {
                         e.printStackTrace();
                     }
                     final boolean canWrite = aWrite;
-                    AlertDialog dialog = new AlertDialog.Builder(mActivity).create();
-                    dialog.setTitle("Warning");
-                    dialog.setMessage("Really delete default config file?");
-                    dialog.setCancelable(false);
-                    dialog.setButton(
-                            DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int buttonId) {
 
-                                    if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        DocumentFileUtils.tryToDeleteFile(
-                                                getActivity(), mActivity.currSongName + ".def.tzf");
-                                        DocumentFileUtils.tryToDeleteFile(
-                                                getActivity(), mActivity.currSongName + ".def.tcf");
-                                    } else {
-                                        new File(mActivity.currSongName + ".def.tcf").delete();
-                                        new File(mActivity.currSongName + ".def.tzf").delete();
-                                    }
-                                    deldefCfg.setEnabled(false);
+                    new AlertDialog.Builder(mActivity)
+                            .setTitle(R.string.warning)
+                            .setMessage("Really delete default config file?")
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.ok, (dialog, buttonId) -> {
+                                if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    DocumentFileUtils.tryToDeleteFile(
+                                            getActivity(), mActivity.currSongName + ".def.tzf");
+                                    DocumentFileUtils.tryToDeleteFile(
+                                            getActivity(), mActivity.currSongName + ".def.tcf");
+                                } else {
+                                    new File(mActivity.currSongName + ".def.tcf").delete();
+                                    new File(mActivity.currSongName + ".def.tzf").delete();
                                 }
-                            });
-                    dialog.setButton(
-                            DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int buttonId) {
-                                }
-                            });
-                    dialog.show();
-
+                                deldefCfg.setEnabled(false);
+                            })
+                            .setNegativeButton(android.R.string.no, null)
+                            .create()
+                            .show();
                 }
             }
 
@@ -1013,13 +993,11 @@ public class PlayerFragment extends Fragment {
         });
         x.setSelection(JNIHandler.currsamp);
 
-        midiInfoDialogBuilder.setView(midiDialogView);
-        midiInfoDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        midiInfoDialogBuilder.setTitle(getActivity().getString(R.string.mop));
+        final AlertDialog.Builder midiInfoDialogBuilder = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.mop)
+                .setView(midiDialogView)
+                .setPositiveButton(android.R.string.ok, null);
+
         midiInfoDialog = midiInfoDialogBuilder.create();
         midiInfoDialog.show();
     }
@@ -1031,18 +1009,15 @@ public class PlayerFragment extends Fragment {
     }
 
     public void showSoxDialog() {
-        /*AlertDialog.Builder soxInfoDialogBuilder = new AlertDialog.Builder(getActivity());
-        View soxDialogView = getActivity().getLayoutInflater().inflate(R.layout.sox_options_basic, null);
+        /*View soxDialogView = getLayoutInflater().inflate(R.layout.sox_options_basic, null);
         final EditText soxEff = soxDialogView.findViewById(R.id.soxDlgText);
         soxEff.setText(SettingsStorage.soxEffStr);
-        soxInfoDialogBuilder.setView(soxDialogView);
-        soxInfoDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                SettingsStorage.soxEffStr = soxEff.getText().toString();
-            }
-        });
-        soxInfoDialogBuilder.setTitle("SoX Effects");
+
+        final AlertDialog.Builder soxInfoDialogBuilder = new AlertDialog.Builder(getActivity())
+                .setView(soxDialogView)
+                .setPositiveButton(android.R.string.ok, (dialog, which) ->
+                        SettingsStorage.soxEffStr = soxEff.getText().toString())
+                .setTitle("SoX Effects");
         midiInfoDialog = soxInfoDialogBuilder.create();
         midiInfoDialog.show();*/
         new SoxEffectsDialog().create(getActivity(), getActivity().getLayoutInflater());

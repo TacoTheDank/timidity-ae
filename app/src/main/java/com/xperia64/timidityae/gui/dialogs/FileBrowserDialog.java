@@ -44,7 +44,7 @@ public class FileBrowserDialog implements OnItemClickListener {
     private int type;
     private String msg;
     private FileBrowserDialogListener onSelectedCallback;
-    private AlertDialog ddd;
+    private AlertDialog alertDialog;
     private boolean closeImmediately; // Should the dialog be closed immediately after selecting the file?
 
     @SuppressLint("InflateParams")
@@ -58,52 +58,39 @@ public class FileBrowserDialog implements OnItemClickListener {
         this.type = type; // A command for later reference. 0 is files, otherwise
         // folders
         this.closeImmediately = closeImmediately; // Close immediately after selecting a file/folder
-        AlertDialog.Builder b = new AlertDialog.Builder(context);
+
         LinearLayout fbdLayout = (LinearLayout) layoutInflater.inflate(R.layout.list, null);
         fbdList = fbdLayout.findViewById(android.R.id.list);
         fbdList.setOnItemClickListener(this);
-        b.setView(fbdLayout);
-        b.setCancelable(false);
-        b.setTitle(this.context.getString(type == 0 ? R.string.fb_chfi : R.string.fb_chfo));
+
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                .setView(fbdLayout)
+                .setCancelable(false)
+                .setTitle(this.context.getString(type == 0 ? R.string.fb_chfi : R.string.fb_chfo));
+
         if (!closeImmediately) {
-            b.setPositiveButton(this.context.getString(R.string.done), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    FileBrowserDialog.this.onSelectedCallback.write();
-                }
-            });
+            alertDialog.setPositiveButton(R.string.done, (dialog, which) ->
+                    FileBrowserDialog.this.onSelectedCallback.write());
         }
-        b.setNegativeButton(context.getString(android.R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        FileBrowserDialog.this.onSelectedCallback.ignore();
-                    }
-                });
+        alertDialog.setNegativeButton(android.R.string.cancel, (dialog, which) ->
+                FileBrowserDialog.this.onSelectedCallback.ignore());
         if (type != 0) {
-            b.setNeutralButton(this.context.getString(R.string.fb_fold),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
+            alertDialog.setNeutralButton(R.string.fb_fold, null);
         }
+
         if (path == null)
             path = Environment.getExternalStorageDirectory().getAbsolutePath();
         else if (!new File(path).exists())
             path = Environment.getExternalStorageDirectory().getAbsolutePath();
         getDir(path);
-        ddd = b.create();
-        ddd.show();
-        Button theButton = ddd.getButton(DialogInterface.BUTTON_NEUTRAL);
+        this.alertDialog = alertDialog.create();
+        this.alertDialog.show();
+        final Button theButton = this.alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
         if (theButton != null)
-            theButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FileBrowserDialog.this.onSelectedCallback.setItem(currPath, FileBrowserDialog.this.type);
-                    if (FileBrowserDialog.this.closeImmediately) {
-                        ddd.dismiss();
-                    }
+            theButton.setOnClickListener(v -> {
+                FileBrowserDialog.this.onSelectedCallback.setItem(currPath, FileBrowserDialog.this.type);
+                if (FileBrowserDialog.this.closeImmediately) {
+                    this.alertDialog.dismiss();
                 }
             });
     }
@@ -198,19 +185,11 @@ public class FileBrowserDialog implements OnItemClickListener {
                     getDir(selfPrimaryStr);
                 }
             } else {
-                AlertDialog.Builder unreadableDialog = new AlertDialog.Builder(context);
-                unreadableDialog.setIcon(R.drawable.ic_launcher);
-                unreadableDialog.setTitle(String.format("[%1$s] %2$s", file.getName(),
-                        context.getString(R.string.fb_cread))
-                );
-                unreadableDialog.setPositiveButton(
-                        context.getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                unreadableDialog.show();
+                new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_launcher)
+                        .setTitle(String.format("[%1$s] %2$s", file.getName(), R.string.fb_cread))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
             }
         } else {
             if (file.canRead()) {
@@ -219,7 +198,7 @@ public class FileBrowserDialog implements OnItemClickListener {
                         .show();
                 onSelectedCallback.setItem(file.getAbsolutePath(), type);
                 if (closeImmediately)
-                    ddd.dismiss();
+                    alertDialog.dismiss();
             }
         }
     }

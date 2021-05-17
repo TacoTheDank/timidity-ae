@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.dialogs;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -69,7 +68,6 @@ public class SoxEffectsDialog {
 
     public void create(final Activity c, final LayoutInflater f) {
         context = c;
-        AlertDialog.Builder b = new AlertDialog.Builder(context);
         final ScrollView mLayout = (ScrollView) f.inflate(R.layout.sox_options, null);
 
         int offset;
@@ -414,39 +412,30 @@ public class SoxEffectsDialog {
         }
         manCmd.addTextChangedListener(delayWatcher);
 
-        b.setPositiveButton(c.getString(R.string.done), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                .setTitle("SoX Effects")
+                .setPositiveButton(R.string.done, null)
+                .setNeutralButton("Save CFG", (dialog, which) -> {
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                    final SharedPreferences.Editor e = prefs.edit();
+                    e.putBoolean(Constants.sett_sox_speed, SettingsStorage.soxEnableSpeed);
+                    e.putFloat(Constants.sett_sox_speed_val, (float) SettingsStorage.soxSpeedVal);
+                    e.putBoolean(Constants.sett_sox_tempo, SettingsStorage.soxEnableTempo);
+                    e.putFloat(Constants.sett_sox_tempo_val, (float) SettingsStorage.soxTempoVal);
+                    e.putBoolean(Constants.sett_sox_pitch, SettingsStorage.soxEnablePitch);
+                    e.putInt(Constants.sett_sox_pitch_val, SettingsStorage.soxPitchVal);
+                    e.putBoolean(Constants.sett_sox_delay, SettingsStorage.soxEnableDelay);
+                    e.putFloat(Constants.sett_sox_delay_valL, (float) SettingsStorage.soxDelayL);
+                    e.putFloat(Constants.sett_sox_delay_valR, (float) SettingsStorage.soxDelayR);
+                    e.putString(Constants.sett_sox_mancmd, SettingsStorage.soxManCmd);
 
-            }
-        });
-
-        b.setNeutralButton("Save CFG", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor e = prefs.edit();
-                e.putBoolean(Constants.sett_sox_speed, SettingsStorage.soxEnableSpeed);
-                e.putFloat(Constants.sett_sox_speed_val, (float) SettingsStorage.soxSpeedVal);
-                e.putBoolean(Constants.sett_sox_tempo, SettingsStorage.soxEnableTempo);
-                e.putFloat(Constants.sett_sox_tempo_val, (float) SettingsStorage.soxTempoVal);
-                e.putBoolean(Constants.sett_sox_pitch, SettingsStorage.soxEnablePitch);
-                e.putInt(Constants.sett_sox_pitch_val, SettingsStorage.soxPitchVal);
-                e.putBoolean(Constants.sett_sox_delay, SettingsStorage.soxEnableDelay);
-                e.putFloat(Constants.sett_sox_delay_valL, (float) SettingsStorage.soxDelayL);
-                e.putFloat(Constants.sett_sox_delay_valR, (float) SettingsStorage.soxDelayR);
-                e.putString(Constants.sett_sox_mancmd, SettingsStorage.soxManCmd);
-
-                e.putString(Constants.sett_sox_fullcmd, SettingsStorage.soxEffStr);
-                e.commit();
-            }
-        });
-
+                    e.putString(Constants.sett_sox_fullcmd, SettingsStorage.soxEffStr);
+                    e.commit();
+                });
         refreshCommandTxt();
-        b.setTitle("SoX Effects");
-        b.setView(mLayout);
-        AlertDialog ddd = b.create();
-        ddd.show();
+        alertDialog.setView(mLayout)
+                .create()
+                .show();
     }
 
     private void refreshCommandTxt() {

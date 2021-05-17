@@ -37,7 +37,7 @@ public class WavSaver implements TimidityActivity.SpecialAction {
     private final String currSongName;
     private final boolean playingExport; // export while playing
     private boolean localfinished;
-    private AlertDialog exportAlert;
+    private AlertDialog alertDialog;
 
     public WavSaver(Activity context, String currSongName, boolean playingExport) {
         this.context = context;
@@ -48,71 +48,66 @@ public class WavSaver implements TimidityActivity.SpecialAction {
     public void dynExport() {
         localfinished = false;
         if (Globals.isMidi(currSongName) && (JNIHandler.isActive() || !playingExport)) {
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-            alert.setTitle(context.getString(R.string.dynex_alert1));
-            alert.setMessage(context.getString(R.string.dynex_alert1_msg));
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             input.setFilters(new InputFilter[]{Globals.fileNameInputFilter});
-            alert.setView(input);
 
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    String value = input.getText().toString();
-                    if (!value.toLowerCase(Locale.US).endsWith(".wav"))
-                        value += ".wav";
-                    String parent = currSongName.substring(0, currSongName.lastIndexOf('/') + 1);
-                    boolean alreadyExists = new File(parent + value).exists();
-                    boolean normalWrite = true;
-                    String needRename = null;
-                    String probablyTheRoot = "";
-                    String probablyTheDirectory = "";
-                    try {
-                        new FileOutputStream(parent + value, true).close();
-                    } catch (FileNotFoundException e) {
-                        normalWrite = false;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                    .setTitle(R.string.dynex_alert1)
+                    .setMessage(R.string.dynex_alert1_msg)
+                    .setView(input)
+                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) -> {
+                        String value = input.getText().toString();
+                        if (!value.toLowerCase(Locale.US).endsWith(".wav"))
+                            value += ".wav";
+                        String parent = currSongName.substring(0, currSongName.lastIndexOf('/') + 1);
+                        boolean alreadyExists = new File(parent + value).exists();
+                        boolean normalWrite = true;
+                        String needRename = null;
+                        String probablyTheRoot = "";
+                        String probablyTheDirectory = "";
+                        try {
+                            new FileOutputStream(parent + value, true).close();
+                        } catch (FileNotFoundException e) {
+                            normalWrite = false;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                    if (normalWrite && !alreadyExists)
-                        new File(parent + value).delete();
+                        if (normalWrite && !alreadyExists)
+                            new File(parent + value).delete();
 
-                    if (normalWrite && new File(parent).canWrite()) {
-                        value = parent + value;
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-                            && DocumentFileUtils.docFileDevice != null
-                    ) {
-                        String[] tmp = DocumentFileUtils.getExternalFilePaths(context, parent);
-                        probablyTheDirectory = tmp[0];
-                        probablyTheRoot = tmp[1];
+                        if (normalWrite && new File(parent).canWrite()) {
+                            value = parent + value;
+                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                                && DocumentFileUtils.docFileDevice != null
+                        ) {
+                            String[] tmp = DocumentFileUtils.getExternalFilePaths(context, parent);
+                            probablyTheDirectory = tmp[0];
+                            probablyTheRoot = tmp[1];
 
-                        if (probablyTheDirectory.length() > 1) {
-                            needRename = parent.substring(parent.indexOf(probablyTheRoot)
-                                    + probablyTheRoot.length()) + value;
-                            value = probablyTheDirectory + '/' + value;
+                            if (probablyTheDirectory.length() > 1) {
+                                needRename = parent.substring(parent.indexOf(probablyTheRoot)
+                                        + probablyTheRoot.length()) + value;
+                                value = probablyTheDirectory + '/' + value;
+                            } else {
+                                value = Environment.getExternalStorageDirectory().getAbsolutePath() + '/' + value;
+                            }
                         } else {
                             value = Environment.getExternalStorageDirectory().getAbsolutePath() + '/' + value;
                         }
-                    } else {
-                        value = Environment.getExternalStorageDirectory().getAbsolutePath() + '/' + value;
-                    }
-                    final String finalval = value;
-                    final boolean canWrite = normalWrite;
-                    final String needToRename = needRename;
-                    final String probRoot = probablyTheRoot;
-                    if (new File(finalval).exists()
-                            || new File(probRoot + needRename).exists() && needToRename != null
-                    ) {
-                        AlertDialog dialog2 = new AlertDialog.Builder(context).create();
-                        dialog2.setTitle(context.getString(R.string.warning));
-                        dialog2.setMessage(context.getString(R.string.dynex_alert2_msg));
-                        dialog2.setCancelable(false);
-                        dialog2.setButton(DialogInterface.BUTTON_POSITIVE,
-                                context.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int buttonId) {
+                        final String finalval = value;
+                        final boolean canWrite = normalWrite;
+                        final String needToRename = needRename;
+                        final String probRoot = probablyTheRoot;
+                        if (new File(finalval).exists()
+                                || new File(probRoot + needRename).exists() && needToRename != null
+                        ) {
+                            new AlertDialog.Builder(context)
+                                    .setTitle(R.string.warning)
+                                    .setMessage(R.string.dynex_alert2_msg)
+                                    .setCancelable(false)
+                                    .setPositiveButton(android.R.string.ok, (dialog1, buttonId) -> {
                                         if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                             if (needToRename != null) {
                                                 DocumentFileUtils.tryToDeleteFile(
@@ -123,28 +118,17 @@ public class WavSaver implements TimidityActivity.SpecialAction {
                                             new File(finalval).delete();
                                         }
                                         saveWavPart2(finalval, needToRename);
-                                    }
-                                });
-                        dialog2.setButton(DialogInterface.BUTTON_NEGATIVE,
-                                context.getString(android.R.string.no), new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int buttonId) {
-                                    }
-                                });
-                        dialog2.show();
-                    } else {
-                        saveWavPart2(finalval, needToRename);
-                    }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .create()
+                                    .show();
+                        } else {
+                            saveWavPart2(finalval, needToRename);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null);
 
-                }
-            });
-
-            alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-
-            exportAlert = alert.show();
+            this.alertDialog = alertDialog.show();
 
         }
     }
@@ -241,7 +225,7 @@ public class WavSaver implements TimidityActivity.SpecialAction {
     @Override
     public AlertDialog getAlertDialog() {
         // TODO Auto-generated method stub
-        return exportAlert;
+        return alertDialog;
     }
 
     @Override

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.xperia64.timidityae.JNIHandler;
+import com.xperia64.timidityae.R;
 import com.xperia64.timidityae.TimidityActivity;
 
 import java.io.File;
@@ -34,7 +35,7 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
 
     private final Activity context;
     private final String currSongName;
-    private AlertDialog alerty;
+    private AlertDialog alertDialog;
     private boolean localfinished;
 
     public ConfigSaver(Activity context, String currSongName) {
@@ -45,30 +46,20 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
     public void promptSaveCfg() {
         localfinished = false;
         if (Globals.isMidi(currSongName) && JNIHandler.isActive()) {
-            AlertDialog.Builder saveMidiConfigDialog = new AlertDialog.Builder(context);
-
-            saveMidiConfigDialog.setTitle("Save Cfg");
-            saveMidiConfigDialog.setMessage("Save a MIDI configuration file");
-
             // Set an EditText view to get user input
             final EditText input = new EditText(context);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             input.setFilters(new InputFilter[]{Globals.fileNameInputFilter});
-            saveMidiConfigDialog.setView(input);
 
-            saveMidiConfigDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    beginConfigFileSave(input.getText().toString());
-                }
-            });
+            final AlertDialog.Builder saveMidiConfigDialog = new AlertDialog.Builder(context)
+                    .setTitle("Save Cfg")
+                    .setMessage("Save a MIDI configuration file")
+                    .setView(input)
+                    .setPositiveButton(android.R.string.ok, (dialog, whichButton) ->
+                            beginConfigFileSave(input.getText().toString()))
+                    .setNegativeButton(android.R.string.cancel, null);
 
-            saveMidiConfigDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-
-            alerty = saveMidiConfigDialog.show();
+            alertDialog = saveMidiConfigDialog.show();
         }
     }
 
@@ -128,30 +119,24 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
         if (new File(finalval).exists() ||
                 new File(probRoot + needRename).exists() && needToRename != null
         ) {
-            AlertDialog deletionDialog = new AlertDialog.Builder(context).create();
-            deletionDialog.setTitle("Warning");
-            deletionDialog.setMessage("Overwrite config file?");
-            deletionDialog.setCancelable(false);
-            deletionDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-                    context.getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int buttonId) {
-                            if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                if (needToRename != null) {
-                                    DocumentFileUtils.tryToDeleteFile(context, probRoot + needToRename);
-                                }
-                                DocumentFileUtils.tryToDeleteFile(context, finalval);
-                            } else {
-                                new File(finalval).delete();
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.warning)
+                    .setMessage("Overwrite config file?")
+                    .setCancelable(false)
+                    .setPositiveButton(android.R.string.ok, (dialog, buttonId) -> {
+                        if (!canWrite && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            if (needToRename != null) {
+                                DocumentFileUtils.tryToDeleteFile(context, probRoot + needToRename);
                             }
-                            writeConfig(finalval, needToRename);
+                            DocumentFileUtils.tryToDeleteFile(context, finalval);
+                        } else {
+                            new File(finalval).delete();
                         }
-                    });
-            deletionDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-                    context.getString(android.R.string.no), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int buttonId) {
-                        }
-                    });
-            deletionDialog.show();
+                        writeConfig(finalval, needToRename);
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .create()
+                    .show();
         } else {
             writeConfig(finalval, needToRename);
         }
@@ -212,7 +197,7 @@ public class ConfigSaver implements TimidityActivity.SpecialAction {
 
     @Override
     public AlertDialog getAlertDialog() {
-        return alerty;
+        return alertDialog;
     }
 
     @Override

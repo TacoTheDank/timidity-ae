@@ -10,7 +10,6 @@ package com.xperia64.timidityae.gui.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -244,19 +243,11 @@ public class FileBrowserFragment extends ListFragment {
                     getDir(selfPrimaryStr);
                 }
             } else {
-                AlertDialog.Builder unreadableDialog = new AlertDialog.Builder(mActivity);
-                unreadableDialog.setIcon(R.drawable.ic_launcher);
-                unreadableDialog.setTitle(String.format("[%1$s] %2$s", file.getName(),
-                        mActivity.getString(R.string.fb_cread))
-                );
-                unreadableDialog.setPositiveButton(
-                        mActivity.getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        });
-                unreadableDialog.show();
+                new AlertDialog.Builder(mActivity)
+                        .setIcon(R.drawable.ic_launcher)
+                        .setTitle(String.format("[%1$s] %2$s", file.getName(), R.string.fb_cread))
+                        .setPositiveButton(android.R.string.ok, null)
+                        .show();
             }
         } else {
             if (file.canRead()) {

@@ -9,7 +9,6 @@
 package com.xperia64.timidityae.gui.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -49,7 +48,7 @@ public class TrackFragment extends Fragment {
     private boolean fromUser;
     private ListView trackList;
     // int bigCounter=6;
-    private AlertDialog ddd;
+    private AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,7 +77,6 @@ public class TrackFragment extends Fragment {
             @SuppressLint({"InflateParams", "SetTextI18n"})
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
-                AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                 View v = getActivity().getLayoutInflater().inflate(R.layout.track_dialog, null);
                 final Spinner instSpin = v.findViewById(R.id.instSpin);
                 instSpin.setClickable(JNIHandler.custInst.get(arg2) && !JNIHandler.drums.get(arg2));
@@ -190,38 +188,32 @@ public class TrackFragment extends Fragment {
                         txtVol.setEnabled(!arg1);
                     }
                 });
-                b.setView(v);
-                b.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        JNIHandler.custInst.set(arg2, !inst.isChecked());
-                        JNIHandler.custVol.set(arg2, !vol.isChecked());
-                        JNIHandler.setChannelVolumeTimidity(
-                                arg2 | (JNIHandler.custVol.get(arg2)
-                                        ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask),
-                                volSeek.getProgress()
-                        );
-                        JNIHandler.setChannelTimidity(
-                                arg2 | (JNIHandler.custInst.get(arg2)
-                                        ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask),
-                                instSpin.getSelectedItemPosition()
-                        );
-                        if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING)
-                            JNIHandler.seekTo(JNIHandler.currTime);
-                        // bigCounter=12;
-                        updateList();
-                    }
-                });
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity())
+                        .setTitle(String.format(getActivity().getString(R.string.trk_form2), arg2 + 1))
+                        .setView(v)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            JNIHandler.custInst.set(arg2, !inst.isChecked());
+                            JNIHandler.custVol.set(arg2, !vol.isChecked());
+                            JNIHandler.setChannelVolumeTimidity(
+                                    arg2 | (JNIHandler.custVol.get(arg2)
+                                            ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask),
+                                    volSeek.getProgress()
+                            );
+                            JNIHandler.setChannelTimidity(
+                                    arg2 | (JNIHandler.custInst.get(arg2)
+                                            ? Constants.jni_tim_holdmask : Constants.jni_tim_unholdmask),
+                                    instSpin.getSelectedItemPosition()
+                            );
+                            if (JNIHandler.state == JNIHandler.PlaybackState.STATE_PLAYING)
+                                JNIHandler.seekTo(JNIHandler.currTime);
+                            // bigCounter=12;
+                            updateList();
+                        })
+                        .setNegativeButton(android.R.string.cancel, null);
 
-                b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                b.setTitle(String.format(getActivity().getString(R.string.trk_form2), arg2 + 1));
-                ddd = b.create();
-                ddd.show();
+                TrackFragment.this.alertDialog = alertDialog.create();
+                TrackFragment.this.alertDialog.show();
             }
         });
     }
@@ -229,10 +221,10 @@ public class TrackFragment extends Fragment {
     public void reset() {
         localInst = new ArrayList<>();
         localVol = new ArrayList<>();
-        if (ddd != null) {
-            if (ddd.isShowing()) {
-                ddd.dismiss();
-                ddd = null;
+        if (alertDialog != null) {
+            if (alertDialog.isShowing()) {
+                alertDialog.dismiss();
+                alertDialog = null;
             }
         }
         localInst.addAll(JNIHandler.programs);
